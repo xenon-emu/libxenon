@@ -178,7 +178,7 @@ function zlib_install
 {
 	if [ ! -f "$ZLIB.tar.gz" ]; then
 		echo -e "Downloading $ZLIB.tar.gz"
-		wget -c http://zlib.net/$ZLIB.tar.gz || fail_with_info
+		wget -c http://zlib.net/fossils/$ZLIB.tar.gz || fail_with_info
 	fi;
 
 	echo -e "Extracting zlib..."
