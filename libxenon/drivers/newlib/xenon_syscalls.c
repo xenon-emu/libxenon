@@ -8,6 +8,7 @@
 #include <sys/dirent.h>
 #include <sys/errno.h>
 #include <sys/time.h>
+#include <time/time.h>
 
 #include <assert.h>
 #include <debug.h>
@@ -135,6 +136,11 @@ static void xenon_exit(int status) {
 		try_return_to_xell(0xc8070000, 0x1c000000); // xell-gggggg (ggboot)
 		try_return_to_xell(0xc8095060, 0x1c040000); // xell-2f (freeboot)
 		try_return_to_xell(0xc8100000, 0x1c000000); // xell-1f, xell-ggggggg
+
+		sprintf(s, "Failed to load Xell, rebooting in 10 seconds...");
+		vfs_console_write(NULL, 0, s, strlen(s));
+		delay(10);
+		xenon_smc_power_reboot();
 	}
 
 	for (;;);
