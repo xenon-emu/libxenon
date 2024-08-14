@@ -114,7 +114,7 @@ static int usbctrl_set_led_callback(usbreq_t *ur) {
     return 0;
 }
 
-int usbctrl_set_rol(uint controllerMask)
+int usbctrl_set_rol(unsigned int controllerMask)
 {
 	if(!RFdev)
 		return -1;
