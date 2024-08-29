@@ -370,9 +370,9 @@ int elf_runWithDeviceTree (void *elf_addr, int elf_size, void *dt_addr, int dt_s
         return res;
     }
 
-    char buffer[42];
+    char buffer[64];
     memset(buffer, 0, sizeof(buffer));
-    snprintf_s(buffer, sizeof(buffer), "Microsoft Corporation Xbox 360");
+    snprintf(buffer, sizeof(buffer), "Microsoft Corporation Xbox 360");
     switch (xenon_get_console_type())
     {
         case REV_XENON:
@@ -402,8 +402,11 @@ int elf_runWithDeviceTree (void *elf_addr, int elf_size, void *dt_addr, int dt_s
             strcat(buffer, " E (DevGL)");
         } break;
     }
+    printf(" model name is %s\n", buffer);
     res = fdt_setprop_string(ELF_DEVTREE_START, node, "model", buffer);
-
+    if (rest < 0){
+        printf("! fdt_setprot_string() failed with %i\n", res);
+    }
     node = fdt_path_offset(ELF_DEVTREE_START, "/chosen");
     if (node < 0){
         printf(" ! /chosen node not found in devtree\n"); 
