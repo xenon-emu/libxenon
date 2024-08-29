@@ -17,6 +17,7 @@ see file COPYING or http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt
 #include <time/time.h>
 #include <libfdt/libfdt.h>
 #include <nocfe/cfe.h>
+#include <xb360/xb360.h>
 
 #include "xetypes.h"
 #include "elf.h"
@@ -376,7 +377,7 @@ int elf_runWithDeviceTree (void *elf_addr, int elf_size, void *dt_addr, int dt_s
     switch (xenon_get_console_type())
     {
         case REV_XENON:
-        case REV_ZEPHYR
+        case REV_ZEPHYR:
         {
             strcat(buffer, " (Xenon)");
         } break;
@@ -404,9 +405,10 @@ int elf_runWithDeviceTree (void *elf_addr, int elf_size, void *dt_addr, int dt_s
     }
     printf(" model name is %s\n", buffer);
     res = fdt_setprop_string(ELF_DEVTREE_START, node, "model", buffer);
-    if (rest < 0){
+    if (res < 0){
         printf("! fdt_setprot_string() failed with %i\n", res);
     }
+
     node = fdt_path_offset(ELF_DEVTREE_START, "/chosen");
     if (node < 0){
         printf(" ! /chosen node not found in devtree\n"); 
