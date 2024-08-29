@@ -356,39 +356,72 @@ int elf_runFromDisk (char *filename)
 
 int elf_runWithDeviceTree (void *elf_addr, int elf_size, void *dt_addr, int dt_size)
 {
-	int res, node;
+    int res = 0, node = 0;
 
-	if (dt_size>ELF_DEVTREE_MAX_SIZE){
-		printf("[ELF loader] Device tree too big (> %d bytes) !\n",ELF_DEVTREE_MAX_SIZE);
-		return -1;
-	}		
-	memset(ELF_DEVTREE_START,0,ELF_DEVTREE_MAX_SIZE);
+    if (dt_size>ELF_DEVTREE_MAX_SIZE){
+        printf("[ELF loader] Device tree too big (> %d bytes) !\n",ELF_DEVTREE_MAX_SIZE);
+        return -1;
+    }
+    memset(ELF_DEVTREE_START,0,ELF_DEVTREE_MAX_SIZE);
 
     res = fdt_open_into(dt_addr, ELF_DEVTREE_START, ELF_DEVTREE_MAX_SIZE);
-	if (res < 0){
-		printf(" ! fdt_open_into() failed\n"); 
+    if (res < 0){
+        printf(" ! fdt_open_into() failed\n"); 
         return res;
     }
 
-	node = fdt_path_offset(ELF_DEVTREE_START, "/chosen");
-	if (node < 0){
-		printf(" ! /chosen node not found in devtree\n"); 
+    char buffer[42];
+    memset(buffer, 0, sizeof(buffer));
+    snprintf_s(buffer, sizeof(buffer), "Microsoft Corporation Xbox 360");
+    switch (xenon_get_console_type())
+    {
+        case REV_XENON:
+        case REV_ZEPHYR
+        {
+            strcat(buffer, " (Xenon)");
+        } break;
+        case REV_FALCON:
+        {
+            strcat(buffer, " (Falcon)");
+        } break;
+        case REV_JASPER:
+        {
+            strcat(buffer, " (Jasper)");
+        } break;
+        case REV_TRINITY:
+        {
+            strcat(buffer, " S (Trinity)");
+        } break;
+        case REV_CORONA:
+        case REV_CORONA_PHISON:
+        {
+            strcat(buffer, " S (Corona)");
+        } break;
+        case REV_WINCHESTER:
+        {
+            strcat(buffer, " E (DevGL)");
+        } break;
+    }
+    res = fdt_setprop_string(ELF_DEVTREE_START, node, "model", buffer);
+
+    node = fdt_path_offset(ELF_DEVTREE_START, "/chosen");
+    if (node < 0){
+        printf(" ! /chosen node not found in devtree\n"); 
         return node;
     }
 
     if (bootargs[0])
     {
         res = fdt_setprop(ELF_DEVTREE_START, node, "bootargs", bootargs, strlen(bootargs)+1);
-		if (res < 0){
-			printf(" ! couldn't set chosen.bootargs property\n"); 
-			return res;
-		}
+        if (res < 0){
+            printf(" ! couldn't set chosen.bootargs property\n"); 
+            return res;
+        }
     }
-	
+
     if (initrd_start && initrd_size)
     {
 		kernel_relocate_initrd(initrd_start,initrd_size);
-                
 		u64 start, end;
 		start = (u32)PHYSADDR((u32)initrd_start);
 		res = fdt_setprop(ELF_DEVTREE_START, node, "linux,initrd-start", &start, sizeof(start));
