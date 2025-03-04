@@ -147,7 +147,7 @@ clean:
 	@$(CC) $(AFLAGS) -c $*.s -o $*.o
 
 libxenon.a: $(LIBOBJS)
-	ar rc $@ $(LIBOBJS)
+	$(AR) rc $@ $(LIBOBJS)
 
 install: libxenon.a
 	mkdir -p $(DEVKITXENON)/usr/lib/

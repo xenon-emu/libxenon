@@ -1,6 +1,6 @@
 # parts taken from devkitppc
 
-PREFIX	:=	xenon-
+PREFIX	?=	xenon-
 
 export AS		:=	$(PREFIX)as
 export CC		:=	$(PREFIX)gcc
@@ -18,7 +18,7 @@ LDSCRIPT := $(DEVKITXENON)/app.lds
 %.o: %.cpp
 	@echo [$(notdir $<)]
 	@$(CXX) -MMD -MP -MF $(DEPSDIR)/$*.d $(CXXFLAGS) -c $< -o $@
-	
+
 %.o: %.cc
 	@echo [$(notdir $<)]
 	@$(CXX) -MMD -MP -MF $(DEPSDIR)/$*.d $(CXXFLAGS) -c $< -o $@
