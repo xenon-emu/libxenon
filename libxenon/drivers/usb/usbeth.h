@@ -1,7 +1,7 @@
 /*  *********************************************************************
     *  Broadcom Common Firmware Environment (CFE)
     *  
-    *  USB Ethernet				File: usbeth.h
+    *  USB Ethernet        File: usbeth.h
     *  
     *  Driver for USB Ethernet devices.
     *  
@@ -92,9 +92,9 @@
 #define R_PEG_EEPROM_DATA          0x21
 #define R_PEG_EEPROM_CTL           0x23
 #define R_PEG_PHY_ADDR             0x25
-#define R_PEG_PHY_DATA             0x26		//& 0x27 for 2 bytes
+#define R_PEG_PHY_DATA             0x26    //& 0x27 for 2 bytes
 #define R_PEG_PHY_CTRL             0x28
-#define R_PEG_INT_PHY  	           0x7b
+#define R_PEG_INT_PHY               0x7b
 #define R_PEG_GPIO0                0x7e
 #define R_PEG_GPIO1                0x7f
 

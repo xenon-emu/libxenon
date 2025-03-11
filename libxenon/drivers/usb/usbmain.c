@@ -1,7 +1,7 @@
 /*  *********************************************************************
     *  Broadcom Common Firmware Environment (CFE)
     *
-    *  Main Module				File: usbmain.c
+    *  Main Module        File: usbmain.c
     *
     *  Main module that invokes the top of the USB stack from CFE.
     *
@@ -63,12 +63,12 @@
     *  Externs
     ********************************************************************* */
 
-extern usb_hcdrv_t ohci_driver;			/* OHCI Driver dispatch */
+extern usb_hcdrv_t ohci_driver;      /* OHCI Driver dispatch */
 
-extern int ohcidebug;				/* OHCI debug control */
-extern int usb_noisy;				/* USBD debug control */
+extern int ohcidebug;        /* OHCI debug control */
+extern int usb_noisy;        /* USBD debug control */
 
-int ui_init_usbcmds(void);			/* forward */
+int ui_init_usbcmds(void);      /* forward */
 void kmem_init(void);
 
 /*  *********************************************************************
@@ -95,11 +95,11 @@ usbbus_t *usb_buses[USB_MAX_BUS];
     *  interrupts from the USB controllers.
     *
     *  Input parameters:
-    *  	   arg - value we passed when the timer was initialized
-    *  	          (not used)
+    *       arg - value we passed when the timer was initialized
+    *              (not used)
     *
     *  Return value:
-    *  	   nothing
+    *       nothing
     ********************************************************************* */
 
 static void usb_cfe_timer(void *arg)
@@ -123,11 +123,11 @@ static void usb_cfe_timer(void *arg)
     in_poll = 1;
 
     for (idx = 0; idx < usb_buscnt; idx++) {
-	if (usb_buses[idx]) {
-	    usb_poll(usb_buses[idx]);
-	    usb_daemon(usb_buses[idx]);
-	    }
-	}
+  if (usb_buses[idx]) {
+      usb_poll(usb_buses[idx]);
+      usb_daemon(usb_buses[idx]);
+      }
+  }
 
     /*
      * Okay to call polling again.
@@ -143,11 +143,11 @@ static void usb_cfe_timer(void *arg)
     *  Initialize one USB controller.
     *
     *  Input parameters:
-    *  	   addr - physical address of OHCI registers
+    *       addr - physical address of OHCI registers
     *
     *  Return value:
-    *  	   0 if ok
-    *  	   else error
+    *       0 if ok
+    *       else error
     ********************************************************************* */
 static int usb_init_one_ohci(uint32_t addr)
 {
@@ -157,23 +157,23 @@ static int usb_init_one_ohci(uint32_t addr)
     bus = UBCREATE(&ohci_driver, addr);
 
     if (bus == NULL) {
-	printf("USB: Could not create OHCI driver structure for controller at 0x%08X\n",addr);
-	return -1;
-	}
+  printf("USB: Could not create OHCI driver structure for controller at 0x%08X\n",addr);
+  return -1;
+  }
 
     bus->ub_num = usb_buscnt;
 
     res = UBSTART(bus);
 
     if (res != 0) {
-	printf("USB: Could not init OHCI controller at 0x%08X\n",addr);
-	UBSTOP(bus);
-	return -1;
-	}
+  printf("USB: Could not init OHCI controller at 0x%08X\n",addr);
+  UBSTOP(bus);
+  return -1;
+  }
     else {
-	usb_buses[usb_buscnt++] = bus;
-	usb_initroot(bus);
-	}
+  usb_buses[usb_buscnt++] = bus;
+  usb_initroot(bus);
+  }
 
     return 0;
 }
@@ -185,11 +185,11 @@ static int usb_init_one_ohci(uint32_t addr)
     *  Initialize all PCI-based OHCI controllers
     *
     *  Input parameters:
-    *  	   nothing
+    *       nothing
     *
     *  Return value:
-    *  	   0 if ok
-    *  	   else error
+    *       0 if ok
+    *       else error
     ********************************************************************* */
 static int usb_init_pci_ohci(void)
 {
@@ -202,23 +202,23 @@ static int usb_init_pci_ohci(void)
     idx = 0;
 
     while (pci_find_class(PCI_CLASS_SERIALBUS,idx,&tag) == 0) {
-	pciclass = pci_conf_read(tag,PCI_CLASS_REG);
-	if ((PCI_SUBCLASS(pciclass) == PCI_SUBCLASS_SERIALBUS_USB) &&
-	    (PCI_INTERFACE(pciclass) == 0x10)) {
-	    /* On the BCM1250, this sets the address to "match bits" mode,
-	       which eliminates the need for byte swaps of data to/from the registers. */
-	    if (pci_map_mem(tag,PCI_MAPREG_START,PCI_MATCH_BITS,&bar) == 0) {
-		pci_tagprintf(tag,"OHCI USB controller found at %08X\n",(uint32_t) bar);
-		/* XXX hack: assumes physaddrs are 32 bits, bad bad! */
-		res = usb_init_one_ohci((uint32_t)bar);
-		if (res < 0) break;
-		}
-	    else {
-		pci_tagprintf(tag,"Could not map OHCI base address\n");
-		}
-	    }
-	idx++;
-	}
+  pciclass = pci_conf_read(tag,PCI_CLASS_REG);
+  if ((PCI_SUBCLASS(pciclass) == PCI_SUBCLASS_SERIALBUS_USB) &&
+      (PCI_INTERFACE(pciclass) == 0x10)) {
+      /* On the BCM1250, this sets the address to "match bits" mode,
+         which eliminates the need for byte swaps of data to/from the registers. */
+      if (pci_map_mem(tag,PCI_MAPREG_START,PCI_MATCH_BITS,&bar) == 0) {
+    pci_tagprintf(tag,"OHCI USB controller found at %08X\n",(uint32_t) bar);
+    /* XXX hack: assumes physaddrs are 32 bits, bad bad! */
+    res = usb_init_one_ohci((uint32_t)bar);
+    if (res < 0) break;
+    }
+      else {
+    pci_tagprintf(tag,"Could not map OHCI base address\n");
+    }
+      }
+  idx++;
+  }
 
     return 0;
 }
@@ -232,78 +232,78 @@ int usb_init(void)
     static int initdone = 0;
 
     if (initdone) {
-		printf("USB has already been initialized.\n");
-		return -1;
-	}
+    printf("USB has already been initialized.\n");
+    return -1;
+  }
 
-	initdone = 1;
+  initdone = 1;
 
-	usb_shutdown();
+  usb_shutdown();
 
-	// preinit (start from scratch)
-		// OHCI
-	write32(0xD0120044,0xed44);
-	write32(0xD0128044,0xed44);
-		// EHCI
-	write32(0xD0121040,0x0C004020);
-	write32(0xD0129040,0x0C004020);
-	write32(0xD0121044,0x3C);
-	write32(0xD0129044,0x3C);
+  // preinit (start from scratch)
+    // OHCI
+  write32(0xD0120044,0xed44);
+  write32(0xD0128044,0xed44);
+    // EHCI
+  write32(0xD0121040,0x0C004020);
+  write32(0xD0129040,0x0C004020);
+  write32(0xD0121044,0x3C);
+  write32(0xD0129044,0x3C);
 
-	printf(" * Initialising USB EHCI...\n");
-	EHCI_Init();
+  printf(" * Initialising USB EHCI...\n");
+  EHCI_Init();
 
-	printf(" * Initialising USB OHCI...\n");
+  printf(" * Initialising USB OHCI...\n");
 
-	usb_buscnt = 0;
+  usb_buscnt = 0;
 
     kmem_init();
 
 #if CFG_PCI
-	usb_init_pci_ohci();
+  usb_init_pci_ohci();
 #endif
 
 #if 0
-	usb_noisy = 1;
-	ohcidebug = 2;
+  usb_noisy = 1;
+  ohcidebug = 2;
 #endif
 
-	usb_init_one_ohci(0xea002000);
-	usb_init_one_ohci(0xea004000);
+  usb_init_one_ohci(0xea002000);
+  usb_init_one_ohci(0xea004000);
 
 //    cfe_bg_add(usb_cfe_timer,NULL);
-	usb_initialized = 1;
+  usb_initialized = 1;
 
-	return 0;
+  return 0;
 }
 
 void usb_shutdown(void)
 {
-	// EHCI
-		// disable interrupts
-	write32(0xEA003028,0);
-	write32(0xEA005028,0);
-		// halt
-	write32(0xEA003020,0);
-	write32(0xEA005020,0);
+  // EHCI
+    // disable interrupts
+  write32(0xEA003028,0);
+  write32(0xEA005028,0);
+    // halt
+  write32(0xEA003020,0);
+  write32(0xEA005020,0);
 
-	// OHCI
-		// disable interrupts
-	write32(0xEA002014,1 << 31);
-	write32(0xEA004014,1 << 31);
-		// halt
-	write32(0xEA002004,0);
-	read32(0xEA002004);
-	write32(0xEA004004,0);
-	read32(0xEA004004);
+  // OHCI
+    // disable interrupts
+  write32(0xEA002014,1 << 31);
+  write32(0xEA004014,1 << 31);
+    // halt
+  write32(0xEA002004,0);
+  read32(0xEA002004);
+  write32(0xEA004004,0);
+  read32(0xEA004004);
 }
 
 void usb_do_poll(void)
 {
-	if (!usb_initialized)
-		return;
+  if (!usb_initialized)
+    return;
 
-	usb_cfe_timer(0);
+  usb_cfe_timer(0);
 
-	USBStorage_Init();
+  USBStorage_Init();
 }

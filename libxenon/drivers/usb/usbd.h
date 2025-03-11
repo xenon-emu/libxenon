@@ -1,7 +1,7 @@
 /*  *********************************************************************
     *  Broadcom Common Firmware Environment (CFE)
     *  
-    *  USB Device Layer definitions		File: usbd.h
+    *  USB Device Layer definitions    File: usbd.h
     *  
     *  Definitions for the USB device layer.
     *  
@@ -68,59 +68,59 @@ typedef struct usb_driver_s usb_driver_t;
     *  will either use these same codes or can be mapped into them.
     ********************************************************************* */
 
-#define UR_ERR_NOERROR			0
-#define UR_ERR_CRC			1
-#define UR_ERR_BITSTUFFING		2
-#define UR_ERR_DATATOGGLEMISMATCH	3
-#define UR_ERR_STALL			4
-#define UR_ERR_DEVICENOTRESPONDING	5
-#define UR_ERR_PIDCHECKFAILURE		6
-#define UR_ERR_UNEXPECTEDPID		7
-#define UR_ERR_DATAOVERRUN		8
-#define UR_ERR_DATAUNDERRUN		9
-#define UR_ERR_BUFFEROVERRUN		12
-#define UR_ERR_BUFFERUNDERRUN		13
-#define UR_ERR_NOTACCESSED		15
-#define UR_ERR_CANCELLED		0xFF
+#define UR_ERR_NOERROR      0
+#define UR_ERR_CRC      1
+#define UR_ERR_BITSTUFFING    2
+#define UR_ERR_DATATOGGLEMISMATCH  3
+#define UR_ERR_STALL      4
+#define UR_ERR_DEVICENOTRESPONDING  5
+#define UR_ERR_PIDCHECKFAILURE    6
+#define UR_ERR_UNEXPECTEDPID    7
+#define UR_ERR_DATAOVERRUN    8
+#define UR_ERR_DATAUNDERRUN    9
+#define UR_ERR_BUFFEROVERRUN    12
+#define UR_ERR_BUFFERUNDERRUN    13
+#define UR_ERR_NOTACCESSED    15
+#define UR_ERR_CANCELLED    0xFF
 
 /*  *********************************************************************
     *  USB Bus structure - one of these per host controller
     ********************************************************************* */
 
-#define USB_MAX_DEVICES	128
+#define USB_MAX_DEVICES  128
 
 typedef struct usbbus_s {
-    struct usbbus_s *ub_next;		/* link to other buses */
-    usb_hc_t *ub_hwsoftc;		/* bus driver softc */
-    usb_hcdrv_t *ub_hwdisp;		/* bus driver dispatch */
-    usbdev_t *ub_roothub;		/* root hub device */
+    struct usbbus_s *ub_next;    /* link to other buses */
+    usb_hc_t *ub_hwsoftc;    /* bus driver softc */
+    usb_hcdrv_t *ub_hwdisp;    /* bus driver dispatch */
+    usbdev_t *ub_roothub;    /* root hub device */
     usbdev_t *ub_devices[USB_MAX_DEVICES]; /* pointers to each device, idx by address */
-    unsigned int ub_flags;		/* flag bits */
-    int ub_num;				/* bus number */
+    unsigned int ub_flags;    /* flag bits */
+    int ub_num;        /* bus number */
 } usbbus_t;
 
-#define UB_FLG_NEEDSCAN	1		/* some device on bus needs scanning */
+#define UB_FLG_NEEDSCAN  1    /* some device on bus needs scanning */
 
 /*  *********************************************************************
     *  USB Pipe structure - one of these per unidirectional channel
     *  to an endpoint on a USB device
     ********************************************************************* */
 
-#define UP_TYPE_CONTROL	1
-#define UP_TYPE_BULK	2
-#define UP_TYPE_INTR	4
-#define UP_TYPE_ISOC	8
+#define UP_TYPE_CONTROL  1
+#define UP_TYPE_BULK  2
+#define UP_TYPE_INTR  4
+#define UP_TYPE_ISOC  8
 
-#define UP_TYPE_IN	128
-#define UP_TYPE_OUT	256
+#define UP_TYPE_IN  128
+#define UP_TYPE_OUT  256
 
 #define UP_TYPE_LOWSPEED 16
 
 typedef struct usbpipe_s {
-    usb_ept_t *up_hwendpoint;		/* OHCI-specific endpoint pointer */
-    usbdev_t *up_dev;			/* our device info */
-    int up_num;				/* pipe number */
-    int up_mps;				/* max packet size */
+    usb_ept_t *up_hwendpoint;    /* OHCI-specific endpoint pointer */
+    usbdev_t *up_dev;      /* our device info */
+    int up_num;        /* pipe number */
+    int up_mps;        /* max packet size */
     int up_flags;
 } usbpipe_t;
 
@@ -130,24 +130,24 @@ typedef struct usbpipe_s {
     *  refer to a device.
     ********************************************************************* */
 
-#define UD_FLAG_HUB	0x0001		/* this is a hub device */
-#define UD_FLAG_ROOTHUB	0x0002		/* this is a root hub device */
-#define UD_FLAG_LOWSPEED 0x0008		/* this is a lowspeed device */
-#define UD_FLAG_REMOVING 0x0010		/* device is being removed */
+#define UD_FLAG_HUB  0x0001    /* this is a hub device */
+#define UD_FLAG_ROOTHUB  0x0002    /* this is a root hub device */
+#define UD_FLAG_LOWSPEED 0x0008    /* this is a lowspeed device */
+#define UD_FLAG_REMOVING 0x0010    /* device is being removed */
 
-#define UD_MAX_PIPES	32
+#define UD_MAX_PIPES  32
 #define USB_EPADDR_TO_IDX(addr) ((((addr)&0x80) >> 3) | ((addr) & 0x0F))
 
 struct usbdev_s {
-    usb_driver_t *ud_drv;		/* Driver's methods */
-    usbbus_t *ud_bus;			/* owning bus */
-    int ud_address;			/* USB address */
-    usbpipe_t *ud_pipes[UD_MAX_PIPES];	/* pipes, 0 is the control pipe */
-    struct usbdev_s *ud_parent;		/* used for hubs */
+    usb_driver_t *ud_drv;    /* Driver's methods */
+    usbbus_t *ud_bus;      /* owning bus */
+    int ud_address;      /* USB address */
+    usbpipe_t *ud_pipes[UD_MAX_PIPES];  /* pipes, 0 is the control pipe */
+    struct usbdev_s *ud_parent;    /* used for hubs */
     int ud_flags;
-    void *ud_private;			/* private data for device driver */
-    usb_device_descr_t ud_devdescr;	/* device descriptor */
-    usb_config_descr_t *ud_cfgdescr;	/* config, interface, and ep descrs */
+    void *ud_private;      /* private data for device driver */
+    usb_device_descr_t ud_devdescr;  /* device descriptor */
+    usb_config_descr_t *ud_cfgdescr;  /* config, interface, and ep descrs */
 };
 
 
@@ -158,14 +158,14 @@ struct usbdev_s {
     ********************************************************************* */
 
 
-#define UR_FLAG_SYNC		0x8000
+#define UR_FLAG_SYNC    0x8000
 
-#define UR_FLAG_SETUP		0x0001
-#define UR_FLAG_IN		0x0002
-#define UR_FLAG_OUT		0x0004
-#define UR_FLAG_STATUS_IN	0x0008		/* status phase of a control WRITE */
-#define UR_FLAG_STATUS_OUT	0x0010		/* status phase of a control READ */
-#define UR_FLAG_SHORTOK		0x0020		/* short transfers are ok */
+#define UR_FLAG_SETUP    0x0001
+#define UR_FLAG_IN    0x0002
+#define UR_FLAG_OUT    0x0004
+#define UR_FLAG_STATUS_IN  0x0008    /* status phase of a control WRITE */
+#define UR_FLAG_STATUS_OUT  0x0010    /* status phase of a control READ */
+#define UR_FLAG_SHORTOK    0x0020    /* short transfers are ok */
 
 
 typedef struct usbreq_s {
@@ -198,7 +198,7 @@ typedef struct usbreq_s {
     /*
      * For use inside the ohci driver
      */
-    void *ur_tdqueue;	
+    void *ur_tdqueue;  
     int ur_tdcount;
 } usbreq_t;
 
@@ -234,8 +234,8 @@ int usb_set_ep0mps(usbdev_t *dev,int mps);
 int usb_new_address(usbbus_t *bus);
 int usb_get_string(usbdev_t *dev,int id,char *buf,int maxlen);
 int usb_std_request(usbdev_t *dev,uint8_t bmRequestType,
-			   uint8_t bRequest,uint16_t wValue,
-		    uint16_t wIndex,uint8_t *buffer,int length);
+         uint8_t bRequest,uint16_t wValue,
+        uint16_t wIndex,uint8_t *buffer,int length);
 void *usb_find_cfg_descr(usbdev_t *dev,int dtype,int idx);
 void usb_delay_ms(usbbus_t *bus,int ms);
 int usb_clear_stall(usbdev_t *dev,int pipe);
@@ -302,9 +302,9 @@ typedef struct usb_drvlist_s {
 
 extern usb_driver_t *usb_find_driver(usbdev_t *dev);
 
-#define CLASS_ANY	-1
-#define VENDOR_ANY	-1
-#define PRODUCT_ANY	-1
+#define CLASS_ANY  -1
+#define VENDOR_ANY  -1
+#define PRODUCT_ANY  -1
 
 void mydelay(int x);
 
@@ -314,13 +314,13 @@ void mydelay(int x);
     *  Error codes
     ********************************************************************* */
 
-#define USBD_ERR_OK		0		/* Request ok */
-#define USBD_ERR_STALLED	-1		/* Endpoint is stalled */
-#define USBD_ERR_IOERROR	-2		/* I/O error */
-#define USBD_ERR_HWERROR	-3		/* Hardware failure */
-#define USBD_ERR_CANCELED	-4		/* Request canceled */
-#define USBD_ERR_NOMEM		-5		/* Out of memory */
-#define USBD_ERR_TIMEOUT	-6		/* Request timeout */
+#define USBD_ERR_OK    0    /* Request ok */
+#define USBD_ERR_STALLED  -1    /* Endpoint is stalled */
+#define USBD_ERR_IOERROR  -2    /* I/O error */
+#define USBD_ERR_HWERROR  -3    /* Hardware failure */
+#define USBD_ERR_CANCELED  -4    /* Request canceled */
+#define USBD_ERR_NOMEM    -5    /* Out of memory */
+#define USBD_ERR_TIMEOUT  -6    /* Request timeout */
 
 /*  *********************************************************************
     *  Debug routines

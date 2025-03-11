@@ -1,7 +1,7 @@
 /*  *********************************************************************
     *  Broadcom Common Firmware Environment (CFE)
     *  
-    *  USB Driver List				File: usbdevs.c
+    *  USB Driver List        File: usbdevs.c
     *  
     *  This module contains a table of supported USB devices and
     *  the routines to look up appropriate drivers given
@@ -85,27 +85,27 @@ usb_drvlist_t usb_drivers[] = {
      * Hub driver
      */
 
-    {USB_DEVICE_CLASS_HUB,	VENDOR_ANY,	PRODUCT_ANY,	&usbhub_driver},
+    {USB_DEVICE_CLASS_HUB,  VENDOR_ANY,  PRODUCT_ANY,  &usbhub_driver},
 
     /*
      * Keyboards and mice
      */
 
-    {USB_DEVICE_CLASS_HUMAN_INTERFACE,	VENDOR_ANY,PRODUCT_ANY,	&usbhid_driver},
-    {CLASS_ANY,	0x045e,0x291,	&usbctrl_driver}, // RF unit
-    {CLASS_ANY,	0x045e,0x28e,	&usbctrl_driver}, // wired controller
-    {CLASS_ANY,	0x045e,0x2aa,	&usbctrl_driver}, // wireless controller
-    {CLASS_ANY,	0x045e,0x2a9,	&usbctrl_driver}, // wireless controller
+    {USB_DEVICE_CLASS_HUMAN_INTERFACE,  VENDOR_ANY,PRODUCT_ANY,  &usbhid_driver},
+    {CLASS_ANY,  0x045e,0x291,  &usbctrl_driver}, // RF unit
+    {CLASS_ANY,  0x045e,0x28e,  &usbctrl_driver}, // wired controller
+    {CLASS_ANY,  0x045e,0x2aa,  &usbctrl_driver}, // wireless controller
+    {CLASS_ANY,  0x045e,0x2a9,  &usbctrl_driver}, // wireless controller
     {CLASS_ANY, 0x045e,0x2b0,   &dummy_driver}, // Kinect, not handled so we load a dummy drive
-    {CLASS_ANY,	0x1bad,0xf900,	&usbctrl_driver}, // PDP Afterglow controller
-    {CLASS_ANY,	0x045e,0x28f,	&dummy_driver}, // play and charge kit, not a controller - let's ignore it
+    {CLASS_ANY,  0x1bad,0xf900,  &usbctrl_driver}, // PDP Afterglow controller
+    {CLASS_ANY,  0x045e,0x28f,  &dummy_driver}, // play and charge kit, not a controller - let's ignore it
 
     /*
      * Mass storage devices
      */
 
 #ifdef USB11_MASS_STORAGE
-    {USB_DEVICE_CLASS_STORAGE,	VENDOR_ANY,	PRODUCT_ANY,	&usbmass_driver},
+    {USB_DEVICE_CLASS_STORAGE,  VENDOR_ANY,  PRODUCT_ANY,  &usbmass_driver},
 #endif
     
 #if 0
@@ -122,17 +122,17 @@ usb_drvlist_t usb_drivers[] = {
      * Ethernet Adapters
      */
 
-    {USB_DEVICE_CLASS_VENDOR_SPECIFIC,0x506,0x4601,&usbpeg_driver},	/* 3Com */
-    {USB_DEVICE_CLASS_VENDOR_SPECIFIC,0x66b,0x2202,&usbpeg_driver},	/* Linksys */
-    {USB_DEVICE_CLASS_VENDOR_SPECIFIC,0x66b,0x2203,&usbpeg_driver},	/* Linksys */
-    {USB_DEVICE_CLASS_VENDOR_SPECIFIC,0x66b,0x2204,&usbpeg_driver},	/* Linksys */
-    {USB_DEVICE_CLASS_VENDOR_SPECIFIC,0x66b,0x2206,&usbpeg_driver},	/* Linksys */
-    {USB_DEVICE_CLASS_VENDOR_SPECIFIC,0x66b,0x400b,&usbpeg_driver},   	/* Linksys */
-    {USB_DEVICE_CLASS_VENDOR_SPECIFIC,0x66b,0x200c,&usbpeg_driver},	/* Linksys */
-    {USB_DEVICE_CLASS_VENDOR_SPECIFIC,0x423,0x000a,&usbcatc_driver},	/* CATC */
-    {USB_DEVICE_CLASS_VENDOR_SPECIFIC,0x423,0x000c,&usbcatc_driver},	/* Belkin */
-    {USB_DEVICE_CLASS_RESERVED,0xbda,0x8150,&usbrtek_driver},	/* Realtek */
-    {USB_DEVICE_CLASS_RESERVED,0x06e1,0x0008,&usbklsi_driver},	/* Kawasaki */
+    {USB_DEVICE_CLASS_VENDOR_SPECIFIC,0x506,0x4601,&usbpeg_driver},  /* 3Com */
+    {USB_DEVICE_CLASS_VENDOR_SPECIFIC,0x66b,0x2202,&usbpeg_driver},  /* Linksys */
+    {USB_DEVICE_CLASS_VENDOR_SPECIFIC,0x66b,0x2203,&usbpeg_driver},  /* Linksys */
+    {USB_DEVICE_CLASS_VENDOR_SPECIFIC,0x66b,0x2204,&usbpeg_driver},  /* Linksys */
+    {USB_DEVICE_CLASS_VENDOR_SPECIFIC,0x66b,0x2206,&usbpeg_driver},  /* Linksys */
+    {USB_DEVICE_CLASS_VENDOR_SPECIFIC,0x66b,0x400b,&usbpeg_driver},     /* Linksys */
+    {USB_DEVICE_CLASS_VENDOR_SPECIFIC,0x66b,0x200c,&usbpeg_driver},  /* Linksys */
+    {USB_DEVICE_CLASS_VENDOR_SPECIFIC,0x423,0x000a,&usbcatc_driver},  /* CATC */
+    {USB_DEVICE_CLASS_VENDOR_SPECIFIC,0x423,0x000c,&usbcatc_driver},  /* Belkin */
+    {USB_DEVICE_CLASS_RESERVED,0xbda,0x8150,&usbrtek_driver},  /* Realtek */
+    {USB_DEVICE_CLASS_RESERVED,0x06e1,0x0008,&usbklsi_driver},  /* Kawasaki */
 
     {CLASS_ANY,0x0846,0x1040,&usbasix_driver},      /* Netgear FA120 */
     {CLASS_ANY,0x07B8,0x420a,&usbasix_driver},      /* Hawking UF200 */
@@ -149,7 +149,7 @@ usb_drvlist_t usb_drivers[] = {
     *  class, vendor, or product.
     *  
     *  Input parameters: 
-    *	   devdescr - device descriptor
+    *     devdescr - device descriptor
     *
     *  Return value:
     *      pointer to device driver or NULL
@@ -192,9 +192,9 @@ usb_driver_t *usb_find_driver(usbdev_t *dev)
     for (i = 0; i < devdescr->bNumConfigurations; i++) {
         usb_interface_descr_t * cfgdescr = usb_find_cfg_descr(dev, USB_INTERFACE_DESCRIPTOR_TYPE, i);
         if (cfgdescr) {
-            if(cfgdescr && cfgdescr->bInterfaceSubClass == 93){
+            if (cfgdescr && cfgdescr->bInterfaceSubClass == 93) {
                 printf("Wired controller ?\n");
-                return &usbctrl_driver;	
+                return &usbctrl_driver;  
             }
 
         }

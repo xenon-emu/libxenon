@@ -450,7 +450,7 @@ lwip_close(int s)
     return -1;
   }
 
-  if(sock->conn != NULL) {
+  if (sock->conn != NULL) {
     is_tcp = netconn_type(sock->conn) == NETCONN_TCP;
   } else {
     LWIP_ASSERT("sock->lastdata == NULL", sock->lastdata == NULL);
@@ -1378,7 +1378,7 @@ lwip_shutdown(int s, int how)
     shut_rx = 1;
   } else if (how == SHUT_WR) {
     shut_tx = 1;
-  } else if(how == SHUT_RDWR) {
+  } else if (how == SHUT_RDWR) {
     shut_rx = 1;
     shut_tx = 1;
   } else {
@@ -2154,12 +2154,12 @@ lwip_setsockopt_internal(void *arg)
         ip_addr_t multi_addr;
         inet_addr_to_ipaddr(&if_addr, &imr->imr_interface);
         inet_addr_to_ipaddr(&multi_addr, &imr->imr_multiaddr);
-        if(optname == IP_ADD_MEMBERSHIP){
+        if (optname == IP_ADD_MEMBERSHIP) {
           data->err = igmp_joingroup(&if_addr, &multi_addr);
         } else {
           data->err = igmp_leavegroup(&if_addr, &multi_addr);
         }
-        if(data->err != ERR_OK) {
+        if (data->err != ERR_OK) {
           data->err = EADDRNOTAVAIL;
         }
       }

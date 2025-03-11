@@ -266,7 +266,7 @@ udp_input(struct pbuf *p, struct netif *inp)
       }
 #endif /* CHECKSUM_CHECK_UDP */
     }
-    if(pbuf_header(p, -UDP_HLEN)) {
+    if (pbuf_header(p, -UDP_HLEN)) {
       /* Can we cope with this failing? Just assert for now */
       LWIP_ASSERT("pbuf_header failed\n", 0);
       UDP_STATS_INC(udp.drop);
@@ -449,7 +449,7 @@ udp_sendto_chksum(struct udp_pcb *pcb, struct pbuf *p, ip_addr_t *dst_ip,
 #if LWIP_CHECKSUM_ON_COPY
   return udp_sendto_if_chksum(pcb, p, dst_ip, dst_port, netif, have_chksum, chksum);
 #else /* LWIP_CHECKSUM_ON_COPY */
-  return udp_sendto_if(pcb, p, dst_ip, dst_port, netif);
+  return udp_sendto_if (pcb, p, dst_ip, dst_port, netif);
 #endif /* LWIP_CHECKSUM_ON_COPY */
 }
 
@@ -473,14 +473,14 @@ udp_sendto_chksum(struct udp_pcb *pcb, struct pbuf *p, ip_addr_t *dst_ip,
  * @see udp_disconnect() udp_send()
  */
 err_t
-udp_sendto_if(struct udp_pcb *pcb, struct pbuf *p,
+udp_sendto_if (struct udp_pcb *pcb, struct pbuf *p,
   ip_addr_t *dst_ip, u16_t dst_port, struct netif *netif)
 {
 #if LWIP_CHECKSUM_ON_COPY
   return udp_sendto_if_chksum(pcb, p, dst_ip, dst_port, netif, 0, 0);
 }
 
-/** Same as udp_sendto_if(), but with checksum */
+/** Same as udp_sendto_if (), but with checksum */
 err_t
 udp_sendto_if_chksum(struct udp_pcb *pcb, struct pbuf *p, ip_addr_t *dst_ip,
                      u16_t dst_port, struct netif *netif, u8_t have_chksum,
@@ -619,7 +619,7 @@ udp_sendto_if_chksum(struct udp_pcb *pcb, struct pbuf *p, ip_addr_t *dst_ip,
 #if LWIP_NETIF_HWADDRHINT
     netif->addr_hint = &(pcb->addr_hint);
 #endif /* LWIP_NETIF_HWADDRHINT*/
-    err = ip_output_if(q, src_ip, dst_ip, pcb->ttl, pcb->tos, IP_PROTO_UDPLITE, netif);
+    err = ip_output_if (q, src_ip, dst_ip, pcb->ttl, pcb->tos, IP_PROTO_UDPLITE, netif);
 #if LWIP_NETIF_HWADDRHINT
     netif->addr_hint = NULL;
 #endif /* LWIP_NETIF_HWADDRHINT*/
@@ -658,7 +658,7 @@ udp_sendto_if_chksum(struct udp_pcb *pcb, struct pbuf *p, ip_addr_t *dst_ip,
 #if LWIP_NETIF_HWADDRHINT
     netif->addr_hint = &(pcb->addr_hint);
 #endif /* LWIP_NETIF_HWADDRHINT*/
-    err = ip_output_if(q, src_ip, dst_ip, pcb->ttl, pcb->tos, IP_PROTO_UDP, netif);
+    err = ip_output_if (q, src_ip, dst_ip, pcb->ttl, pcb->tos, IP_PROTO_UDP, netif);
 #if LWIP_NETIF_HWADDRHINT
     netif->addr_hint = NULL;
 #endif /* LWIP_NETIF_HWADDRHINT*/

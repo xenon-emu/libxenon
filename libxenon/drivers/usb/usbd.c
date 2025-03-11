@@ -1,7 +1,7 @@
 /*  *********************************************************************
     *  Broadcom Common Firmware Environment (CFE)
     *  
-    *  USB device layer				File: usbd.c
+    *  USB device layer        File: usbd.c
     *  
     *  This module deals with devices (things connected to USB buses)
     *  
@@ -102,15 +102,15 @@ extern usb_driver_t usbroothub_driver;
     *  USB device.
     *  
     *  Input parameters: 
-    *  	   dev - device we're talking about
-    *  	   epaddr - endpoint address open, usually from the endpoint
-    *  	             descriptor
-    *  	   mps - maximum packet size understood by the device
-    *  	   flags - flags for this pipe (UP_xxx flags)
-    *  	   
+    *       dev - device we're talking about
+    *       epaddr - endpoint address open, usually from the endpoint
+    *                 descriptor
+    *       mps - maximum packet size understood by the device
+    *       flags - flags for this pipe (UP_xxx flags)
+    *       
     *  Return value:
-    *  	   <0 if error
-    *  	   0 if ok
+    *       <0 if error
+    *       0 if ok
     ********************************************************************* */
 
 int usb_create_pipe(usbdev_t *dev,int epaddr,int mps,int flags)
@@ -121,9 +121,9 @@ int usb_create_pipe(usbdev_t *dev,int epaddr,int mps,int flags)
     pipeidx = USB_EPADDR_TO_IDX(epaddr);
 
     if (dev->ud_pipes[pipeidx] != NULL) {
-	printf("Trying to create a pipe that was already created!\n");
-	return 0;
-	}
+  printf("Trying to create a pipe that was already created!\n");
+  return 0;
+  }
     
     pipe = KMALLOC(sizeof(usbpipe_t),0);
 
@@ -135,10 +135,10 @@ int usb_create_pipe(usbdev_t *dev,int epaddr,int mps,int flags)
     pipe->up_dev = dev;
     if (dev->ud_flags & UD_FLAG_LOWSPEED) flags |= UP_TYPE_LOWSPEED;
     pipe->up_hwendpoint = UBEPTCREATE(dev->ud_bus,
-				      dev->ud_address,
-				      USB_ENDPOINT_ADDRESS(epaddr),
-				      mps,
-				      flags);
+              dev->ud_address,
+              USB_ENDPOINT_ADDRESS(epaddr),
+              mps,
+              flags);
 
     dev->ud_pipes[pipeidx] = pipe;
 
@@ -154,12 +154,12 @@ int usb_create_pipe(usbdev_t *dev,int epaddr,int mps,int flags)
     *  the information you need.
     *  
     *  Input parameters: 
-    *  	   dev - device we're talking to
-    *  	   epdesc - endpoint descriptor
-    *  	   
+    *       dev - device we're talking to
+    *       epdesc - endpoint descriptor
+    *       
     *  Return value:
-    *  	   <0 if error
-    *  	   else endpoint/pipe number (from descriptor)
+    *       <0 if error
+    *       else endpoint/pipe number (from descriptor)
     ********************************************************************* */
 
 int usb_open_pipe(usbdev_t *dev,usb_endpoint_descr_t *epdesc)
@@ -171,24 +171,24 @@ int usb_open_pipe(usbdev_t *dev,usb_endpoint_descr_t *epdesc)
     else flags |= UP_TYPE_OUT;
 
     switch (epdesc->bmAttributes & USB_ENDPOINT_TYPE_MASK) {
-	case USB_ENDPOINT_TYPE_CONTROL:
-	    flags |= UP_TYPE_CONTROL;
-	    break;
-	case USB_ENDPOINT_TYPE_ISOCHRONOUS:
-	    flags |= UP_TYPE_ISOC;
-	    break;
-	case USB_ENDPOINT_TYPE_BULK:
-	    flags |= UP_TYPE_BULK;
-	    break;	
-	case USB_ENDPOINT_TYPE_INTERRUPT:
-	    flags |= UP_TYPE_INTR;
-	    break;
-	}
+  case USB_ENDPOINT_TYPE_CONTROL:
+      flags |= UP_TYPE_CONTROL;
+      break;
+  case USB_ENDPOINT_TYPE_ISOCHRONOUS:
+      flags |= UP_TYPE_ISOC;
+      break;
+  case USB_ENDPOINT_TYPE_BULK:
+      flags |= UP_TYPE_BULK;
+      break;  
+  case USB_ENDPOINT_TYPE_INTERRUPT:
+      flags |= UP_TYPE_INTR;
+      break;
+  }
 
     res = usb_create_pipe(dev,
-			  epdesc->bEndpointAddress,
-			  GETUSBFIELD(epdesc,wMaxPacketSize),
-			  flags);
+        epdesc->bEndpointAddress,
+        GETUSBFIELD(epdesc,wMaxPacketSize),
+        flags);
 
     if (res < 0) return res;
 
@@ -202,11 +202,11 @@ int usb_open_pipe(usbdev_t *dev,usb_endpoint_descr_t *epdesc)
     *  Close(destroy) an open pipe and remove endpoint descriptor
     *  
     *  Input parameters: 
-    *  	   dev - device we're talking to
-    *  	   epaddr - pipe to close
-    *  	   
+    *       dev - device we're talking to
+    *       epaddr - pipe to close
+    *       
     *  Return value:
-    *  	   nothing
+    *       nothing
     ********************************************************************* */
 
 void usb_destroy_pipe(usbdev_t *dev,int epaddr)
@@ -220,9 +220,9 @@ void usb_destroy_pipe(usbdev_t *dev,int epaddr)
     if (!pipe) return;
 
     if (dev->ud_pipes[pipeidx]) {
-	UBEPTDELETE(dev->ud_bus,
-		    dev->ud_pipes[pipeidx]->up_hwendpoint);
-	}
+  UBEPTDELETE(dev->ud_bus,
+        dev->ud_pipes[pipeidx]->up_hwendpoint);
+  }
 
     KFREE(dev->ud_pipes[pipeidx]);
     dev->ud_pipes[pipeidx] = NULL;
@@ -235,10 +235,10 @@ void usb_destroy_pipe(usbdev_t *dev,int epaddr)
     *  Destroy all pipes related to this device.
     *  
     *  Input parameters: 
-    *  	   dev - device we're clearing out
-    *  	   
+    *       dev - device we're clearing out
+    *       
     *  Return value:
-    *  	   nothing
+    *       nothing
     ********************************************************************* */
 
 void usb_destroy_all_pipes(usbdev_t *dev)
@@ -246,13 +246,13 @@ void usb_destroy_all_pipes(usbdev_t *dev)
     int idx;
 
     for (idx = 0; idx < UD_MAX_PIPES; idx++) {
-	if (dev->ud_pipes[idx]) {
-	    UBEPTDELETE(dev->ud_bus,
-			dev->ud_pipes[idx]->up_hwendpoint);
-	    KFREE(dev->ud_pipes[idx]);
-	    dev->ud_pipes[idx] = NULL;
-	    }
-	}
+  if (dev->ud_pipes[idx]) {
+      UBEPTDELETE(dev->ud_bus,
+      dev->ud_pipes[idx]->up_hwendpoint);
+      KFREE(dev->ud_pipes[idx]);
+      dev->ud_pipes[idx] = NULL;
+      }
+  }
 }
 
 /*  *********************************************************************
@@ -262,10 +262,10 @@ void usb_destroy_all_pipes(usbdev_t *dev)
     *  the device data structure
     *  
     *  Input parameters: 
-    *  	   dev - device to destroy
-    *  	   
+    *       dev - device to destroy
+    *       
     *  Return value:
-    *  	   nothing
+    *       nothing
     ********************************************************************* */
 
 void usb_destroy_device(usbdev_t *dev)
@@ -288,12 +288,12 @@ void usb_destroy_device(usbdev_t *dev)
     *  descriptors right away.
     *  
     *  Input parameters: 
-    *  	   bus - bus to create device on
-    *  	   lowspeed - true if it's a lowspeed device (the hubs tell
-    *  	     us these things)
-    *  	   
+    *       bus - bus to create device on
+    *       lowspeed - true if it's a lowspeed device (the hubs tell
+    *         us these things)
+    *       
     *  Return value:
-    *  	   usb device structure, or NULL
+    *       usb device structure, or NULL
     ********************************************************************* */
 
 usbdev_t *usb_create_device(usbbus_t *bus,int lowspeed)
@@ -309,7 +309,7 @@ usbdev_t *usb_create_device(usbbus_t *bus,int lowspeed)
     memset(dev,0,sizeof(usbdev_t));
 
     dev->ud_bus = bus;
-    dev->ud_address = 0;		/* default address */
+    dev->ud_address = 0;    /* default address */
     dev->ud_parent = NULL;
     dev->ud_flags = 0;
 
@@ -319,17 +319,17 @@ usbdev_t *usb_create_device(usbbus_t *bus,int lowspeed)
 
     pipeflags = UP_TYPE_CONTROL;
     if (lowspeed) {
-	pipeflags |= UP_TYPE_LOWSPEED;
-	dev->ud_flags |= UD_FLAG_LOWSPEED;
-	}
+  pipeflags |= UP_TYPE_LOWSPEED;
+  dev->ud_flags |= UD_FLAG_LOWSPEED;
+  }
 
     /*
      * Create the control pipe.
      */
 
     usb_create_pipe(dev,0,
-		    USB_CONTROL_ENDPOINT_MIN_SIZE,
-		    pipeflags);
+        USB_CONTROL_ENDPOINT_MIN_SIZE,
+        pipeflags);
 
     return dev;
 }
@@ -341,13 +341,13 @@ usbdev_t *usb_create_device(usbbus_t *bus,int lowspeed)
     *  ready to go.  A shorthand routine.
     *  
     *  Input parameters: 
-    *  	   dev- device we're talking to
-    *  	   epaddr - endpoint address, from usb_open_pipe()
-    *  	   buf,length - user buffer and buffer length
-    *  	   flags - transfer direction, etc. (UR_xxx flags)
-    *  	   
+    *       dev- device we're talking to
+    *       epaddr - endpoint address, from usb_open_pipe()
+    *       buf,length - user buffer and buffer length
+    *       flags - transfer direction, etc. (UR_xxx flags)
+    *       
     *  Return value:
-    *  	   usbreq_t pointer, or NULL
+    *       usbreq_t pointer, or NULL
     ********************************************************************* */
 
 usbreq_t *usb_make_request(usbdev_t *dev,int epaddr,uint8_t *buf,int length,int flags)
@@ -383,10 +383,10 @@ usbreq_t *usb_make_request(usbdev_t *dev,int epaddr,uint8_t *buf,int length,int 
     *  driver.
     *  
     *  Input parameters: 
-    *  	   bus - bus structure
-    *  	   
+    *       bus - bus structure
+    *       
     *  Return value:
-    *  	   nothing
+    *       nothing
     ********************************************************************* */
 
 void usb_poll(usbbus_t *bus)
@@ -401,10 +401,10 @@ void usb_poll(usbbus_t *bus)
     *  necessary.
     *  
     *  Input parameters: 
-    *  	   bus - bus to  watch
-    *  	   
+    *       bus - bus to  watch
+    *       
     *  Return value:
-    *  	   nothing
+    *       nothing
     ********************************************************************* */
 
 void usb_daemon(usbbus_t *bus)
@@ -418,9 +418,9 @@ void usb_daemon(usbbus_t *bus)
      */
 
     if (bus->ub_flags & UB_FLG_NEEDSCAN) {
-	bus->ub_flags &= ~UB_FLG_NEEDSCAN;
-	usb_scan(bus);
-	}
+  bus->ub_flags &= ~UB_FLG_NEEDSCAN;
+  usb_scan(bus);
+  }
 }
 
 /*  *********************************************************************
@@ -429,11 +429,11 @@ void usb_daemon(usbbus_t *bus)
     *  Cancel a pending usb transfer request.
     *  
     *  Input parameters: 
-    *  	   ur - request to cancel
-    *  	   
+    *       ur - request to cancel
+    *       
     *  Return value:
-    *  	   0 if ok
-    *  	   else error (could not find request)
+    *       0 if ok
+    *       else error (could not find request)
     ********************************************************************* */
 
 int usb_cancel_request(usbreq_t *ur)
@@ -448,10 +448,10 @@ int usb_cancel_request(usbreq_t *ur)
     *  Return a transfer request to the free pool.
     *  
     *  Input parameters: 
-    *  	   ur - request to return
-    *  	   
+    *       ur - request to return
+    *       
     *  Return value:
-    *  	   nothing
+    *       nothing
     ********************************************************************* */
 
 void usb_free_request(usbreq_t *ur)
@@ -459,9 +459,9 @@ void usb_free_request(usbreq_t *ur)
     REQTRACE(printf("Free %p (%s,%s)\n",ur,eptname(ur),devname(ur)));
 
     if (ur->ur_inprogress) {
-	printf("Yow!  Tried to free a request that was in progress!\n");
-	return;
-	}
+  printf("Yow!  Tried to free a request that was in progress!\n");
+  return;
+  }
     KFREE(ur);
 }
 
@@ -471,11 +471,11 @@ void usb_free_request(usbreq_t *ur)
     *  Wait a while, calling the polling routine as we go.
     *  
     *  Input parameters: 
-    *  	   bus - bus we're talking to 
-    *  	   ms - how long to wait
-    *  	   
+    *       bus - bus we're talking to 
+    *       ms - how long to wait
+    *       
     *  Return value:
-    *  	   nothing
+    *       nothing
     ********************************************************************* */
 
 
@@ -491,11 +491,11 @@ void usb_delay_ms(usbbus_t *bus,int ms)
     *  set up a transfer descriptor
     *  
     *  Input parameters: 
-    *  	   ur - request to queue
-    *  	   
+    *       ur - request to queue
+    *       
     *  Return value:
-    *  	   0 if ok
-    *  	   else error
+    *       0 if ok
+    *       else error
     ********************************************************************* */
 
 
@@ -508,8 +508,8 @@ int usb_queue_request(usbreq_t *ur)
     ur->ur_inprogress = 1;
     ur->ur_xferred = 0;
     res = UBXFER(ur->ur_dev->ud_bus,
-		 ur->ur_pipe->up_hwendpoint,
-		 ur);
+     ur->ur_pipe->up_hwendpoint,
+     ur);
     return res;
 }
 
@@ -520,17 +520,17 @@ int usb_queue_request(usbreq_t *ur)
     *  as we wait.
     *  
     *  Input parameters: 
-    *  	   ur - request to wait for
-    *  	   
+    *       ur - request to wait for
+    *       
     *  Return value:
-    *  	   request status
+    *       request status
     ********************************************************************* */
 
 int usb_wait_request(usbreq_t *ur)
 {
     while ((volatile int) (ur->ur_inprogress)) {
-	usb_poll(ur->ur_dev->ud_bus);
-	}
+  usb_poll(ur->ur_dev->ud_bus);
+  }
 
     return ur->ur_status;
 }
@@ -541,10 +541,10 @@ int usb_wait_request(usbreq_t *ur)
     *  Synchronous request - call usb_queue and then usb_wait
     *  
     *  Input parameters: 
-    *  	   ur - request to submit
-    *  	   
+    *       ur - request to submit
+    *       
     *  Return value:
-    *  	   status of request
+    *       status of request
     ********************************************************************* */
 
 int usb_sync_request(usbreq_t *ur)
@@ -560,13 +560,13 @@ int usb_sync_request(usbreq_t *ur)
     *  the request.  A shorthand**2 routine.
     *  
     *  Input parameters: 
-    *  	   dev- device we're talking to
-    *  	   epaddr - endpoint address, from usb_open_pipe()
-    *  	   buf,length - user buffer and buffer length
-    *  	   flags - transfer direction, etc. (UR_xxx flags)
-    *  	   
+    *       dev- device we're talking to
+    *       epaddr - endpoint address, from usb_open_pipe()
+    *       buf,length - user buffer and buffer length
+    *       flags - transfer direction, etc. (UR_xxx flags)
+    *       
     *  Return value:
-    *  	   status of request
+    *       status of request
     ********************************************************************* */
 
 int usb_make_sync_request(usbdev_t *dev,int epaddr,uint8_t *buf,int length,int flags)
@@ -587,14 +587,14 @@ int usb_make_sync_request(usbdev_t *dev,int epaddr,uint8_t *buf,int length,int f
     *  requests with no data phase.
     *  
     *  Input parameters: 
-    *  	   dev - device we're talking to
-    *  	   reqtype - request type (bmRequestType) for descriptor
-    *  	   wValue - wValue for descriptor
-    *  	   wIndex - wIndex for descriptor
-    *  	   
+    *       dev - device we're talking to
+    *       reqtype - request type (bmRequestType) for descriptor
+    *       wValue - wValue for descriptor
+    *       wIndex - wIndex for descriptor
+    *       
     *  Return value:
-    *  	   0 if ok
-    *  	   else error
+    *       0 if ok
+    *       else error
     ********************************************************************* */
 
 int usb_simple_request(usbdev_t *dev,uint8_t reqtype,int bRequest,int wValue,int wIndex)
@@ -609,11 +609,11 @@ int usb_simple_request(usbdev_t *dev,uint8_t reqtype,int bRequest,int wValue,int
     *  Set the current configuration for a USB device.
     * 
     *  Input parameters: 
-    *  	   dev - device we're talking to
-    *  	   config - bConfigValue for the device
-    *  	   
+    *       dev - device we're talking to
+    *       config - bConfigValue for the device
+    *       
     *  Return value:
-    *  	   request status
+    *       request status
     ********************************************************************* */
 
 int usb_set_configuration(usbdev_t *dev,int config)
@@ -632,10 +632,10 @@ int usb_set_configuration(usbdev_t *dev,int config)
     *  Return the next available address for the specified bus
     *  
     *  Input parameters: 
-    *  	   bus - bus to assign an address for
-    *  	   
+    *       bus - bus to assign an address for
+    *       
     *  Return value:
-    *  	   new address, <0 if error
+    *       new address, <0 if error
     ********************************************************************* */
 
 int usb_new_address(usbbus_t *bus)
@@ -643,8 +643,8 @@ int usb_new_address(usbbus_t *bus)
     int idx;
 
     for (idx = 1; idx < USB_MAX_DEVICES; idx++) {
-	if (bus->ub_devices[idx] == NULL) return idx;
-	}
+  if (bus->ub_devices[idx] == NULL) return idx;
+  }
 
     return -1;
 }
@@ -657,11 +657,11 @@ int usb_new_address(usbbus_t *bus)
     *  address of the control pipe.
     *  
     *  Input parameters: 
-    *  	   dev - device we're talking to
-    *  	   address - new address (1..127)
-    *  	   
+    *       dev - device we're talking to
+    *       address - new address (1..127)
+    *       
     *  Return value:
-    *  	   request status
+    *       request status
     ********************************************************************* */
 
 int usb_set_address(usbdev_t *dev,int address)
@@ -673,15 +673,15 @@ int usb_set_address(usbdev_t *dev,int address)
     res = usb_simple_request(dev,0x00,USB_REQUEST_SET_ADDRESS,address,0);
 
     if (res == 0) {
-	dev->ud_bus->ub_devices[address] = dev;
-	dev->ud_address = address;
-	for (idx = 0; idx < UD_MAX_PIPES; idx++) {
-	    pipe = dev->ud_pipes[idx];
-	    if (pipe && pipe->up_hwendpoint) {
-		UBEPTSETADDR(dev->ud_bus,pipe->up_hwendpoint,address);
-		}
-	    }
-	}
+  dev->ud_bus->ub_devices[address] = dev;
+  dev->ud_address = address;
+  for (idx = 0; idx < UD_MAX_PIPES; idx++) {
+      pipe = dev->ud_pipes[idx];
+      if (pipe && pipe->up_hwendpoint) {
+    UBEPTSETADDR(dev->ud_bus,pipe->up_hwendpoint,address);
+    }
+      }
+  }
 
     return res;
 }
@@ -693,11 +693,11 @@ int usb_set_address(usbdev_t *dev,int address)
     *  endpoint in the host controller)
     *  
     *  Input parameters: 
-    *  	   dev - device we're talking to
-    *  	   mps - max packet size for endpoint zero
-    *  	   
+    *       dev - device we're talking to
+    *       mps - max packet size for endpoint zero
+    *       
     *  Return value:
-    *  	   request status
+    *       request status
     ********************************************************************* */
 
 int usb_set_ep0mps(usbdev_t *dev,int mps)
@@ -706,11 +706,11 @@ int usb_set_ep0mps(usbdev_t *dev,int mps)
 
     pipe = dev->ud_pipes[0];
     if (pipe && pipe->up_hwendpoint) {
-	UBEPTSETMPS(dev->ud_bus,pipe->up_hwendpoint,mps);
-	}
+  UBEPTSETMPS(dev->ud_bus,pipe->up_hwendpoint,mps);
+  }
     if (pipe) {
-	pipe->up_mps = mps;
-	}
+  pipe->up_mps = mps;
+  }
 
     return 0;
 }
@@ -721,12 +721,12 @@ int usb_set_ep0mps(usbdev_t *dev,int mps)
     *  Clear a stall condition on the specified pipe
     *  
     *  Input parameters: 
-    *  	   dev - device we're talking to
-    *  	   epaddr - endpoint address
-    *  	   
+    *       dev - device we're talking to
+    *       epaddr - endpoint address
+    *       
     *  Return value:
-    *  	   0 if ok
-    *  	   else error
+    *       0 if ok
+    *       else error
     ********************************************************************* */
 int usb_clear_stall(usbdev_t *dev,int epaddr)
 {
@@ -755,13 +755,13 @@ int usb_clear_stall(usbdev_t *dev,int epaddr)
 
     req->bmRequestType = 0x02;
     req->bRequest = USB_REQUEST_CLEAR_FEATURE;
-    PUTUSBFIELD(req,wValue,0);		/* ENDPOINT_HALT */
+    PUTUSBFIELD(req,wValue,0);    /* ENDPOINT_HALT */
     PUTUSBFIELD(req,wIndex,epaddr);
     PUTUSBFIELD(req,wLength,0);
 
     ur = usb_make_request(dev,0,requestbuf,
-			  sizeof(usb_device_request_t),
-			  UR_FLAG_SETUP);
+        sizeof(usb_device_request_t),
+        UR_FLAG_SETUP);
     /*res =*/ usb_sync_request(ur);
     usb_free_request(ur);
     ur = usb_make_request(dev,0,requestbuf,0,UR_FLAG_STATUS_IN);
@@ -783,19 +783,19 @@ int usb_clear_stall(usbdev_t *dev,int epaddr)
     *  with the appropriate setup, data, and status phases.
     *  
     *  Input parameters: 
-    *  	   dev - dev we're talking to
-    *  	   bmRequestType,bRequest,wValue,wIndex - fields for the
-    *  	            USB request structure
-    *  	   buffer - user buffer
-    *  	   length - length of user buffer
-    *  	   
+    *       dev - dev we're talking to
+    *       bmRequestType,bRequest,wValue,wIndex - fields for the
+    *                USB request structure
+    *       buffer - user buffer
+    *       length - length of user buffer
+    *       
     *  Return value:
-    *  	   number of bytes transferred
+    *       number of bytes transferred
     ********************************************************************* */
 
 int usb_std_request(usbdev_t *dev,uint8_t bmRequestType,
-			   uint8_t bRequest,uint16_t wValue,
-			   uint16_t wIndex,uint8_t *buffer,int length)
+         uint8_t bRequest,uint16_t wValue,
+         uint16_t wIndex,uint8_t *buffer,int length)
 {
     usbpipe_t *pipe = dev->ud_pipes[0];
     usbreq_t *ur;
@@ -806,14 +806,14 @@ int usb_std_request(usbdev_t *dev,uint8_t bmRequestType,
     req = usb_dma_alloc(32);
 
     if ((buffer != NULL) && (length !=0)) {
-	databuf = usb_dma_alloc(length);
-	if (!(bmRequestType & USBREQ_DIR_IN)) {
-	    memcpy(databuf,buffer,length);
-	    }
-	else {
-	    memset(databuf,0,length);
-	    }
-	}
+  databuf = usb_dma_alloc(length);
+  if (!(bmRequestType & USBREQ_DIR_IN)) {
+      memcpy(databuf,buffer,length);
+      }
+  else {
+      memset(databuf,0,length);
+      }
+  }
 
     req->bmRequestType = bmRequestType;
     req->bRequest = bRequest;
@@ -826,47 +826,47 @@ int usb_std_request(usbdev_t *dev,uint8_t bmRequestType,
     usb_free_request(ur);
 
     if (length != 0) {
-	if (bmRequestType & USBREQ_DIR_IN) {
-	    ur = usb_make_request(dev,0,databuf,length,UR_FLAG_IN);
-	    }
-	else {
-	    ur = usb_make_request(dev,0,databuf,length,UR_FLAG_OUT);
-	    }
+  if (bmRequestType & USBREQ_DIR_IN) {
+      ur = usb_make_request(dev,0,databuf,length,UR_FLAG_IN);
+      }
+  else {
+      ur = usb_make_request(dev,0,databuf,length,UR_FLAG_OUT);
+      }
 
-	res = usb_sync_request(ur);
+  res = usb_sync_request(ur);
 
-	if (res == 4) {		/* STALL */
-	    usb_clear_stall(dev,pipe->up_num);
-	    usb_free_request(ur);
-	    if (databuf) KFREE(databuf);
-	    KFREE(req);
-	    return 0;
-	    }
+  if (res == 4) {    /* STALL */
+      usb_clear_stall(dev,pipe->up_num);
+      usb_free_request(ur);
+      if (databuf) KFREE(databuf);
+      KFREE(req);
+      return 0;
+      }
 
-	length = ur->ur_xferred;
-	usb_free_request(ur);
-	}
+  length = ur->ur_xferred;
+  usb_free_request(ur);
+  }
 
     if ((length != 0) && (databuf != NULL) && (bmRequestType & USBREQ_DIR_IN)) {
-	memcpy(buffer,databuf,length);
-	}
+  memcpy(buffer,databuf,length);
+  }
 
     if (bmRequestType & USBREQ_DIR_IN) {
-	ur = usb_make_request(dev,0,(uint8_t *)req,0,UR_FLAG_STATUS_OUT);
-	}
+  ur = usb_make_request(dev,0,(uint8_t *)req,0,UR_FLAG_STATUS_OUT);
+  }
     else {
-	ur = usb_make_request(dev,0,(uint8_t *)req,0,UR_FLAG_STATUS_IN);
-	}
+  ur = usb_make_request(dev,0,(uint8_t *)req,0,UR_FLAG_STATUS_IN);
+  }
 
     res = usb_sync_request(ur);
     usb_free_request(ur);
 
-    if (res == 4) {		/* STALL */
-	usb_clear_stall(dev,pipe->up_num);
-	if (databuf) KFREE(databuf);
-	KFREE(req);
-	return 0;
-	}
+    if (res == 4) {    /* STALL */
+  usb_clear_stall(dev,pipe->up_num);
+  if (databuf) KFREE(databuf);
+  KFREE(req);
+  return 0;
+  }
 
     if (databuf) KFREE(databuf);
     KFREE(req);
@@ -883,25 +883,25 @@ int usb_std_request(usbdev_t *dev,uint8_t bmRequestType,
     *  Request a descriptor from the device.
     *  
     *  Input parameters: 
-    *  	   dev - device we're talking to
-    *  	   reqtype - bmRequestType field for descriptor we want
-    *  	   dsctype - descriptor type we want
-    *  	   dscidx - index of descriptor we want (often zero)
-    *  	   respbuf - response buffer
-    *  	   buflen - length of response buffer
-    *  	   
+    *       dev - device we're talking to
+    *       reqtype - bmRequestType field for descriptor we want
+    *       dsctype - descriptor type we want
+    *       dscidx - index of descriptor we want (often zero)
+    *       respbuf - response buffer
+    *       buflen - length of response buffer
+    *       
     *  Return value:
-    *  	   number of bytes transferred 
+    *       number of bytes transferred 
     ********************************************************************* */
 
 int usb_get_descriptor(usbdev_t *dev,uint8_t reqtype,int dsctype,int dscidx,
-		       uint8_t *respbuf,int buflen)
+           uint8_t *respbuf,int buflen)
 {
     return usb_std_request(dev,
-			   reqtype,USB_REQUEST_GET_DESCRIPTOR,
-			   USB_DESCRIPTOR_TYPEINDEX(dsctype,dscidx),
-			   0,
-			   respbuf,buflen);
+         reqtype,USB_REQUEST_GET_DESCRIPTOR,
+         USB_DESCRIPTOR_TYPEINDEX(dsctype,dscidx),
+         0,
+         respbuf,buflen);
 }
 
 /*  *********************************************************************
@@ -910,23 +910,23 @@ int usb_get_descriptor(usbdev_t *dev,uint8_t reqtype,int dsctype,int dscidx,
     *  Request a descriptor from the device.
     *  
     *  Input parameters: 
-    *  	   dev - device we're talking to
-    *  	   dscidx - index of descriptor we want
-    *  	   respbuf - response buffer
-    *  	   buflen - length of response buffer
-    *  	   
+    *       dev - device we're talking to
+    *       dscidx - index of descriptor we want
+    *       respbuf - response buffer
+    *       buflen - length of response buffer
+    *       
     *  Return value:
-    *  	   number of bytes transferred 
+    *       number of bytes transferred 
     ********************************************************************* */
 
 static int usb_get_string_descriptor(usbdev_t *dev,int dscidx,
-				     uint8_t *respbuf,int buflen)
+             uint8_t *respbuf,int buflen)
 {
     return usb_std_request(dev,
-			   USBREQ_DIR_IN,USB_REQUEST_GET_DESCRIPTOR,
-			   USB_DESCRIPTOR_TYPEINDEX(USB_STRING_DESCRIPTOR_TYPE,dscidx),
-			   0x0409,    /* Microsoft lang code for English */
-			   respbuf,buflen);
+         USBREQ_DIR_IN,USB_REQUEST_GET_DESCRIPTOR,
+         USB_DESCRIPTOR_TYPEINDEX(USB_STRING_DESCRIPTOR_TYPE,dscidx),
+         0x0409,    /* Microsoft lang code for English */
+         respbuf,buflen);
 }
 
 /*  *********************************************************************
@@ -936,13 +936,13 @@ static int usb_get_string_descriptor(usbdev_t *dev,int dscidx,
     *  unicode to ascii (brutally).
     *  
     *  Input parameters: 
-    *  	   dev - device we're talking to
-    *  	   id - string ID
-    *  	   buf - buffer to receive string (null terminated)
-    *  	   maxlen - length of buffer
-    *  	   
+    *       dev - device we're talking to
+    *       id - string ID
+    *       buf - buffer to receive string (null terminated)
+    *       maxlen - length of buffer
+    *       
     *  Return value:
-    *  	   number of characters in returned string
+    *       number of characters in returned string
     ********************************************************************* */
 
 int usb_get_string(usbdev_t *dev,int id,char *buf,int maxlen)
@@ -975,8 +975,8 @@ int usb_get_string(usbdev_t *dev,int id,char *buf,int maxlen)
     if (amtcopy <= 0) return amtcopy;
 
     for (idx = 0; idx < amtcopy; idx+=2) {
-	*buf++ = sdscr->bString[idx];
-	}
+  *buf++ = sdscr->bString[idx];
+  }
 
     *buf = '\0';
 
@@ -995,12 +995,12 @@ int usb_get_string(usbdev_t *dev,int id,char *buf,int maxlen)
     *  stages so we can find out how big the control pipe is.
     *  
     *  Input parameters: 
-    *  	   dev - device we're talking to
-    *  	   dscr - pointer to buffer to receive descriptor 
-    *  	   smallflg - TRUE to request just 8 bytes.
-    *  	   
+    *       dev - device we're talking to
+    *       dscr - pointer to buffer to receive descriptor 
+    *       smallflg - TRUE to request just 8 bytes.
+    *       
     *  Return value:
-    *  	   number of bytes copied
+    *       number of bytes copied
     ********************************************************************* */
 
 int usb_get_device_descriptor(usbdev_t *dev,usb_device_descr_t *dscr,int smallflg)
@@ -1037,13 +1037,13 @@ int usb_get_device_descriptor(usbdev_t *dev,usb_device_descr_t *dscr,int smallfl
     *  Request the configuration descriptor from the device.
     *  
     *  Input parameters: 
-    *  	   dev - device we're talking to
-    *  	   dscr - descriptor buffer (receives data from device)
-    *  	   idx - index of config we want (usually zero)
-    *  	   maxlen - total size of buffer to receive descriptor
-    *  	   
+    *       dev - device we're talking to
+    *       dscr - descriptor buffer (receives data from device)
+    *       idx - index of config we want (usually zero)
+    *       maxlen - total size of buffer to receive descriptor
+    *       
     *  Return value:
-    *  	   number of bytes copied
+    *       number of bytes copied
     ********************************************************************* */
 
 int usb_get_config_descriptor(usbdev_t *dev,usb_config_descr_t *dscr,int idx,int maxlen)
@@ -1053,8 +1053,8 @@ int usb_get_config_descriptor(usbdev_t *dev,usb_config_descr_t *dscr,int idx,int
 
     respbuf = usb_dma_alloc(maxlen);
     res = usb_get_descriptor(dev,USBREQ_DIR_IN,
-			     USB_CONFIGURATION_DESCRIPTOR_TYPE,idx,
-			     respbuf,maxlen);
+           USB_CONFIGURATION_DESCRIPTOR_TYPE,idx,
+           respbuf,maxlen);
     memcpy(dscr,respbuf,maxlen);
     KFREE(respbuf);
     return res;
@@ -1069,22 +1069,22 @@ int usb_get_config_descriptor(usbdev_t *dev,usb_config_descr_t *dscr,int idx,int
     *  Request status from the device (status descriptor)
     *  
     *  Input parameters: 
-    *  	   dev - device we're talking to
-    *  	   status - receives device_status structure
-    *  	   
+    *       dev - device we're talking to
+    *       status - receives device_status structure
+    *       
     *  Return value:
-    *  	   number of bytes returned
+    *       number of bytes returned
     ********************************************************************* */
 
 int usb_get_device_status(usbdev_t *dev,usb_device_status_t *status)
 {
     return usb_std_request(dev,
-			   USBREQ_DIR_IN,
-			   0,
-			   0,
-			   0,
-			   (uint8_t *) status,
-			   sizeof(usb_device_status_t));
+         USBREQ_DIR_IN,
+         0,
+         0,
+         0,
+         (uint8_t *) status,
+         sizeof(usb_device_status_t));
 }
 
 
@@ -1095,11 +1095,11 @@ int usb_get_device_status(usbdev_t *dev,usb_device_status_t *status)
     *  caller and call the callback if there is one.
     *  
     *  Input parameters: 
-    *  	   ur - usbreq_t to complete
-    *  	   status - completion status
-    *  	   
+    *       ur - usbreq_t to complete
+    *       status - completion status
+    *       
     *  Return value:
-    *  	   nothing
+    *       nothing
     ********************************************************************* */
 
 void usb_complete_request(usbreq_t *ur,int status)
@@ -1119,10 +1119,10 @@ void usb_complete_request(usbreq_t *ur,int status)
     *  each time a bus is configured.
     *  
     *  Input parameters: 
-    *  	   bus - bus to initialize
-    *  	   
+    *       bus - bus to initialize
+    *       
     *  Return value:
-    *  	   nothing
+    *       nothing
     ********************************************************************* */
 
 void usb_initroot(usbbus_t *bus)
@@ -1150,9 +1150,9 @@ void usb_initroot(usbbus_t *bus)
     res = usb_get_device_descriptor(dev,&(dev->ud_devdescr),TRUE);
 
     if (dev->ud_devdescr.bDeviceClass != USB_DEVICE_CLASS_HUB) {
-	printf("Error! Root device is not a hub!\n");
-	return;
-	}
+  printf("Error! Root device is not a hub!\n");
+  return;
+  }
 
     /*
      * Set up the max packet size for the control endpoint,
@@ -1176,18 +1176,18 @@ void usb_initroot(usbbus_t *bus)
      */
 
     res = usb_get_config_descriptor(dev,&cfgdescr,0,
-				    sizeof(usb_config_descr_t));
+            sizeof(usb_config_descr_t));
     if (res != sizeof(usb_config_descr_t)) {
-	printf("[a]usb_get_config_descriptor returns %d\n",res);
-	}
+  printf("[a]usb_get_config_descriptor returns %d\n",res);
+  }
 
     len = GETUSBFIELD(&cfgdescr,wTotalLength);
     buf = usb_dma_alloc(len);
 
     res = usb_get_config_descriptor(dev,(usb_config_descr_t *)buf,0,len);
     if (res != len) {
-	printf("[b]usb_get_config_descriptor returns %d\n",res);
-	}
+  printf("[b]usb_get_config_descriptor returns %d\n",res);
+  }
 
     dev->ud_cfgdescr = (usb_config_descr_t *) buf;
 
@@ -1226,12 +1226,12 @@ void usb_initroot(usbbus_t *bus)
     *  we want.
     *  
     *  Input parameters: 
-    *  	   dev - device we are talking to
-    *  	   dtype - descriptor type to find
-    *  	   idx - index of descriptor if there's more than one
-    *  	   
+    *       dev - device we are talking to
+    *       dtype - descriptor type to find
+    *       idx - index of descriptor if there's more than one
+    *       
     *  Return value:
-    *  	   pointer to descriptor or NULL if not found
+    *       pointer to descriptor or NULL if not found
     ********************************************************************* */
 
 void *usb_find_cfg_descr(usbdev_t *dev,int dtype,int idx)
@@ -1247,16 +1247,16 @@ void *usb_find_cfg_descr(usbdev_t *dev,int dtype,int idx)
 
     while (ptr < endptr) {
 
-	cfgdscr = (usb_config_descr_t *) ptr;
+  cfgdscr = (usb_config_descr_t *) ptr;
 
-	if (cfgdscr->bDescriptorType == dtype) {
-	    if (idx == 0) return (void *) ptr;
-	    else idx--;
-	    }
+  if (cfgdscr->bDescriptorType == dtype) {
+      if (idx == 0) return (void *) ptr;
+      else idx--;
+      }
 
-	ptr += cfgdscr->bLength;
+  ptr += cfgdscr->bLength;
 
-	}
+  }
 
     return NULL;
 }

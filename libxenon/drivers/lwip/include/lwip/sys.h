@@ -293,7 +293,7 @@ void sys_arch_unprotect(sys_prot_t pval);
                                 SYS_ARCH_PROTECT(old_level); \
                                 var += val; \
                                 SYS_ARCH_UNPROTECT(old_level); \
-                              } while(0)
+                              } while (0)
 #endif /* SYS_ARCH_INC */
 
 #ifndef SYS_ARCH_DEC
@@ -302,7 +302,7 @@ void sys_arch_unprotect(sys_prot_t pval);
                                 SYS_ARCH_PROTECT(old_level); \
                                 var -= val; \
                                 SYS_ARCH_UNPROTECT(old_level); \
-                              } while(0)
+                              } while (0)
 #endif /* SYS_ARCH_DEC */
 
 #ifndef SYS_ARCH_GET
@@ -311,7 +311,7 @@ void sys_arch_unprotect(sys_prot_t pval);
                                 SYS_ARCH_PROTECT(old_level); \
                                 ret = var; \
                                 SYS_ARCH_UNPROTECT(old_level); \
-                              } while(0)
+                              } while (0)
 #endif /* SYS_ARCH_GET */
 
 #ifndef SYS_ARCH_SET
@@ -320,7 +320,7 @@ void sys_arch_unprotect(sys_prot_t pval);
                                 SYS_ARCH_PROTECT(old_level); \
                                 var = val; \
                                 SYS_ARCH_UNPROTECT(old_level); \
-                              } while(0)
+                              } while (0)
 #endif /* SYS_ARCH_SET */
 
 

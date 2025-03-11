@@ -1,7 +1,7 @@
 /*  *********************************************************************
     *  Broadcom Common Firmware Environment (CFE)
     *  
-    *  Local memory manager			File: mempool.h
+    *  Local memory manager      File: mempool.h
     *  
     *  This routine is used to manage memory allocated within the 
     *  firmware.  You give it a chunk of memory to manage, and then
@@ -63,17 +63,17 @@ typedef enum { memnode_free = 0, memnode_alloc } memnode_status_t;
 
 typedef struct memnode_s {
     unsigned int seal;
-    struct memnode_s *next;		/* pointer to next node */
-    unsigned int length;		/* length of the entire data section */
-    memnode_status_t status;		/* alloc/free status */
-    unsigned char *data;		/* points to actual user data */
-    void *memnodeptr;			/* memnode back pointer (see comments) */
+    struct memnode_s *next;    /* pointer to next node */
+    unsigned int length;    /* length of the entire data section */
+    memnode_status_t status;    /* alloc/free status */
+    unsigned char *data;    /* points to actual user data */
+    void *memnodeptr;      /* memnode back pointer (see comments) */
 } memnode_t;
 
 struct mempool_s {
-    memnode_t *root;			/* pointer to root node */
-    unsigned char *base;		/* base of memory region */
-    unsigned int length;		/* size of memory region */
+    memnode_t *root;      /* pointer to root node */
+    unsigned char *base;    /* base of memory region */
+    unsigned int length;    /* size of memory region */
 };
 
 typedef struct mempool_s mempool_t;

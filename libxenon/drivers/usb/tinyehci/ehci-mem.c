@@ -20,7 +20,7 @@
 
 
 static inline void ehci_qtd_init(struct ehci_qtd *qtd
-        			  )
+                )
 {
         dma_addr_t dma = ehci_virt_to_dma(qtd);
         memset (qtd, 0, sizeof *qtd);
@@ -33,7 +33,7 @@ static inline struct ehci_qtd * ehci_qtd_alloc(struct ehci_hcd * ehci)
 {
         struct ehci_qtd *qtd ;
         //debug_printf("ehci_qtd used=%x\n",ehci->qtd_used);
-        if(ehci->qtd_used>=EHCI_MAX_QTD) return NULL;
+        if (ehci->qtd_used>=EHCI_MAX_QTD) return NULL;
         qtd = ehci->qtds[ehci->qtd_used++];
         ehci_qtd_init(qtd);
         return qtd;
@@ -47,7 +47,7 @@ int ehci_mem_init (struct ehci_hcd * ehci)
         ehci->periodic_dma = ehci_virt_to_dma(ehci->periodic);
 
         for (i = 0; i < DEFAULT_I_TDPS; i++)
-        	ehci->periodic [i] = EHCI_LIST_END();
+          ehci->periodic [i] = EHCI_LIST_END();
         ehci_writel(ehci->periodic_dma, &ehci->regs->frame_list);
 #else
         debug_printf("ehci periodic:%x\n",ehci_readl(ehci,  &ehci->regs->frame_list));

@@ -1,7 +1,7 @@
 /*  *********************************************************************
     *  Broadcom Common Firmware Environment (CFE)
     *  
-    *  USB debugging code			File: usbdebug.c
+    *  USB debugging code      File: usbdebug.c
     *  
     *  This module contains debug code for USB.
     *  
@@ -96,13 +96,13 @@ static char *getstringmaybe(usbdev_t *dev,unsigned int string)
     static char buf[256];
 
     if (string == 0) {
-	strcpy(buf,"");
-	return buf;
-	}
+  strcpy(buf,"");
+  return buf;
+  }
     else {
-	memset(buf,0,sizeof(buf));
-	usb_get_string(dev,string,buf,sizeof(buf));
-	}
+  memset(buf,0,sizeof(buf));
+  usb_get_string(dev,string,buf,sizeof(buf));
+  }
 
     return buf;
 }
@@ -123,143 +123,143 @@ void usb_dbg_dumpdescriptors(usbdev_t *dev,uint8_t *ptr,int len)
 
     while (ptr < endptr) {
 
-	cfgdscr = (usb_config_descr_t *) ptr;
+  cfgdscr = (usb_config_descr_t *) ptr;
 
-	switch (cfgdscr->bDescriptorType) {
-	    case USB_DEVICE_DESCRIPTOR_TYPE:
-		devdscr = (usb_device_descr_t *) ptr;
-		printf("---------------------------------------------------\n");
-		printf("DEVICE DESCRIPTOR\n");
-		printf("bLength         = %d\n",devdscr->bLength);
-		printf("bDescriptorType = %d\n",devdscr->bDescriptorType);
-		printf("bcdUSB          = %04X\n",GETUSBFIELD(devdscr,bcdUSB));
-		printf("bDeviceClass    = %d\n",devdscr->bDeviceClass);
-		printf("bDeviceSubClass = %d\n",devdscr->bDeviceSubClass);
-		printf("bDeviceProtocol = %d\n",devdscr->bDeviceProtocol);
-		printf("bMaxPktSize0    = %d\n",devdscr->bMaxPacketSize0);
-		if (endptr-ptr <= 8) break;
-		printf("idVendor        = %04X (%d)\n",
-		       GETUSBFIELD(devdscr,idVendor),
-		       GETUSBFIELD(devdscr,idVendor));
-		printf("idProduct       = %04X (%d)\n",
-		       GETUSBFIELD(devdscr,idProduct),
-		       GETUSBFIELD(devdscr,idProduct));
-		printf("bcdDevice       = %04X\n",GETUSBFIELD(devdscr,bcdDevice));
-		printf("iManufacturer   = %d (%s)\n",
-		       devdscr->iManufacturer,
-		       getstringmaybe(dev,devdscr->iManufacturer));
-		printf("iProduct        = %d (%s)\n",
-		       devdscr->iProduct,
-		       getstringmaybe(dev,devdscr->iProduct));
-		printf("iSerialNumber   = %d (%s)\n",
-		       devdscr->iSerialNumber,
-		       getstringmaybe(dev,devdscr->iSerialNumber));
-		printf("bNumConfigs     = %d\n",devdscr->bNumConfigurations);
-		break;
+  switch (cfgdscr->bDescriptorType) {
+      case USB_DEVICE_DESCRIPTOR_TYPE:
+    devdscr = (usb_device_descr_t *) ptr;
+    printf("---------------------------------------------------\n");
+    printf("DEVICE DESCRIPTOR\n");
+    printf("bLength         = %d\n",devdscr->bLength);
+    printf("bDescriptorType = %d\n",devdscr->bDescriptorType);
+    printf("bcdUSB          = %04X\n",GETUSBFIELD(devdscr,bcdUSB));
+    printf("bDeviceClass    = %d\n",devdscr->bDeviceClass);
+    printf("bDeviceSubClass = %d\n",devdscr->bDeviceSubClass);
+    printf("bDeviceProtocol = %d\n",devdscr->bDeviceProtocol);
+    printf("bMaxPktSize0    = %d\n",devdscr->bMaxPacketSize0);
+    if (endptr-ptr <= 8) break;
+    printf("idVendor        = %04X (%d)\n",
+           GETUSBFIELD(devdscr,idVendor),
+           GETUSBFIELD(devdscr,idVendor));
+    printf("idProduct       = %04X (%d)\n",
+           GETUSBFIELD(devdscr,idProduct),
+           GETUSBFIELD(devdscr,idProduct));
+    printf("bcdDevice       = %04X\n",GETUSBFIELD(devdscr,bcdDevice));
+    printf("iManufacturer   = %d (%s)\n",
+           devdscr->iManufacturer,
+           getstringmaybe(dev,devdscr->iManufacturer));
+    printf("iProduct        = %d (%s)\n",
+           devdscr->iProduct,
+           getstringmaybe(dev,devdscr->iProduct));
+    printf("iSerialNumber   = %d (%s)\n",
+           devdscr->iSerialNumber,
+           getstringmaybe(dev,devdscr->iSerialNumber));
+    printf("bNumConfigs     = %d\n",devdscr->bNumConfigurations);
+    break;
 
-	    case USB_CONFIGURATION_DESCRIPTOR_TYPE:
-		cfgdscr = (usb_config_descr_t *) ptr;
-		printf("---------------------------------------------------\n");
-		printf("CONFIG DESCRIPTOR\n");
+      case USB_CONFIGURATION_DESCRIPTOR_TYPE:
+    cfgdscr = (usb_config_descr_t *) ptr;
+    printf("---------------------------------------------------\n");
+    printf("CONFIG DESCRIPTOR\n");
 
-		printf("bLength         = %d\n",cfgdscr->bLength);
-		printf("bDescriptorType = %d\n",cfgdscr->bDescriptorType);
-		printf("wTotalLength    = %d\n",GETUSBFIELD(cfgdscr,wTotalLength));
-		printf("bNumInterfaces  = %d\n",cfgdscr->bNumInterfaces);
-		printf("bConfigValue    = %d\n",cfgdscr->bConfigurationValue);
-		printf("iConfiguration  = %d (%s)\n",
-		       cfgdscr->iConfiguration,
-		       getstringmaybe(dev,cfgdscr->iConfiguration));
-		printf("bmAttributes    = %02X\n",cfgdscr->bmAttributes);
-		printf("MaxPower        = %d (%dma)\n",cfgdscr->MaxPower,cfgdscr->MaxPower*2);
-		break;
+    printf("bLength         = %d\n",cfgdscr->bLength);
+    printf("bDescriptorType = %d\n",cfgdscr->bDescriptorType);
+    printf("wTotalLength    = %d\n",GETUSBFIELD(cfgdscr,wTotalLength));
+    printf("bNumInterfaces  = %d\n",cfgdscr->bNumInterfaces);
+    printf("bConfigValue    = %d\n",cfgdscr->bConfigurationValue);
+    printf("iConfiguration  = %d (%s)\n",
+           cfgdscr->iConfiguration,
+           getstringmaybe(dev,cfgdscr->iConfiguration));
+    printf("bmAttributes    = %02X\n",cfgdscr->bmAttributes);
+    printf("MaxPower        = %d (%dma)\n",cfgdscr->MaxPower,cfgdscr->MaxPower*2);
+    break;
 
-	    case USB_INTERFACE_DESCRIPTOR_TYPE:
-		printf("---------------------------------------------------\n");
-		printf("INTERFACE DESCRIPTOR\n");
+      case USB_INTERFACE_DESCRIPTOR_TYPE:
+    printf("---------------------------------------------------\n");
+    printf("INTERFACE DESCRIPTOR\n");
 
-		ifdscr = (usb_interface_descr_t *) ptr;
+    ifdscr = (usb_interface_descr_t *) ptr;
 
-		printf("bLength         = %d\n",ifdscr->bLength);
-		printf("bDescriptorType = %d\n",ifdscr->bDescriptorType);
-		printf("bInterfaceNum   = %d\n",ifdscr->bInterfaceNumber);
-		printf("bAlternateSet   = %d\n",ifdscr->bAlternateSetting);
-		printf("bNumEndpoints   = %d\n",ifdscr->bNumEndpoints);
-		printf("bInterfaceClass = %d\n",ifdscr->bInterfaceClass);
-		printf("bInterSubClass  = %d\n",ifdscr->bInterfaceSubClass);
-		printf("bInterfaceProto = %d\n",ifdscr->bInterfaceProtocol);
-		printf("iInterface      = %d (%s)\n",
-		       ifdscr->iInterface,
-		       getstringmaybe(dev,ifdscr->iInterface));
-		break;
+    printf("bLength         = %d\n",ifdscr->bLength);
+    printf("bDescriptorType = %d\n",ifdscr->bDescriptorType);
+    printf("bInterfaceNum   = %d\n",ifdscr->bInterfaceNumber);
+    printf("bAlternateSet   = %d\n",ifdscr->bAlternateSetting);
+    printf("bNumEndpoints   = %d\n",ifdscr->bNumEndpoints);
+    printf("bInterfaceClass = %d\n",ifdscr->bInterfaceClass);
+    printf("bInterSubClass  = %d\n",ifdscr->bInterfaceSubClass);
+    printf("bInterfaceProto = %d\n",ifdscr->bInterfaceProtocol);
+    printf("iInterface      = %d (%s)\n",
+           ifdscr->iInterface,
+           getstringmaybe(dev,ifdscr->iInterface));
+    break;
 
-	    case USB_ENDPOINT_DESCRIPTOR_TYPE:
-		printf("---------------------------------------------------\n");
-		printf("ENDPOINT DESCRIPTOR\n");
+      case USB_ENDPOINT_DESCRIPTOR_TYPE:
+    printf("---------------------------------------------------\n");
+    printf("ENDPOINT DESCRIPTOR\n");
 
-		epdscr = (usb_endpoint_descr_t *) ptr;
+    epdscr = (usb_endpoint_descr_t *) ptr;
 
-		printf("bLength         = %d\n",epdscr->bLength);
-		printf("bDescriptorType = %d\n",epdscr->bDescriptorType);
-		printf("bEndpointAddr   = %02X (%d,%s)\n",
-		       epdscr->bEndpointAddress,
-		       epdscr->bEndpointAddress & 0x0F,
-		       (epdscr->bEndpointAddress & USB_ENDPOINT_DIRECTION_IN) ? "IN" : "OUT"
-		       );
-		printf("bmAttrbutes     = %02X (%s)\n",
-		       epdscr->bmAttributes,
-		       eptattribs[epdscr->bmAttributes&3]);
-		printf("wMaxPacketSize  = %d\n",GETUSBFIELD(epdscr,wMaxPacketSize));
-		printf("bInterval       = %d\n",epdscr->bInterval);
-		break;
-		
-	    case USB_HID_DESCRIPTOR_TYPE:
-		printf("---------------------------------------------------\n");
-		printf("HID DESCRIPTOR\n");
+    printf("bLength         = %d\n",epdscr->bLength);
+    printf("bDescriptorType = %d\n",epdscr->bDescriptorType);
+    printf("bEndpointAddr   = %02X (%d,%s)\n",
+           epdscr->bEndpointAddress,
+           epdscr->bEndpointAddress & 0x0F,
+           (epdscr->bEndpointAddress & USB_ENDPOINT_DIRECTION_IN) ? "IN" : "OUT"
+           );
+    printf("bmAttrbutes     = %02X (%s)\n",
+           epdscr->bmAttributes,
+           eptattribs[epdscr->bmAttributes&3]);
+    printf("wMaxPacketSize  = %d\n",GETUSBFIELD(epdscr,wMaxPacketSize));
+    printf("bInterval       = %d\n",epdscr->bInterval);
+    break;
+    
+      case USB_HID_DESCRIPTOR_TYPE:
+    printf("---------------------------------------------------\n");
+    printf("HID DESCRIPTOR\n");
 
-		hiddscr = (usb_hid_descr_t *) ptr;
+    hiddscr = (usb_hid_descr_t *) ptr;
 
-		printf("bLength         = %d\n",hiddscr->bLength);
-		printf("bDescriptorType = %d\n",hiddscr->bDescriptorType);
-		printf("bcdHID          = %04X\n",GETUSBFIELD(hiddscr,bcdHID));
-		printf("bCountryCode    = %d\n",hiddscr->bCountryCode);
-		printf("bNumDescriptors = %d\n",hiddscr->bNumDescriptors);
-		printf("bClassDescrType = %d\n",hiddscr->bClassDescrType);
-		printf("wClassDescrLen  = %d\n",GETUSBFIELD(hiddscr,wClassDescrLength));
-		break;
+    printf("bLength         = %d\n",hiddscr->bLength);
+    printf("bDescriptorType = %d\n",hiddscr->bDescriptorType);
+    printf("bcdHID          = %04X\n",GETUSBFIELD(hiddscr,bcdHID));
+    printf("bCountryCode    = %d\n",hiddscr->bCountryCode);
+    printf("bNumDescriptors = %d\n",hiddscr->bNumDescriptors);
+    printf("bClassDescrType = %d\n",hiddscr->bClassDescrType);
+    printf("wClassDescrLen  = %d\n",GETUSBFIELD(hiddscr,wClassDescrLength));
+    break;
 
-	    case USB_HUB_DESCRIPTOR_TYPE:
-		printf("---------------------------------------------------\n");
-		printf("HUB DESCRIPTOR\n");
+      case USB_HUB_DESCRIPTOR_TYPE:
+    printf("---------------------------------------------------\n");
+    printf("HUB DESCRIPTOR\n");
 
-		hubdscr = (usb_hub_descr_t *) ptr;
+    hubdscr = (usb_hub_descr_t *) ptr;
 
-		printf("bLength         = %d\n",hubdscr->bDescriptorLength);
-		printf("bDescriptorType = %d\n",hubdscr->bDescriptorType);
-		printf("bNumberOfPorts  = %d\n",hubdscr->bNumberOfPorts);
-		printf("wHubCharacters  = %04X\n",GETUSBFIELD(hubdscr,wHubCharacteristics));
-		printf("bPowerOnToPwrGd = %d\n",hubdscr->bPowerOnToPowerGood);
-		printf("bHubControlCurr = %d (ma)\n",hubdscr->bHubControlCurrent);
-		printf("bRemPwerMask[0] = %02X\n",hubdscr->bRemoveAndPowerMask[0]);
+    printf("bLength         = %d\n",hubdscr->bDescriptorLength);
+    printf("bDescriptorType = %d\n",hubdscr->bDescriptorType);
+    printf("bNumberOfPorts  = %d\n",hubdscr->bNumberOfPorts);
+    printf("wHubCharacters  = %04X\n",GETUSBFIELD(hubdscr,wHubCharacteristics));
+    printf("bPowerOnToPwrGd = %d\n",hubdscr->bPowerOnToPowerGood);
+    printf("bHubControlCurr = %d (ma)\n",hubdscr->bHubControlCurrent);
+    printf("bRemPwerMask[0] = %02X\n",hubdscr->bRemoveAndPowerMask[0]);
 
-		break;
+    break;
 
-	    default:
-		printf("---------------------------------------------------\n");
-		printf("UNKNOWN DESCRIPTOR\n");
-		printf("bLength         = %d\n",cfgdscr->bLength);
-		printf("bDescriptorType = %d\n",cfgdscr->bDescriptorType);
-		printf("Data Bytes      = ");
-		for (idx = 0; idx < cfgdscr->bLength; idx++) {
-		    printf("%02X ",ptr[idx]);
-		    }
-		printf("\n");
+      default:
+    printf("---------------------------------------------------\n");
+    printf("UNKNOWN DESCRIPTOR\n");
+    printf("bLength         = %d\n",cfgdscr->bLength);
+    printf("bDescriptorType = %d\n",cfgdscr->bDescriptorType);
+    printf("Data Bytes      = ");
+    for (idx = 0; idx < cfgdscr->bLength; idx++) {
+        printf("%02X ",ptr[idx]);
+        }
+    printf("\n");
 
-	    }
+      }
 
-	ptr += cfgdscr->bLength;
+  ptr += cfgdscr->bLength;
 
-	}
+  }
 }
 
 
@@ -275,17 +275,17 @@ void usb_dbg_dumpcfgdescr(usbdev_t *dev,unsigned int index)
     cfgdscr = (usb_config_descr_t *) &buffer[0];
 
     res = usb_get_config_descriptor(dev,cfgdscr,index,
-				    sizeof(usb_config_descr_t));
+            sizeof(usb_config_descr_t));
     if (res != sizeof(usb_config_descr_t)) {
-	printf("[a] usb_get_config_descriptor returns %d\n",res);
-	}
+  printf("[a] usb_get_config_descriptor returns %d\n",res);
+  }
 
     len = GETUSBFIELD(cfgdscr,wTotalLength);
 
     res = usb_get_config_descriptor(dev,cfgdscr,0,len);
     if (res != len) {
-	printf("[b] usb_get_config_descriptor returns %d\n",res);
-	}
+  printf("[b] usb_get_config_descriptor returns %d\n",res);
+  }
 
     usb_dbg_dumpdescriptors(dev,&buffer[0],res);
 }
@@ -299,25 +299,25 @@ void usb_dbg_dumpdevice(usbdev_t *dev)
 
     printf("Device %d\n", dev->ud_address);
     printf(" Vendor: %s (%04x)\n",getstringmaybe(dev,devdscr->iManufacturer),
-	   GETUSBFIELD(devdscr, idVendor));
+     GETUSBFIELD(devdscr, idVendor));
     printf(" Product: %s (%04x)\n",getstringmaybe(dev,devdscr->iProduct),
-	   GETUSBFIELD(devdscr, idProduct));
+     GETUSBFIELD(devdscr, idProduct));
 
     usb_dbg_dumpdescriptors(dev,(uint8_t *)devdscr,sizeof(usb_device_descr_t));
 
     for (i = 0; i < devdscr->bNumConfigurations; i++) {
-	usb_dbg_dumpcfgdescr(dev,i);
-	}
+  usb_dbg_dumpcfgdescr(dev,i);
+  }
 }
 
 
 void usb_dbg_showdevice(usbdev_t *dev)
 {
     printf("USB bus %d device %d: vendor %04X product %04X class %d  [%s]\n",
-	   dev->ud_bus->ub_num, dev->ud_address,
-	   GETUSBFIELD(&(dev->ud_devdescr), idVendor),
-	   GETUSBFIELD(&(dev->ud_devdescr), idProduct),
-	   dev->ud_devdescr.bDeviceClass,
-	   (IS_HUB(dev) ? "HUB" : "DEVICE"));
+     dev->ud_bus->ub_num, dev->ud_address,
+     GETUSBFIELD(&(dev->ud_devdescr), idVendor),
+     GETUSBFIELD(&(dev->ud_devdescr), idProduct),
+     dev->ud_devdescr.bDeviceClass,
+     (IS_HUB(dev) ? "HUB" : "DEVICE"));
 }
 

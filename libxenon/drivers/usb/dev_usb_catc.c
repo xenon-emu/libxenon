@@ -1,7 +1,7 @@
 /*  *********************************************************************
     *  Broadcom Common Firmware Environment (CFE)
     *  
-    *  USB Ethernet				File: dev_usb_catc.c
+    *  USB Ethernet        File: dev_usb_catc.c
     *  
     *  Driver for USB Ethernet devices using the CATC Netmate chip.
     *  
@@ -57,7 +57,7 @@
 #define USBETH_TRACE( x, y ... ) ((void)0)
 #endif
 
-#define FAIL				-1
+#define FAIL        -1
 
 #define CACHE_ALIGN    32       /* XXX place holder, big enough to now. */
 #define ALIGN(n,align) (((n)+((align)-1)) & ~((align)-1))
@@ -83,11 +83,11 @@ static void hexdump( unsigned char *src, int srclen, int rowlen, int rows )
     srcstp = src + srclen;
 
     for( rowptr = src; rowptr < src + rowlen * rows; rowptr += rowlen ) {
-	for( byteptr = rowptr; byteptr < rowptr + rowlen && byteptr < srcstp; byteptr++ ) {
-	    xprintf( "%2X ", *byteptr );
-	    }
-	xprintf( "\n" );
-	}
+  for( byteptr = rowptr; byteptr < rowptr + rowlen && byteptr < srcstp; byteptr++ ) {
+      xprintf( "%2X ", *byteptr );
+      }
+  xprintf( "\n" );
+  }
     xprintf( "\n" );
 }
 #else
@@ -105,8 +105,8 @@ static const char *VENDOR_NAMES[] = {
 };
 
 static const int ID_TBL[] = {
-    0x0423, 0x000a, CATC_NM,		/* CATC (Netmate I) */
-    0x0423, 0x000c, BELKIN_CATC,	/* Belkin/CATC (Netmate II) */
+    0x0423, 0x000a, CATC_NM,    /* CATC (Netmate I) */
+    0x0423, 0x000c, BELKIN_CATC,  /* Belkin/CATC (Netmate II) */
     -1
 };
 
@@ -141,27 +141,27 @@ static usbeth_disp_t usbeth_catc = {
 static int catc_get_reg( usbdev_t *dev, int16_t reg, uint8_t *val )
 {
     return usb_std_request( dev, (USBREQ_TYPE_VENDOR | USBREQ_DIR_IN),
-			    CATC_GET_REG, 0, reg, val, 1 );
+          CATC_GET_REG, 0, reg, val, 1 );
 }
 #endif
 
 static int catc_set_reg( usbdev_t *dev, int16_t reg, int16_t val )
 {
     return usb_std_request( dev, (USBREQ_TYPE_VENDOR | USBREQ_DIR_OUT),
-			    CATC_SET_REG, val, reg, NULL, 0 );
+          CATC_SET_REG, val, reg, NULL, 0 );
 }
 
 static int catc_set_mem( usbdev_t *dev, int16_t addr,
-			 uint8_t *data, int16_t len )
+       uint8_t *data, int16_t len )
 {
     return usb_std_request( dev, (USBREQ_TYPE_VENDOR | USBREQ_DIR_OUT),
-			    CATC_SET_MEM, 0, addr, data, len );
+          CATC_SET_MEM, 0, addr, data, len );
 }
 
 static int catc_get_mac_addr( usbdev_t *dev, uint8_t *mac_addr )
 {
     return usb_std_request( dev, (USBREQ_TYPE_VENDOR | USBREQ_DIR_IN),
-			      CATC_GET_MAC_ADDR, 0, 0, mac_addr, 6 );
+            CATC_GET_MAC_ADDR, 0, 0, mac_addr, 6 );
 }
 
 static int catc_init_device( catc_softc_t *softc )
@@ -178,22 +178,22 @@ static int catc_init_device( catc_softc_t *softc )
     vendor_id = (dev_desc.idVendorHigh  << 8) + dev_desc.idVendorLow;
     product_id = (dev_desc.idProductHigh << 8) + dev_desc.idProductLow;
 
-    while( *ptr != -1 )	{
-	if( (vendor_id == ptr[0]) && (product_id == ptr[1]) ) {
-	    softc->ven_code = ptr[2];
-	    break;
-	    }
-	ptr += 3;
-	}
-    if( *ptr == -1 ) {
-	xprintf( "Unrecognized CATC USB-Ethernet device\n" );
-	return -1;
-	}
+    while ( *ptr != -1 )  {
+  if ( (vendor_id == ptr[0]) && (product_id == ptr[1]) ) {
+      softc->ven_code = ptr[2];
+      break;
+      }
+  ptr += 3;
+  }
+    if ( *ptr == -1 ) {
+  xprintf( "Unrecognized CATC USB-Ethernet device\n" );
+  return -1;
+  }
 
     usb_std_request( dev, (USBREQ_TYPE_STD | USBREQ_REC_INTERFACE),
-		     USB_REQUEST_SET_INTERFACE,
-		     1,         /* alt setting 1 */
-		     0, NULL, 0 );
+         USB_REQUEST_SET_INTERFACE,
+         1,         /* alt setting 1 */
+         0, NULL, 0 );
 
     catc_set_reg(dev, CATC_TX_BUF_CNT_REG, 0x04 );
     catc_set_reg(dev, CATC_RX_BUF_CNT_REG, 0x10 );
@@ -212,7 +212,7 @@ static int catc_init_device( catc_softc_t *softc )
 
     /* display adapter info */
     xprintf( "%s USB-Ethernet Adapter (%a)\n",
-	     VENDOR_NAMES[softc->ven_code], softc->mac_addr);
+       VENDOR_NAMES[softc->ven_code], softc->mac_addr);
 
     return 0;
 }
@@ -227,8 +227,8 @@ static int catc_get_dev_addr( void *ctx, hsaddr_t mac_addr )
 static void catc_queue_rx( catc_softc_t *softc )
 {
     softc->rx_ur = usb_make_request(softc->dev, softc->bulk_inpipe,
-				    softc->rxbuf, sizeof(softc->rxbuf),
-				    (UR_FLAG_IN | UR_FLAG_SHORTOK));
+            softc->rxbuf, sizeof(softc->rxbuf),
+            (UR_FLAG_IN | UR_FLAG_SHORTOK));
     usb_queue_request(softc->rx_ur);
 }
 
@@ -245,21 +245,21 @@ static int catc_get_eth_frame( void  *ctx, hsaddr_t buf )
     int len = 0;
     uint8_t *rxbuf;
 
-    if( !softc->rx_ur->ur_inprogress ) {
-	rxbuf = softc->rxbuf;
-	len = softc->rx_ur->ur_xferred;
-	if (len > 0) {
+    if ( !softc->rx_ur->ur_inprogress ) {
+  rxbuf = softc->rxbuf;
+  len = softc->rx_ur->ur_xferred;
+  if (len > 0) {
 #if CATC_DEBUG
-	    xprintf( "Incoming packet :\n" );
-	    hexdump( rxbuf, len, 16, len / 16 + 1 );
+      xprintf( "Incoming packet :\n" );
+      hexdump( rxbuf, len, 16, len / 16 + 1 );
 #endif
-	    hs_memcpy_to_hs( buf, rxbuf, len );
-	    }
-	usb_free_request(softc->rx_ur);
-	catc_queue_rx( softc );
-	}
+      hs_memcpy_to_hs( buf, rxbuf, len );
+      }
+  usb_free_request(softc->rx_ur);
+  catc_queue_rx( softc );
+  }
     else
-	xprintf( "Bulk data is not available yet!\n" );
+  xprintf( "Bulk data is not available yet!\n" );
 
     return( len );
 }
@@ -281,7 +281,7 @@ static int catc_send_eth_frame( void *ctx, hsaddr_t buf, int len )
     hexdump( txbuf, txlen, 16, txlen / 16 + 1 );
 #endif
     ur = usb_make_request(softc->dev, softc->bulk_outpipe,
-	                      txbuf, txlen, UR_FLAG_OUT);
+                        txbuf, txlen, UR_FLAG_OUT);
     usb_sync_request(ur);
     usb_free_request(ur);
     usb_dma_free(txbuf);
@@ -294,7 +294,7 @@ static void catc_open_device( catc_softc_t *softc )
     int i;
 
     for(i = 0; i < 6; ++i)
-	catc_set_reg( softc->dev, (CATC_ETH_ADDR_0_REG - i), softc->mac_addr[i] );
+  catc_set_reg( softc->dev, (CATC_ETH_ADDR_0_REG - i), softc->mac_addr[i] );
 
     /* Enable adapter to receive packets */
     catc_set_reg( softc->dev, CATC_ETH_CTRL_REG, 0x09 );
@@ -331,7 +331,7 @@ static void catc_close_device( catc_softc_t *softc )
     *      0
     ********************************************************************* */
 
-const cfe_driver_t usbcatcdrv;		/* forward declaration */
+const cfe_driver_t usbcatcdrv;    /* forward declaration */
 
 static int catc_attach(usbdev_t *dev, usb_driver_t *drv)
 {
@@ -346,43 +346,43 @@ static int catc_attach(usbdev_t *dev, usb_driver_t *drv)
     dev->ud_drv = drv;
 
     softc = (catc_softc_t *) KMALLOC( sizeof(catc_softc_t), 0 );
-    if( softc == NULL )	{
-	xprintf( "Failed to allocate softc memory.\n" );
-	return -1;
-	}
+    if ( softc == NULL )  {
+  xprintf( "Failed to allocate softc memory.\n" );
+  return -1;
+  }
     memset( softc, 0, sizeof(catc_softc_t) );
     dev->ud_private = softc;
     softc->dev = dev;
 
     ifdscr = usb_find_cfg_descr(dev,USB_INTERFACE_DESCRIPTOR_TYPE,0);
     if (ifdscr == NULL) {
-	xprintf("USBETH: ERROR...no interace descriptor\n");
-	return -1;
-	}
+  xprintf("USBETH: ERROR...no interace descriptor\n");
+  return -1;
+  }
 
     for (idx = 0; idx < 2; idx++) {
-	epdscr = usb_find_cfg_descr(dev,USB_ENDPOINT_DESCRIPTOR_TYPE,idx);
-	if (USB_ENDPOINT_DIR_OUT(epdscr->bEndpointAddress))
-	    outdscr = epdscr;
-	else
-	    indscr = epdscr;
-	}
+  epdscr = usb_find_cfg_descr(dev,USB_ENDPOINT_DESCRIPTOR_TYPE,idx);
+  if (USB_ENDPOINT_DIR_OUT(epdscr->bEndpointAddress))
+      outdscr = epdscr;
+  else
+      indscr = epdscr;
+  }
 
     if (!indscr || !outdscr) {
-	/*
-	 * Could not get descriptors, something is very wrong.
-	 * Leave device addressed but not configured.
-	 */
-	xprintf("USBETH: ERROR...no endpoint descriptors\n");
-	return -1;
-	}
+  /*
+   * Could not get descriptors, something is very wrong.
+   * Leave device addressed but not configured.
+   */
+  xprintf("USBETH: ERROR...no endpoint descriptors\n");
+  return -1;
+  }
 
     /* Choose the standard configuration. */
     usb_set_configuration(dev,cfgdscr->bConfigurationValue);
 
     /* Quit if not able to initialize the device */
     if (catc_init_device(softc) < 0)
-	return -1;
+  return -1;
 
     /* Open the pipes. */
     softc->bulk_inpipe     = usb_open_pipe(dev,indscr);
@@ -417,12 +417,12 @@ static int catc_detach(usbdev_t *dev)
     catc_softc_t *softc = (catc_softc_t *) dev->ud_private;
 
     if (softc != NULL) {
-	usbeth_unregister( softc );
-	catc_close_device ( softc );
-	dev->ud_private = NULL;
-	softc->dev = NULL;
-	KFREE(softc);
-	}
+  usbeth_unregister( softc );
+  catc_close_device ( softc );
+  dev->ud_private = NULL;
+  softc->dev = NULL;
+  KFREE(softc);
+  }
 
     return 0;
 }
@@ -446,7 +446,7 @@ static int catc_ether_open(cfe_devctx_t *ctx)
     catc_softc_t *softc = (catc_softc_t *) ctx->dev_softc;
 
     if (softc->dev == NULL)
-	return CFE_ERR_NOTREADY;
+  return CFE_ERR_NOTREADY;
 
     USBETH_TRACE( "%s called.\n", __FUNCTION__ );
     catc_open_device( softc );
@@ -459,7 +459,7 @@ static int catc_ether_read( cfe_devctx_t *ctx, iocb_buffer_t *buffer )
     catc_softc_t *softc = (catc_softc_t *) ctx->dev_softc;
 
     if (softc->dev == NULL)
-	return CFE_ERR_NOTREADY;
+  return CFE_ERR_NOTREADY;
 
     buffer->buf_retlen = catc_get_eth_frame( softc, buffer->buf_ptr );
 
@@ -472,7 +472,7 @@ static int catc_ether_inpstat( cfe_devctx_t *ctx, iocb_inpstat_t *inpstat )
     catc_softc_t *softc = (catc_softc_t *) ctx->dev_softc;
 
     if (softc->dev == NULL)
-	return CFE_ERR_NOTREADY;
+  return CFE_ERR_NOTREADY;
 
     inpstat->inp_status = catc_data_rx( softc );
     return 0;
@@ -484,7 +484,7 @@ static int catc_ether_write(cfe_devctx_t *ctx,iocb_buffer_t *buffer)
     catc_softc_t *softc = (catc_softc_t *) ctx->dev_softc;
 
     if (softc->dev == NULL)
-	return CFE_ERR_NOTREADY;
+  return CFE_ERR_NOTREADY;
 
     /* Block until hw notifies you data is sent. */
     catc_send_eth_frame( softc, buffer->buf_ptr, buffer->buf_length );
@@ -499,42 +499,42 @@ static int catc_ether_ioctl(cfe_devctx_t *ctx,iocb_buffer_t *buffer)
     int retval = 0;
 
     if (softc->dev == NULL)
-	return CFE_ERR_NOTREADY;
+  return CFE_ERR_NOTREADY;
 
     switch( (int)buffer->buf_ioctlcmd ) {
-	case IOCTL_ETHER_GETHWADDR:
-	    USBETH_TRACE( "IOCTL_ETHER_GETHWADDR called.\n" );
-	    catc_get_dev_addr( softc, buffer->buf_ptr );
-	    break;
-	case IOCTL_ETHER_SETHWADDR:
-	    xprintf( "IOCTL_ETHER_SETHWADDR not implemented.\n" );
-	    break;
+  case IOCTL_ETHER_GETHWADDR:
+      USBETH_TRACE( "IOCTL_ETHER_GETHWADDR called.\n" );
+      catc_get_dev_addr( softc, buffer->buf_ptr );
+      break;
+  case IOCTL_ETHER_SETHWADDR:
+      xprintf( "IOCTL_ETHER_SETHWADDR not implemented.\n" );
+      break;
 #if 0
-	case IOCTL_ETHER_GETSPEED:
-	    xprintf( "GETSPEED not implemented.\n" );
-	    retval = -1;
-	    break;
-	case IOCTL_ETHER_SETSPEED:
-	    xprintf( "SETSPEED not implemented.\n" );
-	    retval = -1;
-	    break;
-	case IOCTL_ETHER_GETLINK:
-	    xprintf( "GETLINK not implemented.\n" );
-	    retval = -1;
-	    break;
-	case IOCTL_ETHER_GETLOOPBACK:
-	    xprintf( "GETLOOPBACK not implemented.\n" );
-	    retval = -1;
-	    break;
-	case IOCTL_ETHER_SETLOOPBACK:
-	    xprintf( "SETLOOPBACK not implemented.\n" );
-	    retval = -1;
-	    break;
+  case IOCTL_ETHER_GETSPEED:
+      xprintf( "GETSPEED not implemented.\n" );
+      retval = -1;
+      break;
+  case IOCTL_ETHER_SETSPEED:
+      xprintf( "SETSPEED not implemented.\n" );
+      retval = -1;
+      break;
+  case IOCTL_ETHER_GETLINK:
+      xprintf( "GETLINK not implemented.\n" );
+      retval = -1;
+      break;
+  case IOCTL_ETHER_GETLOOPBACK:
+      xprintf( "GETLOOPBACK not implemented.\n" );
+      retval = -1;
+      break;
+  case IOCTL_ETHER_SETLOOPBACK:
+      xprintf( "SETLOOPBACK not implemented.\n" );
+      retval = -1;
+      break;
 #endif
-	default:
-	    xprintf( "Invalid IOCTL to catc_ether_ioctl.\n" );
-	    retval = -1;
-	}
+  default:
+      xprintf( "Invalid IOCTL to catc_ether_ioctl.\n" );
+      retval = -1;
+  }
 
     return retval;
 }
@@ -545,7 +545,7 @@ static int catc_ether_close(cfe_devctx_t *ctx)
     catc_softc_t *softc = (catc_softc_t *) ctx->dev_softc;
 
     if (softc->dev == NULL)
-	return CFE_ERR_NOTREADY;
+  return CFE_ERR_NOTREADY;
 
     USBETH_TRACE( "%s called.\n", __FUNCTION__ );
     catc_close_device( softc );
@@ -573,6 +573,6 @@ const cfe_driver_t usbcatcdrv =
     "eth",
     CFE_DEV_NETWORK,
     &catc_ether_dispatch,
-    NULL,			/* probe...not needed */
+    NULL,      /* probe...not needed */
 };
 

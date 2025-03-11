@@ -591,7 +591,7 @@ etharp_find_addr(struct netif *netif, ip_addr_t *ipaddr,
   LWIP_UNUSED_ARG(netif);
 
   i = find_entry(ipaddr, ETHARP_FLAG_FIND_ONLY);
-  if((i >= 0) && arp_table[i].state == ETHARP_STATE_STABLE) {
+  if ((i >= 0) && arp_table[i].state == ETHARP_STATE_STABLE) {
       *eth_ret = &arp_table[i].ethaddr;
       *ip_ret = &arp_table[i].ipaddr;
       return i;
@@ -1025,16 +1025,16 @@ etharp_query(struct netif *netif, ip_addr_t *ipaddr, struct pbuf *q)
     p = q;
     while (p) {
       LWIP_ASSERT("no packet queues allowed!", (p->len != p->tot_len) || (p->next == 0));
-      if(p->type != PBUF_ROM) {
+      if (p->type != PBUF_ROM) {
         copy_needed = 1;
         break;
       }
       p = p->next;
     }
-    if(copy_needed) {
+    if (copy_needed) {
       /* copy the whole packet into new pbufs */
       p = pbuf_alloc(PBUF_RAW, p->tot_len, PBUF_RAM);
-      if(p != NULL) {
+      if (p != NULL) {
         if (pbuf_copy(p, q) != ERR_OK) {
           pbuf_free(p);
           p = NULL;
@@ -1055,7 +1055,7 @@ etharp_query(struct netif *netif, ip_addr_t *ipaddr, struct pbuf *q)
       if (new_entry != NULL) {
         new_entry->next = 0;
         new_entry->p = p;
-        if(arp_table[i].q != NULL) {
+        if (arp_table[i].q != NULL) {
           /* queue was already existent, append the new entry to the end */
           struct etharp_q_entry *r;
           r = arp_table[i].q;
@@ -1274,7 +1274,7 @@ ethernet_input(struct pbuf *p, struct netif *netif)
       etharp_ip_input(netif, p);
 #endif /* ETHARP_TRUST_IP_MAC */
       /* skip Ethernet header */
-      if(pbuf_header(p, -ip_hdr_offset)) {
+      if (pbuf_header(p, -ip_hdr_offset)) {
         LWIP_ASSERT("Can't move over header in packet", 0);
         goto free_and_return;
       } else {

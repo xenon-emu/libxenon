@@ -408,7 +408,7 @@ lcp_extcode(fsm *f, int code, u_char id, u_char *inp, int len)
 {
   u_char *magp;
 
-  switch( code ){
+  switch( code ) {
     case PROTREJ:
       lcp_rprotrej(f, inp, len);
       break;
@@ -462,7 +462,7 @@ lcp_rprotrej(fsm *f, u_char *inp, int len)
    * Protocol-Reject packets received in any state other than the LCP
    * LS_OPENED state SHOULD be silently discarded.
    */
-  if( f->state != LS_OPENED ) {
+  if ( f->state != LS_OPENED ) {
     LCPDEBUG(LOG_INFO, ("Protocol-Reject discarded: LCP in state %d\n", f->state));
     return;
   }

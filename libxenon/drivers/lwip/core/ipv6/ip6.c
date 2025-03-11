@@ -216,7 +216,7 @@ ip_input(struct pbuf *p, struct netif *inp) {
   LWIP_DEBUGF("ip_input: p->len %"U16_F" p->tot_len %"U16_F"\n", p->len, p->tot_len);*/
 #endif /* IP_DEBUG */
 
-  if(pbuf_header(p, -IP_HLEN)) {
+  if (pbuf_header(p, -IP_HLEN)) {
     LWIP_ASSERT("Can't move over header in packet", 0);
     return;
   }
@@ -342,7 +342,7 @@ ip_output_hinted(struct pbuf *p, struct ip_addr *src, struct ip_addr *dest,
   }
 
   netif->addr_hint = addr_hint;
-  err = ip_output_if(p, src, dest, ttl, tos, proto, netif);
+  err = ip_output_if (p, src, dest, ttl, tos, proto, netif);
   netif->addr_hint = NULL;
 
   return err;

@@ -319,7 +319,7 @@ static void des_setkey( unsigned long SK[32], unsigned char key[8] )
      */
     for( i = 0; i < 16; i++ )
     {
-        if( i < 2 || i == 8 || i == 15 )
+        if ( i < 2 || i == 8 || i == 15 )
         {
             X = ((X <<  1) | (X >> 27)) & 0x0FFFFFFF;
             Y = ((Y <<  1) | (Y >> 27)) & 0x0FFFFFFF;
@@ -514,9 +514,9 @@ void des_crypt_cbc( des_context *ctx,
     int i;
     unsigned char temp[8];
 
-    if( mode == DES_ENCRYPT )
+    if ( mode == DES_ENCRYPT )
     {
-        while( length > 0 )
+        while ( length > 0 )
         {
             for( i = 0; i < 8; i++ )
                 output[i] = (unsigned char)( input[i] ^ iv[i] );
@@ -531,7 +531,7 @@ void des_crypt_cbc( des_context *ctx,
     }
     else /* DES_DECRYPT */
     {
-        while( length > 0 )
+        while ( length > 0 )
         {
             memcpy( temp, input, 8 );
             des_crypt_ecb( ctx, input, output );
@@ -602,9 +602,9 @@ void des3_crypt_cbc( des3_context *ctx,
     int i;
     unsigned char temp[8];
 
-    if( mode == DES_ENCRYPT )
+    if ( mode == DES_ENCRYPT )
     {
-        while( length > 0 )
+        while ( length > 0 )
         {
             for( i = 0; i < 8; i++ )
                 output[i] = (unsigned char)( input[i] ^ iv[i] );
@@ -619,7 +619,7 @@ void des3_crypt_cbc( des3_context *ctx,
     }
     else /* DES_DECRYPT */
     {
-        while( length > 0 )
+        while ( length > 0 )
         {
             memcpy( temp, input, 8 );
             des3_crypt_ecb( ctx, input, output );
@@ -684,7 +684,7 @@ int des_self_test( int verbose )
         u = i >> 1;
         v = i  & 1;
 
-        if( verbose != 0 )
+        if ( verbose != 0 )
             printf( "  DES%c-ECB-%3d (%s): ",
                     ( u == 0 ) ? ' ' : '3', 56 + u * 56,
                     ( v == 0 ) ? "enc" : "dec" );
@@ -694,49 +694,49 @@ int des_self_test( int verbose )
         switch( u )
         {
         case 0:
-            if( v == 0 )
+            if ( v == 0 )
                 des_setkey_enc( &ctx, (unsigned char *) DES3_keys );
-            if( v == 1 )
+            if ( v == 1 )
                 des_setkey_dec( &ctx, (unsigned char *) DES3_keys );
             break;
 
         case 1:
-            if( v == 0 )
+            if ( v == 0 )
                 des3_set2key_enc( &ctx3, (unsigned char *) DES3_keys );
-            if( v == 1 )
+            if ( v == 1 )
                 des3_set2key_dec( &ctx3, (unsigned char *) DES3_keys );
             break;
 
         default:
-            if( v == 0 )
+            if ( v == 0 )
                 des3_set3key_enc( &ctx3, (unsigned char *) DES3_keys );
-            if( v == 1 )
+            if ( v == 1 )
                 des3_set3key_dec( &ctx3, (unsigned char *) DES3_keys );
             break;
         }
 
         for( j = 0; j < 10000; j++ )
         {
-            if( u == 0 )
+            if ( u == 0 )
                  des_crypt_ecb( &ctx, buf, buf );
             else
                 des3_crypt_ecb( &ctx3, buf, buf );
         }
 
-        if( ( v == 0 && memcmp( buf, DES3_enc_test[u], 8 ) != 0 ) ||
+        if ( ( v == 0 && memcmp( buf, DES3_enc_test[u], 8 ) != 0 ) ||
             ( v == 1 && memcmp( buf, DES3_dec_test[u], 8 ) != 0 ) )
         {
-            if( verbose != 0 )
+            if ( verbose != 0 )
                 printf( "failed\n" );
 
             return( 1 );
         }
 
-        if( verbose != 0 )
+        if ( verbose != 0 )
             printf( "passed\n" );
     }
 
-    if( verbose != 0 )
+    if ( verbose != 0 )
         printf( "\n" );
 
     return( 0 );

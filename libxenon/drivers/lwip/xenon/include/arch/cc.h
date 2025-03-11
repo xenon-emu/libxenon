@@ -67,7 +67,7 @@ int printf(const char *format, ...);
 /* Plaform specific diagnostic output */
 
 #endif/* LWIP_DEBUG */
-#define LWIP_PLATFORM_DIAG(x)	{ printf x; }
-#define LWIP_PLATFORM_ASSERT(x) { printf("\fline %d in %s\n", __LINE__, __FILE__);  while(1); }
+#define LWIP_PLATFORM_DIAG(x)  { printf x; }
+#define LWIP_PLATFORM_ASSERT(x) { printf("\fline %d in %s\n", __LINE__, __FILE__);  while (1); }
 
 #endif /* __ARCH_CC_H__ */

@@ -1,7 +1,7 @@
 /*  *********************************************************************
     *  Broadcom Common Firmware Environment (CFE)
     *  
-    *  Main Module				File: usbhack.c       
+    *  Main Module        File: usbhack.c       
     *  
     *  A crude test program to let us tinker with a USB controller
     *  installed in an X86 Linux PC.  Eventually we'll clean up
@@ -82,7 +82,7 @@ extern int ohcidebug;
 
 extern usbdev_t *usbmass_dev;
 extern int usbmass_read_sector(usbdev_t *dev,uint32_t sectornum,uint32_t seccnt,
-			uint8_t *buffer);
+      uint8_t *buffer);
 
 
 /*  *********************************************************************
@@ -135,12 +135,12 @@ extern int usbmass_read_sector(usbdev_t *dev,uint32_t sectornum,uint32_t seccnt,
     *  area, and viewing the register contents.
     ********************************************************************* */
 
-#define PLAY_AREA_ADDR (255*1024*1024)		/* EDIT ME */
+#define PLAY_AREA_ADDR (255*1024*1024)    /* EDIT ME */
 #define PLAY_AREA_SIZE (1024*1024)
 int play_fd = -1;
 uint8_t *play_area = MAP_FAILED;
 
-#define DEVICE_AREA_ADDR 0xd9100000		/* EDIT ME */
+#define DEVICE_AREA_ADDR 0xd9100000    /* EDIT ME */
 #define DEVICE_AREA_SIZE 4096
 int dev_fd = -1;
 uint8_t *device_area = MAP_FAILED;
@@ -161,10 +161,10 @@ int running = 1;
     *  address.
     *  
     *  Input parameters: 
-    *  	   v - virtual address
-    *  	   
+    *       v - virtual address
+    *       
     *  Return value:
-    *  	   physical address
+    *       physical address
     ********************************************************************* */
 
 
@@ -187,11 +187,11 @@ uint32_t vtop(void *v)
     *  address.
     *  
     *  Input parameters: 
-    *  	   p - physical address
-    *  	   
-    *  	   
+    *       p - physical address
+    *       
+    *       
     *  Return value:
-    *  	   virtual address (void pointer)
+    *       virtual address (void pointer)
     ********************************************************************* */
 
 void *ptov(uint32_t p)
@@ -210,10 +210,10 @@ void *ptov(uint32_t p)
     *  delay for 'x' milliseconds.
     *  
     *  Input parameters: 
-    *  	   x - milliseconds
-    *  	   
+    *       x - milliseconds
+    *       
     *  Return value:
-    *  	   nothing
+    *       nothing
     ********************************************************************* */
 
 void mydelay(int x)
@@ -221,7 +221,7 @@ void mydelay(int x)
     struct timespec ts;
 
     ts.tv_sec = 0;
-    ts.tv_nsec = x * 1000000;	/* milliseconds */
+    ts.tv_nsec = x * 1000000;  /* milliseconds */
     nanosleep(&ts,NULL);
 }
 
@@ -232,10 +232,10 @@ void mydelay(int x)
     *  transplanted here.
     *  
     *  Input parameters: 
-    *  	   tmplt - printf string args...
-    *  	   
+    *       tmplt - printf string args...
+    *       
     *  Return value:
-    *  	   nothing
+    *       nothing
     ********************************************************************* */
 
 void console_log(const char *tmplt,...)
@@ -255,10 +255,10 @@ void console_log(const char *tmplt,...)
     *  Open /dev/mem and create the play area
     *  
     *  Input parameters: 
-    *  	   nothing
-    *  	   
+    *       nothing
+    *       
     *  Return value:
-    *  	   0 if ok, else error
+    *       0 if ok, else error
     ********************************************************************* */
 
 int init_devaccess(void)
@@ -268,64 +268,64 @@ int init_devaccess(void)
    play_fd = open("/dev/mem",O_RDWR);
 
     if (play_fd < 0) {
-	perror("open");
-	return -1;
-	}
+  perror("open");
+  return -1;
+  }
 
     dev_fd = open("/dev/mem",O_RDWR | O_SYNC);
 
     if (dev_fd < 0) {
-	perror("open");
-	close(play_fd);
-	play_fd = -1;
-	return -1;
-	}
+  perror("open");
+  close(play_fd);
+  play_fd = -1;
+  return -1;
+  }
 
     play_area = mmap(NULL,
-		     PLAY_AREA_SIZE,
-		     PROT_READ|PROT_WRITE,MAP_SHARED,
-		     play_fd,
-		     PLAY_AREA_ADDR);
+         PLAY_AREA_SIZE,
+         PROT_READ|PROT_WRITE,MAP_SHARED,
+         play_fd,
+         PLAY_AREA_ADDR);
 
     if (play_area != MAP_FAILED) {
-	printf("Play area mapped ok at address %p to %p\n",play_area,play_area+PLAY_AREA_SIZE-1);
-	for (idx = 0; idx < PLAY_AREA_SIZE; idx++) {
-	    play_area[idx] = 0x55;
-	    if (play_area[idx] != 0x55) printf("Offset %x doesn't work\n",idx);
-	    play_area[idx] = 0xaa;
-	    if (play_area[idx] != 0xaa) printf("Offset %x doesn't work\n",idx);
-	    play_area[idx] = 0x0;
-	    if (play_area[idx] != 0x0) printf("Offset %x doesn't work\n",idx);
-	    }
-	}
+  printf("Play area mapped ok at address %p to %p\n",play_area,play_area+PLAY_AREA_SIZE-1);
+  for (idx = 0; idx < PLAY_AREA_SIZE; idx++) {
+      play_area[idx] = 0x55;
+      if (play_area[idx] != 0x55) printf("Offset %x doesn't work\n",idx);
+      play_area[idx] = 0xaa;
+      if (play_area[idx] != 0xaa) printf("Offset %x doesn't work\n",idx);
+      play_area[idx] = 0x0;
+      if (play_area[idx] != 0x0) printf("Offset %x doesn't work\n",idx);
+      }
+  }
     else {
-	perror("mmap");
-	close(play_fd);
-	close(dev_fd);
-	play_fd = -1;
-	dev_fd = -1;
-	return -1;
-	}
+  perror("mmap");
+  close(play_fd);
+  close(dev_fd);
+  play_fd = -1;
+  dev_fd = -1;
+  return -1;
+  }
 
     device_area = mmap(NULL,
-		       DEVICE_AREA_SIZE,
-		       PROT_READ|PROT_WRITE,MAP_SHARED,
-		       dev_fd,
-		       DEVICE_AREA_ADDR);
+           DEVICE_AREA_SIZE,
+           PROT_READ|PROT_WRITE,MAP_SHARED,
+           dev_fd,
+           DEVICE_AREA_ADDR);
 
     if (device_area != MAP_FAILED) {
-	printf("Device area mapped ok at address %p\n",device_area);
-	}
+  printf("Device area mapped ok at address %p\n",device_area);
+  }
     else {
-	perror("mmap");
-	munmap(play_area,PLAY_AREA_SIZE);
-	play_area = MAP_FAILED;
-	close(play_fd);
-	close(dev_fd);
-	play_fd = -1;
-	dev_fd = -1;
-	return -1;
-	}
+  perror("mmap");
+  munmap(play_area,PLAY_AREA_SIZE);
+  play_area = MAP_FAILED;
+  close(play_fd);
+  close(dev_fd);
+  play_fd = -1;
+  dev_fd = -1;
+  return -1;
+  }
 
     return 0;
 }
@@ -339,17 +339,17 @@ int init_devaccess(void)
     *  with it.
     *  
     *  Input parameters: 
-    *  	   nothing
-    *  	   
+    *       nothing
+    *       
     *  Return value:
-    *  	   nothing
+    *       nothing
     ********************************************************************* */
 
 void uninit_devaccess(void)
 {
     if (ohci->ohci_regs) {
-	OHCI_WRITECSR(ohci,R_OHCI_CONTROL,V_OHCI_CONTROL_HCFS(K_OHCI_HCFS_RESET));
-	}
+  OHCI_WRITECSR(ohci,R_OHCI_CONTROL,V_OHCI_CONTROL_HCFS(K_OHCI_HCFS_RESET));
+  }
 
     if (play_area != MAP_FAILED) munmap(play_area,PLAY_AREA_SIZE);
     if (device_area != MAP_FAILED) munmap(device_area,DEVICE_AREA_SIZE);
@@ -370,10 +370,10 @@ void uninit_devaccess(void)
     *  ^C handler - switch off OHCI controller
     *  
     *  Input parameters: 
-    *  	   sig - signal
-    *  	   
+    *       sig - signal
+    *       
     *  Return value:
-    *  	   nothing
+    *       nothing
     ********************************************************************* */
 
 void sighandler(int sig)
@@ -381,8 +381,8 @@ void sighandler(int sig)
     signal(SIGINT,SIG_DFL);
     printf("Interrupted, controller reset\n");
     if (ohci->ohci_regs) {
-	OHCI_WRITECSR(ohci,R_OHCI_CONTROL,V_OHCI_CONTROL_HCFS(K_OHCI_HCFS_RESET));
-	}
+  OHCI_WRITECSR(ohci,R_OHCI_CONTROL,V_OHCI_CONTROL_HCFS(K_OHCI_HCFS_RESET));
+  }
     running = 0;
 }
 
@@ -395,10 +395,10 @@ extern usb_hcdrv_t ohci_driver;
     *  Called by lib_malloc, we need to supply it.
     *  
     *  Input parameters: 
-    *  	   str - string
-    *  	   
+    *       str - string
+    *       
     *  Return value:
-    *  	   0
+    *       0
     ********************************************************************* */
 
 int xprintf(char *str)
@@ -413,10 +413,10 @@ int xprintf(char *str)
     *  Main test program
     *  
     *  Input parameters: 
-    *  	   argc,argv - guess.
-    *  	   
+    *       argc,argv - guess.
+    *       
     *  Return value:
-    *  	   nothing
+    *       nothing
     ********************************************************************* */
 
 
@@ -431,17 +431,17 @@ int main(int argc,char *argv[])
      */
 
     for (res = 1; res < argc; res++) {
-	if (strcmp(argv[res],"-o") == 0) ohcidebug++;
-	if (strcmp(argv[res],"-u") == 0) usb_noisy++;
-	}
+  if (strcmp(argv[res],"-o") == 0) ohcidebug++;
+  if (strcmp(argv[res],"-u") == 0) usb_noisy++;
+  }
 
     /*
      * Open the play area.
      */
 
     if (init_devaccess() < 0) {
-	printf("Could not map USB controller\n");
-	}
+  printf("Could not map USB controller\n");
+  }
 
     /*
      * Establish signal and exit handlers 
@@ -463,7 +463,7 @@ int main(int argc,char *argv[])
 
     printf("-------------------------------------------\n\n");
 
-    /*	
+    /*  
      * Create the OHCI driver instance.
      */
 
@@ -483,10 +483,10 @@ int main(int argc,char *argv[])
     res = UBSTART(bus);
 
     if (res != 0) {
-	printf("Could not init hardware\n");
-	UBSTOP(bus);
-	exit(1);
-	}
+  printf("Could not init hardware\n");
+  UBSTOP(bus);
+  exit(1);
+  }
 
     /*
      * Init the root hub
@@ -499,20 +499,20 @@ int main(int argc,char *argv[])
      */
 
     while (usbmass_dev== NULL) {
-	usb_poll(bus);
-	usb_daemon(bus);
-	}
+  usb_poll(bus);
+  usb_daemon(bus);
+  }
 
     for (res = 0; res < 1000; res++) {
-	usbmass_read_sector(usbmass_dev,0,1,buffer);
-	}
+  usbmass_read_sector(usbmass_dev,0,1,buffer);
+  }
 
     printf("----- finished reading all sectors ----\n");
 
     while (running) {
-	usb_poll(bus);
-	usb_daemon(bus);
-	}
+  usb_poll(bus);
+  usb_daemon(bus);
+  }
 
     /*
      * Clean up - get heap statistics to see if we

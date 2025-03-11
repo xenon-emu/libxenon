@@ -10,67 +10,67 @@ Question: A USB stack in CFE?  But why?
 Answer: Why not?  It's not terribly useful on the BCM1250, since we 
         don't expect many of you to use USB in your boards, but there IS
         a USB host controller on the SWARM (BCM1250 reference design).
-	Besides, CFE is actually being used for other non-SiByte 
- 	Broadcom chips, and some of those _do_ have USB on them.
+  Besides, CFE is actually being used for other non-SiByte 
+   Broadcom chips, and some of those _do_ have USB on them.
 
 ------------------------------------------------------------------------
 
 Source Files
 ------------
 
-ohci.c		OHCI USB Host Controller Driver, tested on a BCM1250
-		with an Opti FireLink PCI USB controller and on a
-		BCM5836 with integrated USB controller.
+ohci.c    OHCI USB Host Controller Driver, tested on a BCM1250
+    with an Opti FireLink PCI USB controller and on a
+    BCM5836 with integrated USB controller.
 
-ohci.h		Register definitions for ohci.c
+ohci.h    Register definitions for ohci.c
 
-usbchap9.h	USB "Chapter 9" definitions (Descriptors, etc.)
+usbchap9.h  USB "Chapter 9" definitions (Descriptors, etc.)
 
-usbd.c		USB Basic Request and pipe management routines, to
-		manage usb devices, do simple requests on the
-		control pipe, open and manage pipes, etc.
+usbd.c    USB Basic Request and pipe management routines, to
+    manage usb devices, do simple requests on the
+    control pipe, open and manage pipes, etc.
 
-usbd.h		Prototypes and data structures for usbd.c
+usbd.h    Prototypes and data structures for usbd.c
 
-usbdebug.c	Some descriptor dump routines live here.
+usbdebug.c  Some descriptor dump routines live here.
 
-usbdevs.c	USB Device Driver list - devices we recognize
-		are listed here - if you add a new USB device,
-		you can add its class or vendor ID entries
-		into the table here.
+usbdevs.c  USB Device Driver list - devices we recognize
+    are listed here - if you add a new USB device,
+    you can add its class or vendor ID entries
+    into the table here.
 
-usbeth.{h,c}	Driver for USB Ethernet devices based on the 
-		ADMtek Pegasus, CATC and Realtek chips.
+usbeth.{h,c}  Driver for USB Ethernet devices based on the 
+    ADMtek Pegasus, CATC and Realtek chips.
 
-usbhid.c	Class driver for keyboards and mice.  Right now
-		not much is done with them except echo characters.
+usbhid.c  Class driver for keyboards and mice.  Right now
+    not much is done with them except echo characters.
 
-usbhub.c	Class driver for USB hubs.  Because hubs are also
-		a major player in device discovery, much of the
-		USB device tree management also lives here.
+usbhub.c  Class driver for USB hubs.  Because hubs are also
+    a major player in device discovery, much of the
+    USB device tree management also lives here.
 
 usbmass.c       Class driver for USB mass-storage devices.  We only
-		support the "bulk-only-no-interrupt" protocol.
-		This driver also includes a top half so that
-		it can be accessed as a CFE mass-storage device.
+    support the "bulk-only-no-interrupt" protocol.
+    This driver also includes a top half so that
+    it can be accessed as a CFE mass-storage device.
 
-usbmain.c	Top-level interface into CFE.  The "usb start"
-		command is instantiated here, as well as a 
-		"usb show" command to display attached USB devices.
+usbmain.c  Top-level interface into CFE.  The "usb start"
+    command is instantiated here, as well as a 
+    "usb show" command to display attached USB devices.
 
-usbserial.c	Simple driver for USB serial devices based on the 
-	        Prolific PL-2303 and MCT USB-232 chips, including
-		CFE UART support.
+usbserial.c  Simple driver for USB serial devices based on the 
+          Prolific PL-2303 and MCT USB-232 chips, including
+    CFE UART support.
 
-usbhack.c	Main program for the test harness, which lets you
-		develop OHCI code under Linux without hacking on
-		either CFE or the kernel.  See the comments in this
-		file for more information.
+usbhack.c  Main program for the test harness, which lets you
+    develop OHCI code under Linux without hacking on
+    either CFE or the kernel.  See the comments in this
+    file for more information.
 
-usbhack.h	A dumping ground for CFE definitions not otherwise
-		provided by the standard include files.
+usbhack.h  A dumping ground for CFE definitions not otherwise
+    provided by the standard include files.
 
-usbhack.mk	GNU makefile for the test harness
+usbhack.mk  GNU makefile for the test harness
 
 ------------------------------------------------------------------------
 
@@ -104,8 +104,8 @@ Device Drivers
 USB Device drivers are currently extremely simple:  There are 
 only two methods that need be exported to the device driver table:
 
-attach()	 Called when the device is "discovered"
-detach()	 Called when the device is "removed"
+attach()   Called when the device is "discovered"
+detach()   Called when the device is "removed"
 
 When a device is removed, pending transfer requests will be 
 canceled with a "canceled" status.

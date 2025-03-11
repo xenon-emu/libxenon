@@ -46,8 +46,8 @@ struct sys_timeo timeouts;
 void
 sys_arch_block(u16_t time)
 {
-	int i;
-	for (i=0; i< time*1000; ++i) ;
+  int i;
+  for (i=0; i< time*1000; ++i) ;
 }
 /*-----------------------------------------------------------------------------------*/
 //sys_mbox_t
@@ -111,9 +111,9 @@ sys_arch_mbox_tryfetch(sys_mbox_t mbox, void **data, u16_t timeout)
 void
 sys_init(void)
 {
-	timeouts.next = NULL;
-	mftb(&startTime);
-	return;
+  timeouts.next = NULL;
+  mftb(&startTime);
+  return;
 }
 /*-----------------------------------------------------------------------------------*/
 struct sys_timeo *
@@ -126,20 +126,20 @@ sys_arch_timeouts(void)
  * may be the same as sys_jiffies or at least based on it. */
 u32_t sys_now(void)
 {
-	tb_t now;
-	mftb(&now);
-	return (u32_t) tb_diff_msec(&now, &startTime);
+  tb_t now;
+  mftb(&now);
+  return (u32_t) tb_diff_msec(&now, &startTime);
 }
 
 u32_t sys_jiffies(void) /* since power up. */
 {
-	//static int count = 0;
-	//return ++count;
-	//tb_t now;
-	//mftb(&now);
-	//return (u32_t) now.l;
+  //static int count = 0;
+  //return ++count;
+  //tb_t now;
+  //mftb(&now);
+  //return (u32_t) now.l;
 
-	return sys_now();
+  return sys_now();
 
 }
 

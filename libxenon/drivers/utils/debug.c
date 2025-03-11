@@ -3,29 +3,29 @@
 #include <ppc/register.h>
 #include <ppc/xenonsprs.h>
 
-void buffer_dump(void * buf, int size){
-	int i;
-	char* cbuf=(char*) buf;
+void buffer_dump(void * buf, int size) {
+  int i;
+  char* cbuf=(char*) buf;
 
-	printf("[Buffer dump] at %p, size=%d\n",buf,size);
-	
-	while(size>0){
-		for(i=0;i<16;++i){
-			printf("%02x ",*cbuf);
-			++cbuf;
-		}
-		printf("\n");
-		size-=16;
-	}
+  printf("[Buffer dump] at %p, size=%d\n",buf,size);
+  
+  while (size>0) {
+    for(i=0;i<16;++i) {
+      printf("%02x ",*cbuf);
+      ++cbuf;
+    }
+    printf("\n");
+    size-=16;
+  }
 }
 
 extern unsigned char elfldr_start[]; // also end of .text ...
 
-static int seems_valid(unsigned int p){
-	return p>=0x80000000 && p<(unsigned int)elfldr_start;
+static int seems_valid(unsigned int p) {
+  return p>=0x80000000 && p<(unsigned int)elfldr_start;
 }
 
-#define DO_RA(x) if(seems_valid(addr) && x<max_depth){ addr=(unsigned int)__builtin_return_address(x); printf("%p; ",addr); }
+#define DO_RA(x) if (seems_valid(addr) && x<max_depth) { addr=(unsigned int)__builtin_return_address(x); printf("%p; ",addr); }
 
 void stack_trace(int max_depth)
 {

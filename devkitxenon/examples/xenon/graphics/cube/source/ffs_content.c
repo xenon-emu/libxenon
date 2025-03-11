@@ -51,11 +51,11 @@ static unsigned char content_filesvsvsu[] = {
 
 struct ffs_s
 {
-	const char *filename;
-	int size;
-	void *content;
+  const char *filename;
+  int size;
+  void *content;
 } ffs_files[] = {
-	{"vs.vsu", 440, content_filesvsvsu},
-	{"ps.psu", 292, content_filespspsu},
-	{0, 0, 0},
+  {"vs.vsu", 440, content_filesvsvsu},
+  {"ps.psu", 292, content_filespspsu},
+  {0, 0, 0},
 };

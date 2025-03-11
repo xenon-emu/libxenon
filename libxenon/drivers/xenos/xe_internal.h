@@ -3,12 +3,12 @@
 
 static inline int FLOAT(float f)
 {
-	union {
-		float f;
-		u32 d;
-	} u = {f};
-	
-	return u.d;
+  union {
+    float f;
+    u32 d;
+  } u = {f};
+  
+  return u.d;
 }
 
 #define rput32(d) *(volatile u32*)(xe->rb_secondary + xe->rb_secondary_wptr++ * 4) = (d);

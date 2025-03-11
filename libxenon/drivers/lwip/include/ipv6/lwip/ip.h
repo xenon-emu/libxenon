@@ -110,11 +110,11 @@ void ip_input(struct pbuf *p, struct netif *inp);
 err_t ip_output(struct pbuf *p, struct ip_addr *src, struct ip_addr *dest,
          u8_t ttl, u8_t proto);
 
-err_t ip_output_if(struct pbuf *p, struct ip_addr *src, struct ip_addr *dest,
+err_t ip_output_if (struct pbuf *p, struct ip_addr *src, struct ip_addr *dest,
       u8_t ttl, u8_t proto,
       struct netif *netif);
 
-#define ip_current_netif() NULL
+#define ip_current_netif () NULL
 #define ip_current_header() NULL
 
 #if IP_DEBUG

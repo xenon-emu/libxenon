@@ -1,7 +1,7 @@
 /*  *********************************************************************
     *  Broadcom Common Firmware Environment (CFE)
     *  
-    *  Chapter 9 definitions			File: usbchap9.h
+    *  Chapter 9 definitions      File: usbchap9.h
     *  
     *  This module contains definitions from the USB specification,
     *  chapter 9.
@@ -65,8 +65,8 @@
 #define USB_INTERFACE_DESCRIPTOR_TYPE             0x04
 #define USB_ENDPOINT_DESCRIPTOR_TYPE              0x05
 #define USB_POWER_DESCRIPTOR_TYPE                 0x06
-#define USB_HID_DESCRIPTOR_TYPE			  0x21
-#define USB_HUB_DESCRIPTOR_TYPE			  0x29
+#define USB_HID_DESCRIPTOR_TYPE        0x21
+#define USB_HUB_DESCRIPTOR_TYPE        0x29
 
 #define USB_DESCRIPTOR_TYPEINDEX(d, i) ((uint16_t)((uint16_t)(d)<<8 | (i)))
 
@@ -98,7 +98,7 @@
  */
 
 #define USB_ENDPOINT_DIRECTION_MASK               0x80
-#define USB_ENDPOINT_DIRECTION_IN		  0x80	/* bit set means IN */
+#define USB_ENDPOINT_DIRECTION_IN      0x80  /* bit set means IN */
 
 /*
  * test direction bit in the bEndpointAddress field of
@@ -107,7 +107,7 @@
 #define USB_ENDPOINT_DIR_OUT(addr)          (!((addr) & USB_ENDPOINT_DIRECTION_MASK))
 #define USB_ENDPOINT_DIR_IN(addr)           ((addr) & USB_ENDPOINT_DIRECTION_MASK)
 
-#define USB_ENDPOINT_ADDRESS(addr)		((addr) & 0x0F)
+#define USB_ENDPOINT_ADDRESS(addr)    ((addr) & 0x0F)
 
 /*
  * USB defined request codes
@@ -171,7 +171,7 @@
 
 #define USBWORD(x) ((x) & 0xFF),(((x) >> 8) & 0xFF)
 
-#define USB_CONTROL_ENDPOINT_MIN_SIZE	8
+#define USB_CONTROL_ENDPOINT_MIN_SIZE  8
 
 typedef struct usb_device_descr_s {
     uint8_t bLength;
@@ -219,7 +219,7 @@ typedef struct usb_config_descr_s {
     uint8_t MaxPower;
 } usb_config_descr_t;
 
-#define USB_INTERFACE_CLASS_HUB		0x09
+#define USB_INTERFACE_CLASS_HUB    0x09
 
 typedef struct usb_interface_descr_s {
     uint8_t bLength;
@@ -284,7 +284,7 @@ typedef struct usb_device_status_s {
  * See Chapter 11
  */
 
-#define USB_HUB_DESCR_SIZE	8
+#define USB_HUB_DESCR_SIZE  8
 typedef struct usb_hub_descr_s {
     uint8_t        bDescriptorLength;      /* Length of this descriptor */
     uint8_t        bDescriptorType;        /* Hub configuration type */
@@ -297,51 +297,51 @@ typedef struct usb_hub_descr_s {
     uint8_t        bRemoveAndPowerMask[64];
 } usb_hub_descr_t;
 
-#define USB_HUBCHAR_PWR_GANGED	0
-#define USB_HUBCHAR_PWR_IND	1
-#define USB_HUBCHAR_PWR_NONE	2
+#define USB_HUBCHAR_PWR_GANGED  0
+#define USB_HUBCHAR_PWR_IND  1
+#define USB_HUBCHAR_PWR_NONE  2
 
 typedef struct usb_hub_status_s {
-    uint8_t	   wHubStatusLow,wHubStatusHigh;
-    uint8_t	   wHubChangeLow,wHubChangeHigh;
+    uint8_t     wHubStatusLow,wHubStatusHigh;
+    uint8_t     wHubChangeLow,wHubChangeHigh;
 } usb_hub_status_t;
 
-#define USB_PORT_STATUS_CONNECT	0x0001
+#define USB_PORT_STATUS_CONNECT  0x0001
 #define USB_PORT_STATUS_ENABLED 0x0002
 #define USB_PORT_STATUS_SUSPEND 0x0004
 #define USB_PORT_STATUS_OVERCUR 0x0008
 #define USB_PORT_STATUS_RESET   0x0010
 #define USB_PORT_STATUS_POWER   0x0100
-#define USB_PORT_STATUS_LOWSPD	0x0200
+#define USB_PORT_STATUS_LOWSPD  0x0200
 
 typedef struct usb_port_status_s {
-    uint8_t	   wPortStatusLow,wPortStatusHigh;
-    uint8_t	   wPortChangeLow,wPortChangeHigh;
+    uint8_t     wPortStatusLow,wPortStatusHigh;
+    uint8_t     wPortChangeLow,wPortChangeHigh;
 } usb_port_status_t;
 
 
-#define USB_HUBREQ_GET_STATUS		0
-#define USB_HUBREQ_CLEAR_FEATURE	1
-#define USB_HUBREQ_GET_STATE		2
-#define USB_HUBREQ_SET_FEATURE		3
-#define USB_HUBREQ_GET_DESCRIPTOR	6
-#define USB_HUBREQ_SET_DESCRIPTOR	7
+#define USB_HUBREQ_GET_STATUS    0
+#define USB_HUBREQ_CLEAR_FEATURE  1
+#define USB_HUBREQ_GET_STATE    2
+#define USB_HUBREQ_SET_FEATURE    3
+#define USB_HUBREQ_GET_DESCRIPTOR  6
+#define USB_HUBREQ_SET_DESCRIPTOR  7
 
-#define USB_HUB_FEATURE_C_LOCAL_POWER	0
-#define USB_HUB_FEATURE_C_OVER_CURRENT	1
+#define USB_HUB_FEATURE_C_LOCAL_POWER  0
+#define USB_HUB_FEATURE_C_OVER_CURRENT  1
 
-#define USB_PORT_FEATURE_CONNECTION		0
-#define USB_PORT_FEATURE_ENABLE			1
-#define USB_PORT_FEATURE_SUSPEND		2
-#define USB_PORT_FEATURE_OVER_CURRENT		3
-#define USB_PORT_FEATURE_RESET			4
-#define USB_PORT_FEATURE_POWER			8
-#define USB_PORT_FEATURE_LOW_SPEED		9
-#define USB_PORT_FEATURE_C_PORT_CONNECTION	16
-#define USB_PORT_FEATURE_C_PORT_ENABLE		17
-#define USB_PORT_FEATURE_C_PORT_SUSPEND		18
-#define USB_PORT_FEATURE_C_PORT_OVER_CURRENT	19
-#define USB_PORT_FEATURE_C_PORT_RESET		20
+#define USB_PORT_FEATURE_CONNECTION    0
+#define USB_PORT_FEATURE_ENABLE      1
+#define USB_PORT_FEATURE_SUSPEND    2
+#define USB_PORT_FEATURE_OVER_CURRENT    3
+#define USB_PORT_FEATURE_RESET      4
+#define USB_PORT_FEATURE_POWER      8
+#define USB_PORT_FEATURE_LOW_SPEED    9
+#define USB_PORT_FEATURE_C_PORT_CONNECTION  16
+#define USB_PORT_FEATURE_C_PORT_ENABLE    17
+#define USB_PORT_FEATURE_C_PORT_SUSPEND    18
+#define USB_PORT_FEATURE_C_PORT_OVER_CURRENT  19
+#define USB_PORT_FEATURE_C_PORT_RESET    20
 
 
 #define GETUSBFIELD(s,f) (((s)->f##Low) | ((s)->f##High << 8))
@@ -359,16 +359,16 @@ typedef struct usb_device_request_s {
 /*
  * Values for the bmAttributes field of a request
  */
-#define USBREQ_DIR_IN	0x80
-#define USBREQ_DIR_OUT 	0x00
-#define USBREQ_TYPE_STD 	0x00
-#define USBREQ_TYPE_CLASS 	0x20
-#define USBREQ_TYPE_VENDOR	0x40
-#define USBREQ_TYPE_RSVD 	0x60
-#define USBREQ_REC_DEVICE 	0x00
+#define USBREQ_DIR_IN  0x80
+#define USBREQ_DIR_OUT   0x00
+#define USBREQ_TYPE_STD   0x00
+#define USBREQ_TYPE_CLASS   0x20
+#define USBREQ_TYPE_VENDOR  0x40
+#define USBREQ_TYPE_RSVD   0x60
+#define USBREQ_REC_DEVICE   0x00
 #define USBREQ_REC_INTERFACE 0x01
 #define USBREQ_REC_ENDPOINT 0x02
-#define USBREQ_REC_OTHER 	0x03
+#define USBREQ_REC_OTHER   0x03
 
 #define REQCODE(req,dir,type,rec) (((req) << 8) | (dir) | (type) | (rec))
 #define REQSW(req,attr) (((req) << 8) | (attr))

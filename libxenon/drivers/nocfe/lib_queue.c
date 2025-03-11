@@ -1,7 +1,7 @@
 /*  *********************************************************************
     *  Broadcom Common Firmware Environment (CFE)
     *  
-    *  Queue Management routines		File: lib_queue.c
+    *  Queue Management routines    File: lib_queue.c
     *  
     *  Routines to manage doubly-linked queues.
     *  
@@ -50,16 +50,16 @@
 
 
 /*  *********************************************************************
-    *  Q_ENQUEUE(qb,item)	
-    *  				
+    *  Q_ENQUEUE(qb,item)  
+    *          
     *  Add item to a queue
-    *  				
-    *  Input Parameters: 	
-    *      qb - queue block	
-    *      item - item to add	
-    *      			
-    *  Return Value:		
-    *      Nothing.		
+    *          
+    *  Input Parameters:   
+    *      qb - queue block  
+    *      item - item to add  
+    *            
+    *  Return Value:    
+    *      Nothing.    
     ********************************************************************* */
 
 void q_enqueue(queue_t *qb,queue_t *item)
@@ -72,15 +72,15 @@ void q_enqueue(queue_t *qb,queue_t *item)
 
 
 /*  *********************************************************************
-    *  Q_DEQUEUE(element)	
-    *  				
+    *  Q_DEQUEUE(element)  
+    *          
     *  Remove an element from the queue
-    *  					
-    *  Input Parameters: 		
-    *      element - element to remove	
-    *      				
-    *  Return Value:			
-    *      Nothing.			
+    *            
+    *  Input Parameters:     
+    *      element - element to remove  
+    *              
+    *  Return Value:      
+    *      Nothing.      
     ********************************************************************* */
 
 void q_dequeue(queue_t *item)
@@ -95,18 +95,18 @@ void q_dequeue(queue_t *item)
     *
     *  Dequeue next element from the specified queue
     * 
-    *  Input Parameters: 	
-    *      qb - queue block	
-    *      			
-    *  Return Value:		
+    *  Input Parameters:   
+    *      qb - queue block  
+    *            
+    *  Return Value:    
     *      next element, or NULL
     ********************************************************************* */
 
 queue_t *q_deqnext(queue_t *qb)
 {
     if (qb->q_next == qb) {
-	return NULL;
-	}
+  return NULL;
+  }
 
     qb = qb->q_next;
 
@@ -125,18 +125,18 @@ queue_t *q_deqnext(queue_t *qb)
     *  
     *  If the function returns nonzero, q_map will terminate.
     *  
-    *  Input Parameters: 		
-    *      qb - queue block		
-    *      fn - function pointer	
+    *  Input Parameters:     
+    *      qb - queue block    
+    *      fn - function pointer  
     *      a,b - parameters for the function
     *  
-    *  Return Value:	
+    *  Return Value:  
     *      return value from function, or zero if entire queue 
-    *      was mapped.	
+    *      was mapped.  
     ********************************************************************* */
 
 int q_map(queue_t *qb, int (*func)(queue_t *,unsigned int,unsigned int),
-	  unsigned int a,unsigned int b)
+    unsigned int a,unsigned int b)
 {
     queue_t *qe;
     queue_t *nextq;
@@ -147,10 +147,10 @@ int q_map(queue_t *qb, int (*func)(queue_t *,unsigned int,unsigned int),
     qe = qb->q_next;
 
     while (qe != qb) {
-	nextq = qe->q_next;
-	if ((res = (*func)(qe,a,b))) return res;
-	qe = nextq;
-	}
+  nextq = qe->q_next;
+  if ((res = (*func)(qe,a,b))) return res;
+  qe = nextq;
+  }
 
     return 0;
 }
@@ -160,15 +160,15 @@ int q_map(queue_t *qb, int (*func)(queue_t *,unsigned int,unsigned int),
 
 
 /*  *********************************************************************
-    *  Q_COUNT(qb)							*
-    *  									*
-    *  Counts the elements on a queue (not interlocked)			*
-    *  									*
-    *  Input Parameters: 						*
-    *      qb - queue block						*
-    *      								*
-    *  Return Value:							*
-    *      number of elements						*
+    *  Q_COUNT(qb)              *
+    *                    *
+    *  Counts the elements on a queue (not interlocked)      *
+    *                    *
+    *  Input Parameters:             *
+    *      qb - queue block            *
+    *                      *
+    *  Return Value:              *
+    *      number of elements            *
     ********************************************************************* */
 int q_count(queue_t *qb)
 {
@@ -178,9 +178,9 @@ int q_count(queue_t *qb)
     qe = qb;
 
     while (qe->q_next != qb) {
-	qe = qe->q_next;
-	res++;
-	}
+  qe = qe->q_next;
+  res++;
+  }
 
     return res;
 }
@@ -192,11 +192,11 @@ int q_count(queue_t *qb)
     *  Q_FIND(qb,item)
     *  
     *  Determines if a particular element is on a queue.
-    *  				
-    *  Input Parameters: 	
+    *          
+    *  Input Parameters:   
     *      qb - queue block
     *      item - queue element 
-    *      	
+    *        
     *  Return Value:
     *      0 - not on queue        
     *      >0 - position on queue  
@@ -209,10 +209,10 @@ int q_find(queue_t *qb,queue_t *item)
     q = qb->q_next;
 
     while (q != item) {
-	if (q == qb) return 0;
-	q = q->q_next;
-	res++;
-	}
+  if (q == qb) return 0;
+  q = q->q_next;
+  res++;
+  }
 
     return res;
 }

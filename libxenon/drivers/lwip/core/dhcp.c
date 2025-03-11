@@ -115,7 +115,7 @@
 #define DHCP_OPTION_IDX_T2          5
 #define DHCP_OPTION_IDX_SUBNET_MASK 6
 #define DHCP_OPTION_IDX_ROUTER      7
-#define DHCP_OPTION_IDX_DNS_SERVER	8
+#define DHCP_OPTION_IDX_DNS_SERVER  8
 #define DHCP_OPTION_IDX_MAX         (DHCP_OPTION_IDX_DNS_SERVER + DNS_MAX_SERVERS)
 
 /** Holds the decoded option values, only valid while in dhcp_recv.
@@ -314,7 +314,7 @@ dhcp_select(struct netif *netif)
     pbuf_realloc(dhcp->p_out, sizeof(struct dhcp_msg) - DHCP_OPTIONS_LEN + dhcp->options_out_len);
 
     /* send broadcast to any DHCP server */
-    udp_sendto_if(dhcp->pcb, dhcp->p_out, IP_ADDR_BROADCAST, DHCP_SERVER_PORT, netif);
+    udp_sendto_if (dhcp->pcb, dhcp->p_out, IP_ADDR_BROADCAST, DHCP_SERVER_PORT, netif);
     dhcp_delete_msg(dhcp);
     LWIP_DEBUGF(DHCP_DEBUG | LWIP_DBG_TRACE | LWIP_DBG_STATE, ("dhcp_select: REQUESTING\n"));
   } else {
@@ -569,7 +569,7 @@ dhcp_handle_ack(struct netif *netif)
 #if LWIP_DNS
   /* DNS servers */
   n = 0;
-  while(dhcp_option_given(dhcp, DHCP_OPTION_IDX_DNS_SERVER + n) && (n < DNS_MAX_SERVERS)) {
+  while (dhcp_option_given(dhcp, DHCP_OPTION_IDX_DNS_SERVER + n) && (n < DNS_MAX_SERVERS)) {
     ip_addr_t dns_addr;
     ip4_addr_set_u32(&dns_addr, htonl(dhcp_get_option_value(dhcp, DHCP_OPTION_IDX_DNS_SERVER + n)));
     dns_setserver(n, &dns_addr);
@@ -746,7 +746,7 @@ dhcp_inform(struct netif *netif)
     pbuf_realloc(dhcp.p_out, sizeof(struct dhcp_msg) - DHCP_OPTIONS_LEN + dhcp.options_out_len);
 
     LWIP_DEBUGF(DHCP_DEBUG | LWIP_DBG_TRACE | LWIP_DBG_STATE, ("dhcp_inform: INFORMING\n"));
-    udp_sendto_if(pcb, dhcp.p_out, IP_ADDR_BROADCAST, DHCP_SERVER_PORT, netif);
+    udp_sendto_if (pcb, dhcp.p_out, IP_ADDR_BROADCAST, DHCP_SERVER_PORT, netif);
     dhcp_delete_msg(&dhcp);
   } else {
     LWIP_DEBUGF(DHCP_DEBUG | LWIP_DBG_TRACE | LWIP_DBG_LEVEL_SERIOUS, ("dhcp_inform: could not allocate DHCP request\n"));
@@ -784,7 +784,7 @@ dhcp_network_changed(struct netif *netif)
   default:
     dhcp->tries = 0;
 #if LWIP_DHCP_AUTOIP_COOP
-    if(dhcp->autoip_coop_state == DHCP_AUTOIP_COOP_STATE_ON) {
+    if (dhcp->autoip_coop_state == DHCP_AUTOIP_COOP_STATE_ON) {
       autoip_stop(netif);
       dhcp->autoip_coop_state = DHCP_AUTOIP_COOP_STATE_OFF;
     }
@@ -848,7 +848,7 @@ dhcp_decline(struct netif *netif)
     pbuf_realloc(dhcp->p_out, sizeof(struct dhcp_msg) - DHCP_OPTIONS_LEN + dhcp->options_out_len);
 
     /* per section 4.4.4, broadcast DECLINE messages */
-    udp_sendto_if(dhcp->pcb, dhcp->p_out, IP_ADDR_BROADCAST, DHCP_SERVER_PORT, netif);
+    udp_sendto_if (dhcp->pcb, dhcp->p_out, IP_ADDR_BROADCAST, DHCP_SERVER_PORT, netif);
     dhcp_delete_msg(dhcp);
     LWIP_DEBUGF(DHCP_DEBUG | LWIP_DBG_TRACE | LWIP_DBG_STATE, ("dhcp_decline: BACKING OFF\n"));
   } else {
@@ -900,7 +900,7 @@ dhcp_discover(struct netif *netif)
     pbuf_realloc(dhcp->p_out, sizeof(struct dhcp_msg) - DHCP_OPTIONS_LEN + dhcp->options_out_len);
 
     LWIP_DEBUGF(DHCP_DEBUG | LWIP_DBG_TRACE, ("dhcp_discover: sendto(DISCOVER, IP_ADDR_BROADCAST, DHCP_SERVER_PORT)\n"));
-    udp_sendto_if(dhcp->pcb, dhcp->p_out, IP_ADDR_BROADCAST, DHCP_SERVER_PORT, netif);
+    udp_sendto_if (dhcp->pcb, dhcp->p_out, IP_ADDR_BROADCAST, DHCP_SERVER_PORT, netif);
     LWIP_DEBUGF(DHCP_DEBUG | LWIP_DBG_TRACE, ("dhcp_discover: deleting()ing\n"));
     dhcp_delete_msg(dhcp);
     LWIP_DEBUGF(DHCP_DEBUG | LWIP_DBG_TRACE | LWIP_DBG_STATE, ("dhcp_discover: SELECTING\n"));
@@ -909,7 +909,7 @@ dhcp_discover(struct netif *netif)
   }
   dhcp->tries++;
 #if LWIP_DHCP_AUTOIP_COOP
-  if(dhcp->tries >= LWIP_DHCP_AUTOIP_COOP_TRIES && dhcp->autoip_coop_state == DHCP_AUTOIP_COOP_STATE_OFF) {
+  if (dhcp->tries >= LWIP_DHCP_AUTOIP_COOP_TRIES && dhcp->autoip_coop_state == DHCP_AUTOIP_COOP_STATE_OFF) {
     dhcp->autoip_coop_state = DHCP_AUTOIP_COOP_STATE_ON;
     autoip_start(netif);
   }
@@ -942,7 +942,7 @@ dhcp_bind(struct netif *netif)
     /* set renewal period timer */
     LWIP_DEBUGF(DHCP_DEBUG | LWIP_DBG_TRACE, ("dhcp_bind(): t1 renewal timer %"U32_F" secs\n", dhcp->offered_t1_renew));
     timeout = (dhcp->offered_t1_renew + DHCP_COARSE_TIMER_SECS / 2) / DHCP_COARSE_TIMER_SECS;
-    if(timeout > 0xffff) {
+    if (timeout > 0xffff) {
       timeout = 0xffff;
     }
     dhcp->t1_timeout = (u16_t)timeout;
@@ -955,7 +955,7 @@ dhcp_bind(struct netif *netif)
   if (dhcp->offered_t2_rebind != 0xffffffffUL) {
     LWIP_DEBUGF(DHCP_DEBUG | LWIP_DBG_TRACE, ("dhcp_bind(): t2 rebind timer %"U32_F" secs\n", dhcp->offered_t2_rebind));
     timeout = (dhcp->offered_t2_rebind + DHCP_COARSE_TIMER_SECS / 2) / DHCP_COARSE_TIMER_SECS;
-    if(timeout > 0xffff) {
+    if (timeout > 0xffff) {
       timeout = 0xffff;
     }
     dhcp->t2_timeout = (u16_t)timeout;
@@ -990,7 +990,7 @@ dhcp_bind(struct netif *netif)
   }
 
 #if LWIP_DHCP_AUTOIP_COOP
-  if(dhcp->autoip_coop_state == DHCP_AUTOIP_COOP_STATE_ON) {
+  if (dhcp->autoip_coop_state == DHCP_AUTOIP_COOP_STATE_ON) {
     autoip_stop(netif);
     dhcp->autoip_coop_state = DHCP_AUTOIP_COOP_STATE_OFF;
   }
@@ -1059,7 +1059,7 @@ dhcp_renew(struct netif *netif)
 
     pbuf_realloc(dhcp->p_out, sizeof(struct dhcp_msg) - DHCP_OPTIONS_LEN + dhcp->options_out_len);
 
-    udp_sendto_if(dhcp->pcb, dhcp->p_out, &dhcp->server_ip_addr, DHCP_SERVER_PORT, netif);
+    udp_sendto_if (dhcp->pcb, dhcp->p_out, &dhcp->server_ip_addr, DHCP_SERVER_PORT, netif);
     dhcp_delete_msg(dhcp);
 
     LWIP_DEBUGF(DHCP_DEBUG | LWIP_DBG_TRACE | LWIP_DBG_STATE, ("dhcp_renew: RENEWING\n"));
@@ -1121,7 +1121,7 @@ dhcp_rebind(struct netif *netif)
     pbuf_realloc(dhcp->p_out, sizeof(struct dhcp_msg) - DHCP_OPTIONS_LEN + dhcp->options_out_len);
 
     /* broadcast to server */
-    udp_sendto_if(dhcp->pcb, dhcp->p_out, IP_ADDR_BROADCAST, DHCP_SERVER_PORT, netif);
+    udp_sendto_if (dhcp->pcb, dhcp->p_out, IP_ADDR_BROADCAST, DHCP_SERVER_PORT, netif);
     dhcp_delete_msg(dhcp);
     LWIP_DEBUGF(DHCP_DEBUG | LWIP_DBG_TRACE | LWIP_DBG_STATE, ("dhcp_rebind: REBINDING\n"));
   } else {
@@ -1162,7 +1162,7 @@ dhcp_reboot(struct netif *netif)
     pbuf_realloc(dhcp->p_out, sizeof(struct dhcp_msg) - DHCP_OPTIONS_LEN + dhcp->options_out_len);
 
     /* broadcast to server */
-    udp_sendto_if(dhcp->pcb, dhcp->p_out, IP_ADDR_BROADCAST, DHCP_SERVER_PORT, netif);
+    udp_sendto_if (dhcp->pcb, dhcp->p_out, IP_ADDR_BROADCAST, DHCP_SERVER_PORT, netif);
     dhcp_delete_msg(dhcp);
     LWIP_DEBUGF(DHCP_DEBUG | LWIP_DBG_TRACE | LWIP_DBG_STATE, ("dhcp_reboot: REBOOTING\n"));
   } else {
@@ -1208,7 +1208,7 @@ dhcp_release(struct netif *netif)
 
     pbuf_realloc(dhcp->p_out, sizeof(struct dhcp_msg) - DHCP_OPTIONS_LEN + dhcp->options_out_len);
 
-    udp_sendto_if(dhcp->pcb, dhcp->p_out, &dhcp->server_ip_addr, DHCP_SERVER_PORT, netif);
+    udp_sendto_if (dhcp->pcb, dhcp->p_out, &dhcp->server_ip_addr, DHCP_SERVER_PORT, netif);
     dhcp_delete_msg(dhcp);
     LWIP_DEBUGF(DHCP_DEBUG | LWIP_DBG_TRACE | LWIP_DBG_STATE, ("dhcp_release: RELEASED, DHCP_OFF\n"));
   } else {
@@ -1246,7 +1246,7 @@ dhcp_stop(struct netif *netif)
   /* netif is DHCP configured? */
   if (dhcp != NULL) {
 #if LWIP_DHCP_AUTOIP_COOP
-    if(dhcp->autoip_coop_state == DHCP_AUTOIP_COOP_STATE_ON) {
+    if (dhcp->autoip_coop_state == DHCP_AUTOIP_COOP_STATE_ON) {
       autoip_stop(netif);
       dhcp->autoip_coop_state = DHCP_AUTOIP_COOP_STATE_OFF;
     }
@@ -1359,7 +1359,7 @@ dhcp_parse_reply(struct dhcp *dhcp, struct pbuf *p)
   options_idx_max = p->tot_len;
 again:
   q = p;
-  while((q != NULL) && (options_idx >= q->len)) {
+  while ((q != NULL) && (options_idx >= q->len)) {
     options_idx -= q->len;
     options_idx_max -= q->len;
     q = q->next;
@@ -1371,7 +1371,7 @@ again:
   offset_max = options_idx_max;
   options = (u8_t*)q->payload;
   /* at least 1 byte to read and no end marker, then at least 3 bytes to read? */
-  while((q != NULL) && (options[offset] != DHCP_OPTION_END) && (offset < offset_max)) {
+  while ((q != NULL) && (options[offset] != DHCP_OPTION_END) && (offset < offset_max)) {
     u8_t op = options[offset];
     u8_t len;
     u8_t decode_len = 0;

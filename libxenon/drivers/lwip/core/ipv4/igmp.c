@@ -141,7 +141,7 @@ static void   igmp_timeout( struct igmp_group *group);
 static void   igmp_start_timer(struct igmp_group *group, u8_t max_time);
 static void   igmp_stop_timer(struct igmp_group *group);
 static void   igmp_delaying_member(struct igmp_group *group, u8_t maxresp);
-static err_t  igmp_ip_output_if(struct pbuf *p, ip_addr_t *src, ip_addr_t *dest, struct netif *netif);
+static err_t  igmp_ip_output_if (struct pbuf *p, ip_addr_t *src, ip_addr_t *dest, struct netif *netif);
 static void   igmp_send(struct igmp_group *group, u8_t type);
 
 
@@ -510,7 +510,7 @@ igmp_input(struct pbuf *p, struct netif *inp, ip_addr_t *dest)
  *
  * @param ifaddr ip address of the network interface which should join a new group
  * @param groupaddr the ip address of the group which to join
- * @return ERR_OK if group was joined on the netif(s), an err_t otherwise
+ * @return ERR_OK if group was joined on the netif (s), an err_t otherwise
  */
 err_t
 igmp_joingroup(ip_addr_t *ifaddr, ip_addr_t *groupaddr)
@@ -580,7 +580,7 @@ igmp_joingroup(ip_addr_t *ifaddr, ip_addr_t *groupaddr)
  *
  * @param ifaddr ip address of the network interface which should leave a group
  * @param groupaddr the ip address of the group which to leave
- * @return ERR_OK if group was left on the netif(s), an err_t otherwise
+ * @return ERR_OK if group was left on the netif (s), an err_t otherwise
  */
 err_t
 igmp_leavegroup(ip_addr_t *ifaddr, ip_addr_t *groupaddr)
@@ -754,7 +754,7 @@ igmp_delaying_member(struct igmp_group *group, u8_t maxresp)
  *         returns errors returned by netif->output
  */
 static err_t
-igmp_ip_output_if(struct pbuf *p, ip_addr_t *src, ip_addr_t *dest, struct netif *netif)
+igmp_ip_output_if (struct pbuf *p, ip_addr_t *src, ip_addr_t *dest, struct netif *netif)
 {
   /* This is the "router alert" option */
   u16_t ra[2];
@@ -804,7 +804,7 @@ igmp_send(struct igmp_group *group, u8_t type)
       igmp->igmp_checksum = 0;
       igmp->igmp_checksum = inet_chksum(igmp, IGMP_MINLEN);
 
-      igmp_ip_output_if(p, &src, dest, group->netif);
+      igmp_ip_output_if (p, &src, dest, group->netif);
     }
 
     pbuf_free(p);

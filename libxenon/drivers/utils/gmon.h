@@ -1,6 +1,6 @@
 /*-
  * Copyright (c) 1982, 1986, 1992, 1993
- *	The Regents of the University of California.  All rights reserved.
+ *  The Regents of the University of California.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -12,8 +12,8 @@
  *    documentation and/or other materials provided with the distribution.
  * 3. All advertising materials mentioning features or use of this software
  *    must display the following acknowledgement:
- *	This product includes software developed by the University of
- *	California, Berkeley and its contributors.
+ *  This product includes software developed by the University of
+ *  California, Berkeley and its contributors.
  * 4. Neither the name of the University nor the names of its contributors
  *    may be used to endorse or promote products derived from this software
  *    without specific prior written permission.
@@ -30,7 +30,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- *	@(#)gmon.h	8.2 (Berkeley) 1/4/94
+ *  @(#)gmon.h  8.2 (Berkeley) 1/4/94
  * $FreeBSD: src/sys/sys/gmon.h,v 1.15 1999/08/28 00:51:45 peter Exp $
  */
 
@@ -39,47 +39,47 @@
 
 //#include <machine/profile.h>
 typedef u_int fptrint_t;
-typedef	int	fptrdiff_t;
+typedef  int  fptrdiff_t;
 typedef u_int uintfptr_t;
 
 /*
  * Getkerninfo clock information structure
  */
 struct clockinfo {
-	int	hz;		/* clock frequency */
-	int	tick;		/* micro-seconds per hz tick */
-	int	tickadj;	/* clock skew rate for adjtime() */
-	int	stathz;		/* statistics clock frequency */
-	int	profhz;		/* profiling clock frequency */
+  int  hz;    /* clock frequency */
+  int  tick;    /* micro-seconds per hz tick */
+  int  tickadj;  /* clock skew rate for adjtime() */
+  int  stathz;    /* statistics clock frequency */
+  int  profhz;    /* profiling clock frequency */
 };
 
 /*
  * Config generates something to tell the compiler to align functions on 16
  * byte boundaries.  A strict alignment is good for keeping the tables small.
  */
-#define	FUNCTION_ALIGNMENT	16
+#define  FUNCTION_ALIGNMENT  16
 
 /*
  * Structure prepended to gmon.out profiling data file.
  */
 struct gmonhdr {
-	u_long	lpc;		/* base pc address of sample buffer */
-	u_long	hpc;		/* max pc address of sampled buffer */
-	int	ncnt;		/* size of sample buffer (plus this header) */
-	int	version;	/* version number */
-	int	profrate;	/* profiling clock rate */
-	int	spare[3];	/* reserved */
-	/* XXX should record counter size and density */
+  u_long  lpc;    /* base pc address of sample buffer */
+  u_long  hpc;    /* max pc address of sampled buffer */
+  int  ncnt;    /* size of sample buffer (plus this header) */
+  int  version;  /* version number */
+  int  profrate;  /* profiling clock rate */
+  int  spare[3];  /* reserved */
+  /* XXX should record counter size and density */
 };
-#define GMONVERSION	0x00051879
+#define GMONVERSION  0x00051879
 
 /*
  * Type of histogram counters used in the kernel.
  */
 #ifdef GPROF4
-#define	HISTCOUNTER	int64_t
+#define  HISTCOUNTER  int64_t
 #else
-#define	HISTCOUNTER	unsigned short
+#define  HISTCOUNTER  unsigned short
 #endif
 
 /*
@@ -89,8 +89,8 @@ struct gmonhdr {
  * A lower density of counters would give less resolution but a
  * higher density would be wasted.
  */
-#define	HISTFRACTION	(FUNCTION_ALIGNMENT / sizeof(HISTCOUNTER) == 0 \
-			 ? 1 : FUNCTION_ALIGNMENT / sizeof(HISTCOUNTER))
+#define  HISTFRACTION  (FUNCTION_ALIGNMENT / sizeof(HISTCOUNTER) == 0 \
+       ? 1 : FUNCTION_ALIGNMENT / sizeof(HISTCOUNTER))
 
 /*
  * Fraction of text space to allocate for from hash buckets.
@@ -99,17 +99,17 @@ struct gmonhdr {
  * Given MIN_SUBR_SEPARATION bytes of separation the value of
  * HASHFRACTION is calculated as:
  *
- *	HASHFRACTION = MIN_SUBR_SEPARATION / (2 * sizeof(short) - 1);
+ *  HASHFRACTION = MIN_SUBR_SEPARATION / (2 * sizeof(short) - 1);
  *
  * For example, on the VAX, the shortest two call sequence is:
  *
- *	calls	$0,(r0)
- *	calls	$0,(r0)
+ *  calls  $0,(r0)
+ *  calls  $0,(r0)
  *
  * which is separated by only three bytes, thus HASHFRACTION is
  * calculated as:
  *
- *	HASHFRACTION = 3 / (2 * 2 - 1) = 1
+ *  HASHFRACTION = 3 / (2 * 2 - 1) = 1
  *
  * Note that the division above rounds down, thus if MIN_SUBR_FRACTION
  * is less than three, this algorithm will not work!
@@ -126,7 +126,7 @@ struct gmonhdr {
  * different values.  Since the hash is essentially division by
  * sizeof(unsigned short), the correct formula is:
  *
- * 	HASHFRACTION = MIN_FUNCTION_ALIGNMENT / sizeof(unsigned short)
+ *   HASHFRACTION = MIN_FUNCTION_ALIGNMENT / sizeof(unsigned short)
  *
  * Note that he unsigned short here has nothing to do with the one for
  * HISTFRACTION.
@@ -135,26 +135,26 @@ struct gmonhdr {
  * handled like collisions for calls to different addresses from the
  * same address through a function pointer.
  */
-#define	HASHFRACTION	(FUNCTION_ALIGNMENT / sizeof(unsigned short) == 0 \
-			 ? 1 : FUNCTION_ALIGNMENT / sizeof(unsigned short))
+#define  HASHFRACTION  (FUNCTION_ALIGNMENT / sizeof(unsigned short) == 0 \
+       ? 1 : FUNCTION_ALIGNMENT / sizeof(unsigned short))
 
 /*
  * percent of text space to allocate for tostructs with a minimum.
  */
-#define ARCDENSITY	2
-#define MINARCS		50
+#define ARCDENSITY  2
+#define MINARCS    50
 
 /*
  * Limit on the number of arcs to so that arc numbers can be stored in
  * `*froms' and stored and incremented without overflow in links.
  */
-#define MAXARCS		(((u_long)1 << (8 * sizeof(u_short))) - 2)
+#define MAXARCS    (((u_long)1 << (8 * sizeof(u_short))) - 2)
 
 struct tostruct {
-	u_long	selfpc;
-	long	count;
-	u_short	link;
-	u_short pad;
+  u_long  selfpc;
+  long  count;
+  u_short  link;
+  u_short pad;
 };
 
 /*
@@ -162,9 +162,9 @@ struct tostruct {
  * the called site and a count.
  */
 struct rawarc {
-	u_long	raw_frompc;
-	u_long	raw_selfpc;
-	long	raw_count;
+  u_long  raw_frompc;
+  u_long  raw_selfpc;
+  long  raw_count;
 };
 
 /*
@@ -177,53 +177,53 @@ struct rawarc {
  * The profiling data structures are housed in this structure.
  */
 struct gmonparam {
-	int		state;
-	HISTCOUNTER	*kcount;
-	u_long		kcountsize;
-	u_short		*froms;
-	u_long		fromssize;
-	struct tostruct	*tos;
-	u_long		tossize;
-	long		tolimit;
-	uintfptr_t	lowpc;
-	uintfptr_t	highpc;
-	u_long		textsize;
-	u_long		hashfraction;
-	int		profrate;	/* XXX wrong type to match gmonhdr */
-	HISTCOUNTER	*cputime_count;
-	int		cputime_overhead;
-	HISTCOUNTER	*mcount_count;
-	int		mcount_overhead;
-	int		mcount_post_overhead;
-	int		mcount_pre_overhead;
-	HISTCOUNTER	*mexitcount_count;
-	int		mexitcount_overhead;
-	int		mexitcount_post_overhead;
-	int		mexitcount_pre_overhead;
+  int    state;
+  HISTCOUNTER  *kcount;
+  u_long    kcountsize;
+  u_short    *froms;
+  u_long    fromssize;
+  struct tostruct  *tos;
+  u_long    tossize;
+  long    tolimit;
+  uintfptr_t  lowpc;
+  uintfptr_t  highpc;
+  u_long    textsize;
+  u_long    hashfraction;
+  int    profrate;  /* XXX wrong type to match gmonhdr */
+  HISTCOUNTER  *cputime_count;
+  int    cputime_overhead;
+  HISTCOUNTER  *mcount_count;
+  int    mcount_overhead;
+  int    mcount_post_overhead;
+  int    mcount_pre_overhead;
+  HISTCOUNTER  *mexitcount_count;
+  int    mexitcount_overhead;
+  int    mexitcount_post_overhead;
+  int    mexitcount_pre_overhead;
 };
 extern struct gmonparam _gmonparam;
 
 /*
  * Possible states of profiling.
  */
-#define	GMON_PROF_ON	0
-#define	GMON_PROF_BUSY	1
-#define	GMON_PROF_ERROR	2
-#define	GMON_PROF_OFF	3
-#define	GMON_PROF_HIRES	4
+#define  GMON_PROF_ON  0
+#define  GMON_PROF_BUSY  1
+#define  GMON_PROF_ERROR  2
+#define  GMON_PROF_OFF  3
+#define  GMON_PROF_HIRES  4
 
 /*
  * Sysctl definitions for extracting profiling information from the kernel.
  */
-#define	GPROF_STATE	0	/* int: profiling enabling variable */
-#define	GPROF_COUNT	1	/* struct: profile tick count buffer */
-#define	GPROF_FROMS	2	/* struct: from location hash bucket */
-#define	GPROF_TOS	3	/* struct: destination/count structure */
-#define	GPROF_GMONPARAM	4	/* struct: profiling parameters (see above) */
+#define  GPROF_STATE  0  /* int: profiling enabling variable */
+#define  GPROF_COUNT  1  /* struct: profile tick count buffer */
+#define  GPROF_FROMS  2  /* struct: from location hash bucket */
+#define  GPROF_TOS  3  /* struct: destination/count structure */
+#define  GPROF_GMONPARAM  4  /* struct: profiling parameters (see above) */
 
-#define	CALIB_SCALE	1000
-#define	KCOUNT(p,index)	((p)->kcount[(index) \
-			 / (HISTFRACTION * sizeof(HISTCOUNTER))])
+#define  CALIB_SCALE  1000
+#define  KCOUNT(p,index)  ((p)->kcount[(index) \
+       / (HISTFRACTION * sizeof(HISTCOUNTER))])
 
 #endif /* !_SYS_GMON_H_ */
 

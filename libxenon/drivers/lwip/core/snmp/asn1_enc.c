@@ -152,14 +152,14 @@ snmp_asn1_enc_oid_cnt(u8_t ident_len, s32_t *ident, u16_t *octets_needed)
     ident_len -= 2;
     ident += 2;
   }
-  while(ident_len > 0)
+  while (ident_len > 0)
   {
     ident_len--;
     sub_id = *ident;
 
     sub_id >>= 7;
     cnt++;
-    while(sub_id > 0)
+    while (sub_id > 0)
     {
       sub_id >>= 7;
       cnt++;
@@ -494,7 +494,7 @@ snmp_asn1_enc_oid(struct pbuf *p, u16_t ofs, u8_t ident_len, s32_t *ident)
         sub_id = *ident;
         tail = 0;
         shift = 28;
-        while(shift > 0)
+        while (shift > 0)
         {
           u8_t code;
 

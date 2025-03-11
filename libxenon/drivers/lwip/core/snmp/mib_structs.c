@@ -92,7 +92,7 @@ pop_node(struct nse* node)
  * @param netif points to returned netif struct pointer
  */
 void
-snmp_ifindextonetif(s32_t ifindex, struct netif **netif)
+snmp_ifindextonetif (s32_t ifindex, struct netif **netif)
 {
   struct netif *nif = netif_list;
   s32_t i, ifidx;
@@ -506,7 +506,7 @@ snmp_search_tree(struct mib_node *node, u8_t ident_len, s32_t *ident, struct snm
         return NULL;
       }
     }
-    else if(node_type == MIB_NODE_LR)
+    else if (node_type == MIB_NODE_LR)
     {
       struct mib_list_rootnode *lrn;
       struct mib_list_node *ln;
@@ -553,7 +553,7 @@ snmp_search_tree(struct mib_node *node, u8_t ident_len, s32_t *ident, struct snm
         return NULL;
       }
     }
-    else if(node_type == MIB_NODE_EX)
+    else if (node_type == MIB_NODE_EX)
     {
       struct mib_external_node *en;
       u16_t i, len;
@@ -811,7 +811,7 @@ snmp_expand_tree(struct mib_node *node, u8_t ident_len, s32_t *ident, struct snm
         }
       }
     }
-    else if(node_type == MIB_NODE_LR)
+    else if (node_type == MIB_NODE_LR)
     {
       struct mib_list_rootnode *lrn;
       struct mib_list_node *ln;
@@ -929,7 +929,7 @@ snmp_expand_tree(struct mib_node *node, u8_t ident_len, s32_t *ident, struct snm
         }
       }
     }
-    else if(node_type == MIB_NODE_EX)
+    else if (node_type == MIB_NODE_EX)
     {
       struct mib_external_node *en;
       s32_t ex_id;
@@ -1039,7 +1039,7 @@ snmp_expand_tree(struct mib_node *node, u8_t ident_len, s32_t *ident, struct snm
         }
       }
     }
-    else if(node_type == MIB_NODE_SC)
+    else if (node_type == MIB_NODE_SC)
     {
       mib_scalar_node *sn;
 

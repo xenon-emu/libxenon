@@ -1,7 +1,7 @@
 /*  *********************************************************************
     *  Broadcom Common Firmware Environment (CFE)
     *  
-    *  USB Ethernet				File: dev_usb_pegasus.c
+    *  USB Ethernet        File: dev_usb_pegasus.c
     *  
     *  Driver for USB Ethernet devices using ADMTEK Pegasus chip.
     *  
@@ -57,7 +57,7 @@
 #define USBETH_TRACE( x, y ... ) ((void)0)
 #endif
 
-#define FAIL				-1
+#define FAIL        -1
 
 #define CACHE_ALIGN    32       /* XXX place holder, big enough to now. */
 #define ALIGN(n,align) (((n)+((align)-1)) & ~((align)-1))
@@ -83,11 +83,11 @@ static void hexdump( unsigned char * src, int srclen, int rowlen, int rows )
     srcstp = src + srclen;
 
     for( rowptr = src; rowptr < src + rowlen * rows; rowptr += rowlen ) {
-	for( byteptr = rowptr; byteptr < rowptr + rowlen && byteptr < srcstp; byteptr++ ) {
-	    xprintf( "%2X ", *byteptr );
-	    }
-	xprintf( "\n" );
-	}
+  for( byteptr = rowptr; byteptr < rowptr + rowlen && byteptr < srcstp; byteptr++ ) {
+      xprintf( "%2X ", *byteptr );
+      }
+  xprintf( "\n" );
+  }
     xprintf( "\n" );
 }
 #else
@@ -106,8 +106,8 @@ static const char *VENDOR_NAMES[] = {
 };
 
 static const int ID_TBL[] = {
-    0x0506, 0x4601, PEGASUS_II, _3_COM,		/* 3-Com */
-    0x066b, 0x2202, PEGASUS_II, LINKSYS_10,	/* LinkSys */
+    0x0506, 0x4601, PEGASUS_II, _3_COM,    /* 3-Com */
+    0x066b, 0x2202, PEGASUS_II, LINKSYS_10,  /* LinkSys */
     0x066b, 0x2203, PEGASUS,    LINKSYS_100,
     0x066b, 0x2204, PEGASUS,    LINKSYS_100,
     0x066b, 0x2206, PEGASUS,    LINKSYS,
@@ -148,7 +148,7 @@ static usbeth_disp_t usbeth_peg = {
 static int peg_get_reg( usbdev_t *dev, int16_t reg, uint8_t *val, int16_t len )
 {
     return usb_std_request( dev, (USBREQ_TYPE_VENDOR | USBREQ_DIR_IN),
-			    PEG_GET_REG, 0, reg, val, len );
+          PEG_GET_REG, 0, reg, val, len );
 }
 
 static int peg_set_reg( usbdev_t *dev, int16_t reg, int16_t val )
@@ -156,13 +156,13 @@ static int peg_set_reg( usbdev_t *dev, int16_t reg, int16_t val )
     unsigned char data = (uint8_t) val & 0xff;
 
     return usb_std_request( dev, (USBREQ_TYPE_VENDOR | USBREQ_DIR_OUT),
-			    PEG_SET_REG, val, reg, &data, 1 );
+          PEG_SET_REG, val, reg, &data, 1 );
 }
 
 static int peg_set_regs( usbdev_t *dev, int16_t reg, int8_t *vals, int16_t len )
 {
     return usb_std_request( dev, (USBREQ_TYPE_VENDOR | USBREQ_DIR_OUT),
-			    PEG_SET_REG, 0, reg, (uint8_t *)vals, len );
+          PEG_SET_REG, 0, reg, (uint8_t *)vals, len );
 }
 
 static int peg_get_eep_word( usbdev_t *dev, int16_t ofs, uint8_t *val )
@@ -170,24 +170,24 @@ static int peg_get_eep_word( usbdev_t *dev, int16_t ofs, uint8_t *val )
     int status=0, tries=20;
     uint8_t data[2];
 
-    if( peg_set_reg( dev, R_PEG_EEPROM_CTL, 0 ) == FAIL )
-	return FAIL;
-    if( peg_set_reg( dev, R_PEG_EEPROM_OFS, ofs ) == FAIL )
-	return FAIL;
-    if( peg_set_reg( dev, R_PEG_EEPROM_CTL, 0x02 ) == FAIL )	/* read */
-	return FAIL;
-    while( --tries ) {
-	if( peg_get_reg( dev, R_PEG_EEPROM_CTL, data, 1 ) == FAIL )
-	    return FAIL;
-	if( data[0] & 0x04 )
-	    break;	/* eeprom data ready */
-	}
-    if( !tries ) {
-	xprintf( "Pegasus Eeprom read failed!\n" );
-	return FAIL;
-	}
-    if( peg_get_reg( dev, R_PEG_EEPROM_DATA, data, 2 ) == FAIL )
-	return FAIL;
+    if ( peg_set_reg( dev, R_PEG_EEPROM_CTL, 0 ) == FAIL )
+  return FAIL;
+    if ( peg_set_reg( dev, R_PEG_EEPROM_OFS, ofs ) == FAIL )
+  return FAIL;
+    if ( peg_set_reg( dev, R_PEG_EEPROM_CTL, 0x02 ) == FAIL )  /* read */
+  return FAIL;
+    while ( --tries ) {
+  if ( peg_get_reg( dev, R_PEG_EEPROM_CTL, data, 1 ) == FAIL )
+      return FAIL;
+  if ( data[0] & 0x04 )
+      break;  /* eeprom data ready */
+  }
+    if ( !tries ) {
+  xprintf( "Pegasus Eeprom read failed!\n" );
+  return FAIL;
+  }
+    if ( peg_get_reg( dev, R_PEG_EEPROM_DATA, data, 2 ) == FAIL )
+  return FAIL;
     val[0] = data[0];
     val[1] = data[1];
 
@@ -199,8 +199,8 @@ static int peg_get_mac_addr( usbdev_t *dev, uint8_t *mac_addr )
     int i, status;
 
     for( i = 0; i < 3; ++i ) {
-	status = peg_get_eep_word( dev, i, &mac_addr[i*2] );
-	}
+  status = peg_get_eep_word( dev, i, &mac_addr[i*2] );
+  }
     return( status );
 }
 
@@ -244,31 +244,31 @@ static int peg_init_device( peg_softc_t * softc )
     vendor_id = (dev_desc.idVendorHigh  << 8) + dev_desc.idVendorLow;
     product_id = (dev_desc.idProductHigh << 8) + dev_desc.idProductLow;
 
-    while( *ptr != -1 )	{
-	if( (vendor_id == ptr[0]) && (product_id == ptr[1]) ) {
-	    softc->dev_id = ptr[2];
-	    softc->ven_code = ptr[3];
-	    break;
-	    }
-	ptr += 4;
-	}
-    if( *ptr == -1 ) {
-	xprintf( "Unrecognized ADMTEK USB-Ethernet device\n" );
-	return -1;
-	}
+    while ( *ptr != -1 )  {
+  if ( (vendor_id == ptr[0]) && (product_id == ptr[1]) ) {
+      softc->dev_id = ptr[2];
+      softc->ven_code = ptr[3];
+      break;
+      }
+  ptr += 4;
+  }
+    if ( *ptr == -1 ) {
+  xprintf( "Unrecognized ADMTEK USB-Ethernet device\n" );
+  return -1;
+  }
 
     /* init the adapter */
-    if( softc->dev_id == PEGASUS_II )
-	peg_set_reg( dev, R_PEG_INT_PHY, 0x02 );    /* enable internal PHY */
+    if ( softc->dev_id == PEGASUS_II )
+  peg_set_reg( dev, R_PEG_INT_PHY, 0x02 );    /* enable internal PHY */
     else
-	peg_init_phy( dev );
+  peg_init_phy( dev );
 
     /* Read the adapter's MAC addr */
     peg_get_mac_addr( dev, softc->mac_addr );
 
     /* display adapter info */
     xprintf( "%s USB-Ethernet Adapter (%a)\n",
-	     VENDOR_NAMES[softc->ven_code], softc->mac_addr);
+       VENDOR_NAMES[softc->ven_code], softc->mac_addr);
 
     return 0;
 }
@@ -283,8 +283,8 @@ static int peg_get_dev_addr( void *ctx, hsaddr_t mac_addr )
 static void peg_queue_rx( peg_softc_t *softc )
 {
     softc->rx_ur = usb_make_request(softc->dev, softc->bulk_inpipe,
-				    softc->rxbuf, sizeof(softc->rxbuf),
-				    (UR_FLAG_IN | UR_FLAG_SHORTOK));
+            softc->rxbuf, sizeof(softc->rxbuf),
+            (UR_FLAG_IN | UR_FLAG_SHORTOK));
     usb_queue_request(softc->rx_ur);
 }
 
@@ -301,21 +301,21 @@ static int peg_get_eth_frame( void *ctx, hsaddr_t buf )
     peg_softc_t *softc = (peg_softc_t *) ctx;
     uint8_t *rxbuf;
 
-    if( !softc->rx_ur->ur_inprogress ) {
-	rxbuf = softc->rxbuf;
-	len = softc->rx_ur->ur_xferred;
-	if (len > 0) {
+    if ( !softc->rx_ur->ur_inprogress ) {
+  rxbuf = softc->rxbuf;
+  len = softc->rx_ur->ur_xferred;
+  if (len > 0) {
 #if USBETH_DEBUG
-	    xprintf( "Incoming packet :\n" );
-	    hexdump( rxbuf, len, 16, len / 16 + 1 );
+      xprintf( "Incoming packet :\n" );
+      hexdump( rxbuf, len, 16, len / 16 + 1 );
 #endif
-	    hs_memcpy_to_hs( buf, rxbuf, len );
-	    }
-	usb_free_request(softc->rx_ur);
-	peg_queue_rx( softc );
-	}
+      hs_memcpy_to_hs( buf, rxbuf, len );
+      }
+  usb_free_request(softc->rx_ur);
+  peg_queue_rx( softc );
+  }
     else
-	xprintf( "Bulk data is not available yet!\n" );
+  xprintf( "Bulk data is not available yet!\n" );
 
     return( len );
 }
@@ -337,7 +337,7 @@ static int peg_send_eth_frame( void *ctx, hsaddr_t buf, int len )
     hexdump( txbuf, txlen, 16, txlen / 16 + 1 );
 #endif
     ur = usb_make_request(softc->dev, softc->bulk_outpipe,
-	                      txbuf, txlen, UR_FLAG_OUT);
+                        txbuf, txlen, UR_FLAG_OUT);
     usb_sync_request(ur);
     usb_free_request(ur);
     usb_dma_free(txbuf);
@@ -389,7 +389,7 @@ static void peg_close_device( peg_softc_t *softc )
     *      0
     ********************************************************************* */
 
-const cfe_driver_t usbpegdrv;		/* forward declaration */
+const cfe_driver_t usbpegdrv;    /* forward declaration */
 
 static int peg_attach(usbdev_t *dev, usb_driver_t *drv)
 {
@@ -404,43 +404,43 @@ static int peg_attach(usbdev_t *dev, usb_driver_t *drv)
     dev->ud_drv = drv;
 
     softc = (peg_softc_t *) KMALLOC( sizeof(peg_softc_t), 0 );
-    if( softc == NULL )	{
-	xprintf( "Failed to allocate softc memory.\n" );
-	return -1;
-	}
+    if ( softc == NULL )  {
+  xprintf( "Failed to allocate softc memory.\n" );
+  return -1;
+  }
     memset( softc, 0, sizeof(peg_softc_t) );
     dev->ud_private = softc;
     softc->dev = dev;
 
     ifdscr = usb_find_cfg_descr(dev,USB_INTERFACE_DESCRIPTOR_TYPE,0);
     if (ifdscr == NULL) {
-	xprintf("USBETH: ERROR...no interace descriptor\n");
-	return -1;
-	}
+  xprintf("USBETH: ERROR...no interace descriptor\n");
+  return -1;
+  }
 
     for (idx = 0; idx < 2; idx++) {
-	epdscr = usb_find_cfg_descr(dev,USB_ENDPOINT_DESCRIPTOR_TYPE,idx);
-	if (USB_ENDPOINT_DIR_OUT(epdscr->bEndpointAddress))
-	    outdscr = epdscr;
-	else
-	    indscr = epdscr;
-	}
+  epdscr = usb_find_cfg_descr(dev,USB_ENDPOINT_DESCRIPTOR_TYPE,idx);
+  if (USB_ENDPOINT_DIR_OUT(epdscr->bEndpointAddress))
+      outdscr = epdscr;
+  else
+      indscr = epdscr;
+  }
 
     if (!indscr || !outdscr) {
-	/*
-	 * Could not get descriptors, something is very wrong.
-	 * Leave device addressed but not configured.
-	 */
-	xprintf("USBETH: ERROR...no endpoint descriptors\n");
-	return -1;
-	}
+  /*
+   * Could not get descriptors, something is very wrong.
+   * Leave device addressed but not configured.
+   */
+  xprintf("USBETH: ERROR...no endpoint descriptors\n");
+  return -1;
+  }
 
     /* Choose the standard configuration. */
     usb_set_configuration(dev,cfgdscr->bConfigurationValue);
 
     /* Quit if not able to initialize the device */
     if (peg_init_device(softc) < 0)
-	return -1;
+  return -1;
 
     /* Open the pipes. */
     softc->bulk_inpipe     = usb_open_pipe(dev,indscr);
@@ -475,12 +475,12 @@ static int peg_detach(usbdev_t *dev)
     peg_softc_t *softc = (peg_softc_t *) dev->ud_private;
 
     if (softc != NULL) {
-	usbeth_unregister( softc );
-	peg_close_device ( softc );
-	dev->ud_private = NULL;
-	softc->dev = NULL;
-	KFREE(softc);
-	}
+  usbeth_unregister( softc );
+  peg_close_device ( softc );
+  dev->ud_private = NULL;
+  softc->dev = NULL;
+  KFREE(softc);
+  }
 
     return 0;
 }

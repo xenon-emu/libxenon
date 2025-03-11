@@ -1,7 +1,7 @@
 #ifndef ELF_H
-#define	ELF_H
+#define  ELF_H
 
-#ifdef	__cplusplus
+#ifdef  __cplusplus
 extern "C" {
 #endif
 
@@ -17,9 +17,9 @@ void kernel_relocate_initrd(void *start, size_t size);
 void kernel_reset_initrd(void);
 void kernel_build_cmdline(const char *parameters, const char *root);
 
-#ifdef	__cplusplus
+#ifdef  __cplusplus
 }
 #endif
 
-#endif	/* ELF_H */
+#endif  /* ELF_H */
 

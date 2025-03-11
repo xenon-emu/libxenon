@@ -212,21 +212,21 @@ PACK_STRUCT_END
 
 #define TCP_EVENT_ACCEPT(pcb,err,ret)                          \
   do {                                                         \
-    if((pcb)->accept != NULL)                                  \
+    if ((pcb)->accept != NULL)                                  \
       (ret) = (pcb)->accept((pcb)->callback_arg,(pcb),(err));  \
     else (ret) = ERR_ARG;                                      \
   } while (0)
 
 #define TCP_EVENT_SENT(pcb,space,ret)                          \
   do {                                                         \
-    if((pcb)->sent != NULL)                                    \
+    if ((pcb)->sent != NULL)                                    \
       (ret) = (pcb)->sent((pcb)->callback_arg,(pcb),(space));  \
     else (ret) = ERR_OK;                                       \
   } while (0)
 
 #define TCP_EVENT_RECV(pcb,p,err,ret)                          \
   do {                                                         \
-    if((pcb)->recv != NULL) {                                  \
+    if ((pcb)->recv != NULL) {                                  \
       (ret) = (pcb)->recv((pcb)->callback_arg,(pcb),(p),(err));\
     } else {                                                   \
       (ret) = tcp_recv_null(NULL, (pcb), (p), (err));          \
@@ -235,7 +235,7 @@ PACK_STRUCT_END
 
 #define TCP_EVENT_CLOSED(pcb,ret)                                \
   do {                                                           \
-    if(((pcb)->recv != NULL)) {                                  \
+    if (((pcb)->recv != NULL)) {                                  \
       (ret) = (pcb)->recv((pcb)->callback_arg,(pcb),NULL,ERR_OK);\
     } else {                                                     \
       (ret) = ERR_OK;                                            \
@@ -244,21 +244,21 @@ PACK_STRUCT_END
 
 #define TCP_EVENT_CONNECTED(pcb,err,ret)                         \
   do {                                                           \
-    if((pcb)->connected != NULL)                                 \
+    if ((pcb)->connected != NULL)                                 \
       (ret) = (pcb)->connected((pcb)->callback_arg,(pcb),(err)); \
     else (ret) = ERR_OK;                                         \
   } while (0)
 
 #define TCP_EVENT_POLL(pcb,ret)                                \
   do {                                                         \
-    if((pcb)->poll != NULL)                                    \
+    if ((pcb)->poll != NULL)                                    \
       (ret) = (pcb)->poll((pcb)->callback_arg,(pcb));          \
     else (ret) = ERR_OK;                                       \
   } while (0)
 
 #define TCP_EVENT_ERR(errf,arg,err)                            \
   do {                                                         \
-    if((errf) != NULL)                                         \
+    if ((errf) != NULL)                                         \
       (errf)((arg),(err));                                     \
   } while (0)
 
@@ -349,14 +349,14 @@ extern struct tcp_pcb *tcp_tmp_pcb;      /* Only used for temporary storage. */
                             *(pcbs) = (npcb); \
                             LWIP_ASSERT("TCP_RMV: tcp_pcbs sane", tcp_pcbs_sane()); \
               tcp_timer_needed(); \
-                            } while(0)
+                            } while (0)
 #define TCP_RMV(pcbs, npcb) do { \
                             LWIP_ASSERT("TCP_RMV: pcbs != NULL", *(pcbs) != NULL); \
                             LWIP_DEBUGF(TCP_DEBUG, ("TCP_RMV: removing %p from %p\n", (npcb), *(pcbs))); \
-                            if(*(pcbs) == (npcb)) { \
+                            if (*(pcbs) == (npcb)) { \
                                *(pcbs) = (*pcbs)->next; \
                             } else for(tcp_tmp_pcb = *(pcbs); tcp_tmp_pcb != NULL; tcp_tmp_pcb = tcp_tmp_pcb->next) { \
-                               if(tcp_tmp_pcb->next == (npcb)) { \
+                               if (tcp_tmp_pcb->next == (npcb)) { \
                                   tcp_tmp_pcb->next = (npcb)->next; \
                                   break; \
                                } \
@@ -364,7 +364,7 @@ extern struct tcp_pcb *tcp_tmp_pcb;      /* Only used for temporary storage. */
                             (npcb)->next = NULL; \
                             LWIP_ASSERT("TCP_RMV: tcp_pcbs sane", tcp_pcbs_sane()); \
                             LWIP_DEBUGF(TCP_DEBUG, ("TCP_RMV: removed %p from %p\n", (npcb), *(pcbs))); \
-                            } while(0)
+                            } while (0)
 
 #else /* LWIP_DEBUG */
 
@@ -377,21 +377,21 @@ extern struct tcp_pcb *tcp_tmp_pcb;      /* Only used for temporary storage. */
 
 #define TCP_RMV(pcbs, npcb)                        \
   do {                                             \
-    if(*(pcbs) == (npcb)) {                        \
+    if (*(pcbs) == (npcb)) {                        \
       (*(pcbs)) = (*pcbs)->next;                   \
     }                                              \
     else {                                         \
       for(tcp_tmp_pcb = *pcbs;                     \
           tcp_tmp_pcb != NULL;                     \
           tcp_tmp_pcb = tcp_tmp_pcb->next) {       \
-        if(tcp_tmp_pcb->next == (npcb)) {          \
+        if (tcp_tmp_pcb->next == (npcb)) {          \
           tcp_tmp_pcb->next = (npcb)->next;        \
           break;                                   \
         }                                          \
       }                                            \
     }                                              \
     (npcb)->next = NULL;                           \
-  } while(0)
+  } while (0)
 
 #endif /* LWIP_DEBUG */
 
@@ -407,7 +407,7 @@ struct tcp_seg *tcp_seg_copy(struct tcp_seg *seg);
 
 #define tcp_ack(pcb)                               \
   do {                                             \
-    if((pcb)->flags & TF_ACK_DELAY) {              \
+    if ((pcb)->flags & TF_ACK_DELAY) {              \
       (pcb)->flags &= ~TF_ACK_DELAY;               \
       (pcb)->flags |= TF_ACK_NOW;                  \
     }                                              \

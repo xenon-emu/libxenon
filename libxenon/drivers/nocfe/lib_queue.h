@@ -1,7 +1,7 @@
 /*  *********************************************************************
     *  Broadcom Common Firmware Environment (CFE)
     *  
-    *  Queue management prototypes		File: lib_queue.h
+    *  Queue management prototypes    File: lib_queue.h
     *  
     *  Constants, structures, and function prototypes for the queue
     *  manager.
@@ -77,7 +77,7 @@ void q_enqueue(queue_t *,queue_t *);
 void q_dequeue(queue_t *);
 queue_t *q_deqnext(queue_t *);
 int q_map(queue_t *qb,int (*func)(queue_t *,unsigned int,unsigned int),
-	  unsigned int a,unsigned int b);
+    unsigned int a,unsigned int b);
 int q_count(queue_t *);
 int q_find(queue_t *,queue_t *);
 

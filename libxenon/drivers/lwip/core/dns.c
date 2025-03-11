@@ -349,8 +349,8 @@ dns_lookup_local(const char *hostname)
 {
 #if DNS_LOCAL_HOSTLIST_IS_DYNAMIC
   struct local_hostlist_entry *entry = local_hostlist_dynamic;
-  while(entry != NULL) {
-    if(strcmp(entry->name, hostname) == 0) {
+  while (entry != NULL) {
+    if (strcmp(entry->name, hostname) == 0) {
       return ip4_addr_get_u32(&entry->addr);
     }
     entry = entry->next;
@@ -358,7 +358,7 @@ dns_lookup_local(const char *hostname)
 #else /* DNS_LOCAL_HOSTLIST_IS_DYNAMIC */
   int i;
   for (i = 0; i < sizeof(local_hostlist_static) / sizeof(struct local_hostlist_entry); i++) {
-    if(strcmp(local_hostlist_static[i].name, hostname) == 0) {
+    if (strcmp(local_hostlist_static[i].name, hostname) == 0) {
       return ip4_addr_get_u32(&local_hostlist_static[i].addr);
     }
   }
@@ -459,7 +459,7 @@ dns_lookup(const char *name)
   }
 #endif /* DNS_LOCAL_HOSTLIST */
 #ifdef DNS_LOOKUP_LOCAL_EXTERN
-  if((addr = DNS_LOOKUP_LOCAL_EXTERN(name)) != IPADDR_NONE) {
+  if ((addr = DNS_LOOKUP_LOCAL_EXTERN(name)) != IPADDR_NONE) {
     return addr;
   }
 #endif /* DNS_LOOKUP_LOCAL_EXTERN */
@@ -598,7 +598,7 @@ dns_send(u8_t numdns, const char* name, u8_t id)
         ++n;
       }
       *nptr = n;
-    } while(*pHostname != 0);
+    } while (*pHostname != 0);
     *query++='\0';
 
     /* fill dns query */
@@ -765,7 +765,7 @@ dns_recv(void *arg, struct udp_pcb *pcb, struct pbuf *p, ip_addr_t *addr, u16_t 
     i = htons(hdr->id);
     if (i < DNS_TABLE_SIZE) {
       pEntry = &dns_table[i];
-      if(pEntry->state == DNS_STATE_ASKING) {
+      if (pEntry->state == DNS_STATE_ASKING) {
         /* This entry is now completed. */
         pEntry->state = DNS_STATE_DONE;
         pEntry->err   = hdr->flags2 & DNS_FLAG2_ERR_MASK;
@@ -800,7 +800,7 @@ dns_recv(void *arg, struct udp_pcb *pcb, struct pbuf *p, ip_addr_t *addr, u16_t 
 
           /* Check for IP address type and Internet class. Others are discarded. */
           SMEMCPY(&ans, pHostname, SIZEOF_DNS_ANSWER);
-          if((ans.type == PP_HTONS(DNS_RRTYPE_A)) && (ans.cls == PP_HTONS(DNS_RRCLASS_IN)) &&
+          if ((ans.type == PP_HTONS(DNS_RRTYPE_A)) && (ans.cls == PP_HTONS(DNS_RRCLASS_IN)) &&
              (ans.len == PP_HTONS(sizeof(ip_addr_t))) ) {
             /* read the answer resource record's TTL, and maximize it if needed */
             pEntry->ttl = ntohl(ans.ttl);

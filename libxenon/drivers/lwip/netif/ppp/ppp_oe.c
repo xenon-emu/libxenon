@@ -179,7 +179,7 @@ pppoe_destroy(struct netif *ifp)
     }
   }
 
-  if(!(sc && (sc->sc_ethif == ifp))) {
+  if (!(sc && (sc->sc_ethif == ifp))) {
     return ERR_IF;
   }
 
@@ -337,7 +337,7 @@ pppoe_dispatch_disc_pkt(struct netif *netif, struct pbuf *pb)
         pb->len - off, plen);
     goto done;
   }
-  if(pb->tot_len == pb->len) {
+  if (pb->tot_len == pb->len) {
     pb->tot_len = pb->len = (u16_t)off + plen; /* ignore trailing garbage */
   }
   tag = 0;
@@ -531,7 +531,7 @@ breakbreak:;
       pppoe_clear_softc(sc, "received PADT");
       break;
     default:
-      if(sc) {
+      if (sc) {
         printf("%c%c%"U16_F": unknown code (0x%"X16_F") session = 0x%"X16_F"\n",
             sc->sc_ethif->name[0], sc->sc_ethif->name[1], sc->sc_ethif->num,
             (u16_t)ph->code, session);

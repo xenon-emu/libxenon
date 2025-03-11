@@ -61,7 +61,7 @@
 #define TCP_DATA_COPY(dst, src, len, seg) do { \
   tcp_seg_add_chksum(LWIP_CHKSUM_COPY(dst, src, len), \
                      len, &seg->chksum, &seg->chksum_swapped); \
-  seg->flags |= TF_SEG_DATA_CHECKSUMMED; } while(0)
+  seg->flags |= TF_SEG_DATA_CHECKSUMMED; } while (0)
 #define TCP_DATA_COPY2(dst, src, len, chksum, chksum_swapped)  \
   tcp_seg_add_chksum(LWIP_CHKSUM_COPY(dst, src, len), len, chksum, chksum_swapped);
 #else /* TCP_CHECKSUM_ON_COPY*/
@@ -960,8 +960,8 @@ tcp_output(struct tcp_pcb *pcb)
      *   either seg->next != NULL or pcb->unacked == NULL;
      *   RST is no sent using tcp_write/tcp_output.
      */
-    if((tcp_do_output_nagle(pcb) == 0) &&
-      ((pcb->flags & (TF_NAGLEMEMERR | TF_FIN)) == 0)){
+    if ((tcp_do_output_nagle(pcb) == 0) &&
+      ((pcb->flags & (TF_NAGLEMEMERR | TF_FIN)) == 0)) {
       break;
     }
 #if TCP_CWND_DEBUG
@@ -1359,7 +1359,7 @@ tcp_keepalive(struct tcp_pcb *pcb)
                           tcp_ticks, pcb->tmr, pcb->keep_cnt_sent));
    
   p = tcp_output_alloc_header(pcb, 0, 0, htonl(pcb->snd_nxt - 1));
-  if(p == NULL) {
+  if (p == NULL) {
     LWIP_DEBUGF(TCP_DEBUG, 
                 ("tcp_keepalive: could not allocate memory for pbuf\n"));
     return;
@@ -1417,10 +1417,10 @@ tcp_zero_window_probe(struct tcp_pcb *pcb)
 
   seg = pcb->unacked;
 
-  if(seg == NULL) {
+  if (seg == NULL) {
     seg = pcb->unsent;
   }
-  if(seg == NULL) {
+  if (seg == NULL) {
     return;
   }
 
@@ -1429,7 +1429,7 @@ tcp_zero_window_probe(struct tcp_pcb *pcb)
   len = is_fin ? 0 : 1;
 
   p = tcp_output_alloc_header(pcb, 0, len, seg->tcphdr->seqno);
-  if(p == NULL) {
+  if (p == NULL) {
     LWIP_DEBUGF(TCP_DEBUG, ("tcp_zero_window_probe: no memory for pbuf\n"));
     return;
   }

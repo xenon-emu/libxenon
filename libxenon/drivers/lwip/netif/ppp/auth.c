@@ -303,7 +303,7 @@ setupapfile(char **argv)
 
     /* get username */
     if (fgets(user, MAXNAMELEN - 1, ufile) == NULL
-        || fgets(passwd, MAXSECRETLEN - 1, ufile) == NULL){
+        || fgets(passwd, MAXSECRETLEN - 1, ufile) == NULL) {
       option_error("unable to read user login data file %s", *argv);
       return 0;
     }
@@ -1027,10 +1027,10 @@ get_pap_passwd(int unit, char *user, char *passwd)
 
    @todo: This should be configured by the user, instead of being hardcoded here!
 */
-  if(user) {
+  if (user) {
     strcpy(user, "none");
   }
-  if(passwd) {
+  if (passwd) {
     strcpy(passwd, "none");
   }
   return 1;
@@ -1083,7 +1083,7 @@ get_secret(int unit, char *client, char *server, char *secret, int *secret_len, 
 
   addrs = NULL;
 
-  if(!client || !client[0] || strcmp(client, ppp_settings.user)) {
+  if (!client || !client[0] || strcmp(client, ppp_settings.user)) {
     return 0;
   }
 

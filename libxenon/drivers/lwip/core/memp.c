@@ -223,7 +223,7 @@ memp_overflow_check_element_overflow(struct memp *p, u16_t memp_type)
     if (m[k] != 0xcd) {
       char errstr[128] = "detected memp overflow in pool ";
       char digit[] = "0";
-      if(memp_type >= 10) {
+      if (memp_type >= 10) {
         digit[0] = '0' + (memp_type/10);
         strcat(errstr, digit);
       }
@@ -256,7 +256,7 @@ memp_overflow_check_element_underflow(struct memp *p, u16_t memp_type)
     if (m[k] != 0xcd) {
       char errstr[128] = "detected memp underflow in pool ";
       char digit[] = "0";
-      if(memp_type >= 10) {
+      if (memp_type >= 10) {
         digit[0] = '0' + (memp_type/10);
         strcat(errstr, digit);
       }

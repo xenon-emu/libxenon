@@ -104,7 +104,7 @@
  * OR MODIFICATIONS.
  */
 
-#define TIMEOUT(f, a, t)    do { sys_untimeout((f), (a)); sys_timeout((t)*1000, (f), (a)); } while(0)
+#define TIMEOUT(f, a, t)    do { sys_untimeout((f), (a)); sys_timeout((t)*1000, (f), (a)); } while (0)
 #define UNTIMEOUT(f, a)     sys_untimeout((f), (a))
 
 

@@ -1,7 +1,7 @@
 /*  *********************************************************************
     *  Broadcom Common Firmware Environment (CFE)
     *  
-    *  usb test harness definitions	    	File: usbhack.h
+    *  usb test harness definitions        File: usbhack.h
     *  
     *  Anything special required by the test harness is defined
     *  here.

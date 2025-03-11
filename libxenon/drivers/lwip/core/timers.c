@@ -390,7 +390,7 @@ sys_check_timeouts(void)
         }
       }
     /* repeat until all expired timers have been called */
-    }while(had_one);
+    } while (had_one);
   }
 }
 

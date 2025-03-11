@@ -291,12 +291,12 @@ void netif_set_link_callback(struct netif *netif, netif_status_callback_fn link_
 #endif /* LWIP_NETIF_LINK_CALLBACK */
 
 #if LWIP_NETIF_HOSTNAME
-#define netif_set_hostname(netif, name) do { if((netif) != NULL) { (netif)->hostname = name; }}while(0)
+#define netif_set_hostname(netif, name) do { if ((netif) != NULL) { (netif)->hostname = name; }} while (0)
 #define netif_get_hostname(netif) (((netif) != NULL) ? ((netif)->hostname) : NULL)
 #endif /* LWIP_NETIF_HOSTNAME */
 
 #if LWIP_IGMP
-#define netif_set_igmp_mac_filter(netif, function) do { if((netif) != NULL) { (netif)->igmp_mac_filter = function; }}while(0)
+#define netif_set_igmp_mac_filter(netif, function) do { if ((netif) != NULL) { (netif)->igmp_mac_filter = function; }} while (0)
 #define netif_get_igmp_mac_filter(netif) (((netif) != NULL) ? ((netif)->igmp_mac_filter) : NULL)
 #endif /* LWIP_IGMP */
 

@@ -1,7 +1,7 @@
 /*  *********************************************************************
     *  Broadcom Common Firmware Environment (CFE)
     *  
-    *  USB Ethernet				File: usbeth.c
+    *  USB Ethernet        File: usbeth.c
     *  
     *  Generic top-level interface for USB Ethernet devices
     *  
@@ -81,14 +81,14 @@ int usbeth_register(usbeth_disp_t *disp,void *softc)
     usbeth_unit_t *unit;
 
     for (idx = 0; idx < USBETH_MAXUNITS; idx++) {
-	unit = usbeth_units[idx];
-	if (!unit) continue;
-	if (!unit->dispatch) {
-	    unit->dispatch = disp;
-	    unit->softc = softc;
-	    return idx;
-	    }
-	}
+  unit = usbeth_units[idx];
+  if (!unit) continue;
+  if (!unit->dispatch) {
+      unit->dispatch = disp;
+      unit->softc = softc;
+      return idx;
+      }
+  }
 
     return -1;
 }
@@ -105,13 +105,13 @@ void usbeth_unregister(void *softc)
      */
       
     for (idx = 0; idx < USBETH_MAXUNITS; idx++) {
-	unit = usbeth_units[idx];
-	if (!unit) continue;
-	if (unit->softc == softc) {
-	    unit->dispatch = NULL;
-	    unit->softc = NULL;
-	    }
-	}
+  unit = usbeth_units[idx];
+  if (!unit) continue;
+  if (unit->softc == softc) {
+      unit->dispatch = NULL;
+      unit->softc = NULL;
+      }
+  }
 }
 
 /*  *********************************************************************
@@ -130,8 +130,8 @@ static int usb_ether_read( cfe_devctx_t *ctx, iocb_buffer_t *buffer )
 
     /* If no device is hooked up, pretend like the cable is disconnected */
     if (unit->softc == NULL) {
-	return CFE_ERR_NOTREADY;
-	}
+  return CFE_ERR_NOTREADY;
+  }
 
     buffer->buf_retlen = (*(unit->dispatch->read))(unit->softc,buffer->buf_ptr);
 
@@ -145,9 +145,9 @@ static int usb_ether_inpstat( cfe_devctx_t *ctx, iocb_inpstat_t *inpstat )
 
     /* If no device is hooked up, pretend like the cable is disconnected */
     if (unit->softc == NULL) {
-	inpstat->inp_status = 0;
-	return 0;
-	}
+  inpstat->inp_status = 0;
+  return 0;
+  }
 
     inpstat->inp_status = (*(unit->dispatch->inpstat))(unit->softc);
 
@@ -161,8 +161,8 @@ static int usb_ether_write(cfe_devctx_t *ctx,iocb_buffer_t *buffer)
 
     /* If no device is hooked up, pretend like the cable is disconnected */
     if (unit->softc == NULL) {
-	return CFE_ERR_NOTREADY;
-	}
+  return CFE_ERR_NOTREADY;
+  }
 
     /* Block until hw notifies you data is sent. */
     (*(unit->dispatch->write))(unit->softc,buffer->buf_ptr, buffer->buf_length );
@@ -178,16 +178,16 @@ static int usb_ether_ioctl(cfe_devctx_t *ctx,iocb_buffer_t *buffer)
 
     /* If no device is hooked up, pretend like the cable is disconnected */
     if (unit->softc == NULL) {
-	return CFE_ERR_UNSUPPORTED;
-	}
+  return CFE_ERR_UNSUPPORTED;
+  }
 
     switch( (int)buffer->buf_ioctlcmd ) {
-	case IOCTL_ETHER_GETHWADDR:
-	    (*(unit->dispatch->getaddr))(unit->softc,buffer->buf_ptr );
-	    break;
-	default:
-	    retval = CFE_ERR_UNSUPPORTED;
-	}
+  case IOCTL_ETHER_GETHWADDR:
+      (*(unit->dispatch->getaddr))(unit->softc,buffer->buf_ptr );
+      break;
+  default:
+      retval = CFE_ERR_UNSUPPORTED;
+  }
 
     return retval;
 }
@@ -199,8 +199,8 @@ static int usb_ether_close(cfe_devctx_t *ctx)
 }
 
 static void usb_ether_probe(cfe_driver_t *drv,
-			   unsigned long probe_a, unsigned long probe_b, 
-			   void *probe_ptr)
+         unsigned long probe_a, unsigned long probe_b, 
+         void *probe_ptr)
 {
     usbeth_unit_t *unit;
     char descr[80];

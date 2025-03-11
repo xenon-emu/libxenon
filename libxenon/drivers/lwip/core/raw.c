@@ -227,7 +227,7 @@ raw_sendto(struct raw_pcb *pcb, struct pbuf *p, ip_addr_t *ipaddr)
   }  else {
     /* first pbuf q equals given pbuf */
     q = p;
-    if(pbuf_header(q, -IP_HLEN)) {
+    if (pbuf_header(q, -IP_HLEN)) {
       LWIP_ASSERT("Can't restore header we just removed!", 0);
       return ERR_MEM;
     }

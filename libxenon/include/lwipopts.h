@@ -38,8 +38,8 @@
 #include <stdio.h>
 
 #define NO_SYS                  1
-#define NO_SYS_NO_TIMERS		1
-#define ETHARP_TRUST_IP_MAC		1
+#define NO_SYS_NO_TIMERS    1
+#define ETHARP_TRUST_IP_MAC    1
 
 #define LWIP_CALLBACK_API       1
 #define LWIP_TCP                1
@@ -71,10 +71,10 @@
 #define DHCP_DOES_ARP_CHECK     1
 
 
-//#define LWIP_DEBUG 					1
+//#define LWIP_DEBUG           1
 //#define DHCP_DEBUG                    LWIP_DBG_ON
 //#define NETIF_DEBUG                   LWIP_DBG_ON
 //#define TIMERS_DEBUG                  LWIP_DBG_ON
-//#define LWIP_DEBUG_TIMERNAMES			1
+//#define LWIP_DEBUG_TIMERNAMES      1
 
 #endif /* __LWIPOPTS_H__ */

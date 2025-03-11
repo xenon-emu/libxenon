@@ -129,7 +129,7 @@ static struct check_s checks[MAX_CHECKS];
 
 void mf_check(void * addr,int size,int check_reads, int check_writes, int halt_on_access)
 {
-    if(check_count>=MAX_CHECKS-1)
+    if (check_count>=MAX_CHECKS-1)
     {
         printf("[mf-simplecheck] Too many checks!\n");
         return;

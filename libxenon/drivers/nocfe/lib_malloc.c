@@ -1,7 +1,7 @@
 /*  *********************************************************************
     *  Broadcom Common Firmware Environment (CFE)
     *  
-    *  Local memory manager			File: cfe_malloc.c
+    *  Local memory manager      File: cfe_malloc.c
     *  
     *  This routine is used to manage memory allocated within the 
     *  firmware.  You give it a chunk of memory to manage, and then
@@ -64,14 +64,14 @@
     *  Constants
     ********************************************************************* */
 
-#define MEMNODE_SEAL 0xFAAFA123		/* just some random constant */
+#define MEMNODE_SEAL 0xFAAFA123    /* just some random constant */
 #define MINBLKSIZE 64
 
 /*  *********************************************************************
     *  Globals
     ********************************************************************* */
 
-mempool_t kmempool;			/* default pool */
+mempool_t kmempool;      /* default pool */
 
 /*  *********************************************************************
     *  kmeminit(pool,buffer,length)
@@ -82,11 +82,11 @@ mempool_t kmempool;			/* default pool */
     *  
     *  Input parameters: 
     *      pool - pool pointer
-    *  	   buffer - beginning of buffer area, must be pointer-aligned
-    *  	   length - length of buffer area
-    *  	   
+    *       buffer - beginning of buffer area, must be pointer-aligned
+    *       length - length of buffer area
+    *       
     *  Return value:
-    *  	   nothing
+    *       nothing
     ********************************************************************* */
 
 
@@ -110,10 +110,10 @@ void kmeminit(mempool_t *pool,unsigned char *buffer,int length)
     *  Returns the base address of the specified memory pool
     *  
     *  Input parameters: 
-    *  	   pool - pool pointer
-    *  	   
+    *       pool - pool pointer
+    *       
     *  Return value:
-    *  	   pointer to beginning of pool's memory
+    *       pointer to beginning of pool's memory
     ********************************************************************* */
 void *kmempoolbase(mempool_t *pool)
 {
@@ -126,10 +126,10 @@ void *kmempoolbase(mempool_t *pool)
     *  Returns the total size of the specified memory pool
     *  
     *  Input parameters: 
-    *  	   pool - pool pointer
-    *  	   
+    *       pool - pool pointer
+    *       
     *  Return value:
-    *  	   size of pool in bytes
+    *       size of pool in bytes
     ********************************************************************* */
 
 int kmempoolsize(mempool_t *pool)
@@ -144,10 +144,10 @@ int kmempoolsize(mempool_t *pool)
     *  on the list.
     *  
     *  Input parameters: 
-    *  	   pool - pool descriptor
-    *  	   
+    *       pool - pool descriptor
+    *       
     *  Return value:
-    *  	   nothing
+    *       nothing
     ********************************************************************* */
 
 static void kmemcompact(mempool_t *pool)
@@ -156,37 +156,37 @@ static void kmemcompact(mempool_t *pool)
     int compacted;
 
     do {
-	compacted = 0;
+  compacted = 0;
 
-	for (m = pool->root; m; m = m->next) {
+  for (m = pool->root; m; m = m->next) {
 
-	    /* Check seal to be sure that we're doing ok */
+      /* Check seal to be sure that we're doing ok */
 
-	    if (m->seal != MEMNODE_SEAL) {
+      if (m->seal != MEMNODE_SEAL) {
 #ifdef TESTPROG
-		printf("Memory list corrupted!\n");
+    printf("Memory list corrupted!\n");
 #endif
-		return;
-		}
+    return;
+    }
 
-	    /* 
-	     * If we're not on the last block and both this
-	     * block and the next one are free, combine them
-	     */
+      /* 
+       * If we're not on the last block and both this
+       * block and the next one are free, combine them
+       */
 
-	    if (m->next && 
-		(m->status == memnode_free) &&
-		(m->next->status == memnode_free)) {
-		m->length += sizeof(memnode_t) + m->next->length;
-		m->next->seal = 0;
-		m->next = m->next->next;
-		compacted++;
-		}
+      if (m->next && 
+    (m->status == memnode_free) &&
+    (m->next->status == memnode_free)) {
+    m->length += sizeof(memnode_t) + m->next->length;
+    m->next->seal = 0;
+    m->next = m->next->next;
+    compacted++;
+    }
 
-	    /* Keep going till we make a pass without doing anything. */
-	    }
+      /* Keep going till we make a pass without doing anything. */
+      }
 
-	} while (compacted > 0);
+  } while (compacted > 0);
 }
 
 
@@ -196,10 +196,10 @@ static void kmemcompact(mempool_t *pool)
     *  Return some memory to the pool.
     *  
     *  Input parameters: 
-    *  	   ptr - pointer to something allocated via kmalloc()
-    *  	   
+    *       ptr - pointer to something allocated via kmalloc()
+    *       
     *  Return value:
-    *  	   nothing
+    *       nothing
     ********************************************************************* */
 
 void kfree(mempool_t *pool,void *ptr)
@@ -208,22 +208,22 @@ void kfree(mempool_t *pool,void *ptr)
     memnode_t *m;
 
     if (((unsigned char *) ptr < pool->base) ||
-	((unsigned char *) ptr >= (pool->base+pool->length))) {
+  ((unsigned char *) ptr >= (pool->base+pool->length))) {
 #ifdef TESTPROG
-	printf("Pointer %08X does not belong to pool %08X\n",ptr,pool);
+  printf("Pointer %08X does not belong to pool %08X\n",ptr,pool);
 #endif
-	return;
-	}
+  return;
+  }
 
     backptr = (memnode_t **) (((unsigned char *) ptr) - sizeof(memnode_t *));
     m = *backptr;
 
     if (m->seal != MEMNODE_SEAL) {
 #ifdef TESTPROG
-	printf("Invalid node freed: %08X\n",m);
+  printf("Invalid node freed: %08X\n",m);
 #endif
-	return;
-	}
+  return;
+  }
 
     m->status = memnode_free;
 
@@ -237,10 +237,10 @@ void kfree(mempool_t *pool,void *ptr)
     *  XXX replace with something real someday
     *  
     *  Input parameters: 
-    *  	   nothing
-    *  	   
+    *       nothing
+    *       
     *  Return value:
-    *  	   nothing
+    *       nothing
     ********************************************************************* */
 
 void lib_outofmemory(void);
@@ -256,11 +256,11 @@ void lib_outofmemory(void)
     *  
     *  Input parameters: 
     *      pool - pool structure
-    *  	   size - size of item to allocate
-    *  	   align - alignment (must be zero or a power of 2)
-    *  	   
+    *       size - size of item to allocate
+    *       align - alignment (must be zero or a power of 2)
+    *       
     *  Return value:
-    *  	   pointer to data, or NULL if no memory left
+    *       pointer to data, or NULL if no memory left
     ********************************************************************* */
 
 void *kmalloc(mempool_t *pool,unsigned int size,unsigned int align)
@@ -282,16 +282,16 @@ void *kmalloc(mempool_t *pool,unsigned int size,unsigned int align)
     ptralign = (uintptr_t) align;
     if (ptralign < sizeof(void *)) ptralign = sizeof(uint64_t);
 
-    /*	
+    /*  
      * Everything should be at least a multiple of the 
      * size of a pointer.
      */
 
     if (size == 0) size = sizeof(void *);
     if (size & (sizeof(void *)-1)) {
-	size += sizeof(void *);
-	size &= ~(sizeof(void *)-1);
-	}
+  size += sizeof(void *);
+  size &= ~(sizeof(void *)-1);
+  }
 
     /*
      * Find a memnode at least big enough to hold the storage we
@@ -300,32 +300,32 @@ void *kmalloc(mempool_t *pool,unsigned int size,unsigned int align)
 
     for (m = pool->root; m; m = m->next) {
 
-	if (m->status == memnode_alloc) continue;
+  if (m->status == memnode_alloc) continue;
 
-	/*
-	 * If we wanted a particular alignment, we will
-	 * need to adjust the size.
-	 */
+  /*
+   * If we wanted a particular alignment, we will
+   * need to adjust the size.
+   */
 
-	daddr = memnode_data(uintptr_t,m);
-	extra = 0;
-	if (daddr & (ptralign-1)) {
-	    extra = size + (ptralign - (daddr & (ptralign-1)));
-	    }
-	realsize = size + extra;
+  daddr = memnode_data(uintptr_t,m);
+  extra = 0;
+  if (daddr & (ptralign-1)) {
+      extra = size + (ptralign - (daddr & (ptralign-1)));
+      }
+  realsize = size + extra;
 
-	if (m->length < realsize) continue;
-	break;
-	}
+  if (m->length < realsize) continue;
+  break;
+  }
 
     /*
      * If m is null, there's no memory left.
      */
 
     if (m == NULL) {
-	lib_outofmemory();
-	return NULL;
-	}
+  lib_outofmemory();
+  return NULL;
+  }
 
     /*
      * Otherwise, use this block.  Calculate the address of the data
@@ -333,9 +333,9 @@ void *kmalloc(mempool_t *pool,unsigned int size,unsigned int align)
      */
 
     if (daddr & (ptralign-1)) {
-	daddr += ptralign;
-	daddr &= ~(ptralign-1);
-	}
+  daddr += ptralign;
+  daddr &= ~(ptralign-1);
+  }
 
     /* Mark this node as allocated. */
 
@@ -362,8 +362,8 @@ void *kmalloc(mempool_t *pool,unsigned int size,unsigned int align)
      */
 
     if (m->length - realsize < MINBLKSIZE) {
-	return m->data;
-	}
+  return m->data;
+  }
 
     /*
      * Split this block.  Align the address on a pointer-size
@@ -372,9 +372,9 @@ void *kmalloc(mempool_t *pool,unsigned int size,unsigned int align)
 
     daddr += size;
     if (daddr & (uintptr_t)(sizeof(void *)-1)) {
-	daddr += (uintptr_t)sizeof(void *);
-	daddr &= ~(uintptr_t)(sizeof(void *)-1);
-	}
+  daddr += (uintptr_t)sizeof(void *);
+  daddr &= ~(uintptr_t)(sizeof(void *)-1);
+  }
 
     blkend = memnode_data(uintptr_t,m) + (uintptr_t)(m->length);
 
@@ -407,38 +407,38 @@ int kmemstats(mempool_t *pool,memstats_t *stats)
     stats->mem_largest = 0;
 
     for (m = pool->root; m; m = m->next) {
-	if (m->status) {
-	    stats->mem_allocnodes++;
-	    stats->mem_allocbytes += m->length;
-	    }
-	else {
-	    stats->mem_freenodes++;
-	    stats->mem_freebytes += m->length;
-	    if (m->length > stats->mem_largest) {
-		stats->mem_largest = m->length;
-		}
-	    }
+  if (m->status) {
+      stats->mem_allocnodes++;
+      stats->mem_allocbytes += m->length;
+      }
+  else {
+      stats->mem_freenodes++;
+      stats->mem_freebytes += m->length;
+      if (m->length > stats->mem_largest) {
+    stats->mem_largest = m->length;
+    }
+      }
 
-	daddr = memnode_data(uintptr_t,m);
-	if (m->seal != MEMNODE_SEAL) {
-	    return -1;
-	    }
-	if (m->next && ((daddr + m->length) != (uintptr_t) m->next)) {
-	    return -1;
-	    }
-	if (m->next && (m->next < m)) {
-	    return -1;
-	    }
-	if (m->data < (unsigned char *) m) {
-	    return -1;
-	    }
-	if (m->status == memnode_alloc) {
-	    backptr = (memnode_t **) (m->data - sizeof(void *));
-	    if (*backptr != m) {
-		return -1;
-		}
-	    }
-	}
+  daddr = memnode_data(uintptr_t,m);
+  if (m->seal != MEMNODE_SEAL) {
+      return -1;
+      }
+  if (m->next && ((daddr + m->length) != (uintptr_t) m->next)) {
+      return -1;
+      }
+  if (m->next && (m->next < m)) {
+      return -1;
+      }
+  if (m->data < (unsigned char *) m) {
+      return -1;
+      }
+  if (m->status == memnode_alloc) {
+      backptr = (memnode_t **) (m->data - sizeof(void *));
+      if (*backptr != m) {
+    return -1;
+    }
+      }
+  }
 
     return 0;
 }
@@ -451,10 +451,10 @@ int kmemstats(mempool_t *pool,memstats_t *stats)
     *  
     *  Input parameters: 
     *      pool - pool pointer
-    *  	   
+    *       
     *  Return value:
-    *  	   0 - pool is consistent
-    *  	   -1 - pool is corrupt
+    *       0 - pool is consistent
+    *       -1 - pool is corrupt
     ********************************************************************* */
 
 #ifdef TESTPROG
@@ -465,38 +465,38 @@ int kmemchk(mempool_t *pool,int verbose)
     unsigned int daddr;
 
     for (m = pool->root; m; m = m->next) {
-	if (verbose) {
-	    printf("%08X: Next=%08X  Len=%5u  %s  Data=%08X ",
-	       m,m->next,m->length,
-	       m->status ? "alloc" : "free ",
-	       m->data);
-	    }
-	daddr = memnode_data(uintptr_t,m);
-	if (m->seal != MEMNODE_SEAL) {
-	    if (verbose) printf("BadSeal ");
-	    else return -1;
-	    }
-	if (m->next && (daddr + m->length != (unsigned int) m->next)) {
-	    if (verbose) printf("BadLength ");
-	    else return -1;
-	    }
-	if (m->next && (m->next < m)) {
-	    if (verbose) printf("BadOrder ");
-	    else return -1;
-	    }
-	if (m->data < (unsigned char *) m) {
-	    if (verbose) printf("BadData ");
-	    else return -1;
-	    }
-	if (m->status == memnode_alloc) {
-	    backptr = (memnode_t **) (m->data - sizeof(void *));
-	    if (*backptr != m) {
-		if (verbose) printf("BadBackPtr ");
-		else return -1;
-		}
-	    }
-	if (verbose) printf("\n");
-	}
+  if (verbose) {
+      printf("%08X: Next=%08X  Len=%5u  %s  Data=%08X ",
+         m,m->next,m->length,
+         m->status ? "alloc" : "free ",
+         m->data);
+      }
+  daddr = memnode_data(uintptr_t,m);
+  if (m->seal != MEMNODE_SEAL) {
+      if (verbose) printf("BadSeal ");
+      else return -1;
+      }
+  if (m->next && (daddr + m->length != (unsigned int) m->next)) {
+      if (verbose) printf("BadLength ");
+      else return -1;
+      }
+  if (m->next && (m->next < m)) {
+      if (verbose) printf("BadOrder ");
+      else return -1;
+      }
+  if (m->data < (unsigned char *) m) {
+      if (verbose) printf("BadData ");
+      else return -1;
+      }
+  if (m->status == memnode_alloc) {
+      backptr = (memnode_t **) (m->data - sizeof(void *));
+      if (*backptr != m) {
+    if (verbose) printf("BadBackPtr ");
+    else return -1;
+    }
+      }
+  if (verbose) printf("\n");
+  }
 
     return 0;
 }
@@ -513,10 +513,10 @@ unsigned int sizes[4096];
     *  Test program for the memory allocator
     *  
     *  Input parameters: 
-    *  	   argc,argv
-    *  	   
+    *       argc,argv
+    *       
     *  Return value:
-    *  	   nothing
+    *       nothing
     ********************************************************************* */
 
 
@@ -537,68 +537,68 @@ void main(int argc,char *argv[])
 
     for (;;) {
 
-	for (;;) {
-	    if (items == 4096) break;
-	    size = rand() % 1024;
-	    ptrs[items] = kmalloc(pool,size,1<<(rand() & 7));
-	    if (!ptrs[items]) break;
-	    sizes[items] = size;
-	    items++;
-	    totalsize += size;
-	    }
+  for (;;) {
+      if (items == 4096) break;
+      size = rand() % 1024;
+      ptrs[items] = kmalloc(pool,size,1<<(rand() & 7));
+      if (!ptrs[items]) break;
+      sizes[items] = size;
+      items++;
+      totalsize += size;
+      }
 
-	printf("%d items allocated, %d total bytes\n",items,totalsize);
+  printf("%d items allocated, %d total bytes\n",items,totalsize);
 
-	if (kmemchk(pool,0) < 0) {
-	    kmemchk(pool,1);
-	    exit(1);
-	    }
+  if (kmemchk(pool,0) < 0) {
+      kmemchk(pool,1);
+      exit(1);
+      }
 
-	/* Scramble the pointers */
-	idx = items - 1;
+  /* Scramble the pointers */
+  idx = items - 1;
 
-	while (idx) {
-	    if (rand() & 2) {
-		mem = ptrs[0];
-		ptrs[0] = ptrs[idx];
-		ptrs[idx] = mem;
+  while (idx) {
+      if (rand() & 2) {
+    mem = ptrs[0];
+    ptrs[0] = ptrs[idx];
+    ptrs[idx] = mem;
 
-		nfree = sizes[0];
-		sizes[0] = sizes[idx];
-		sizes[idx] = nfree;
-		}
-	    idx--;
-	    }
-	
-	/* now free a random number of elements */
+    nfree = sizes[0];
+    sizes[0] = sizes[idx];
+    sizes[idx] = nfree;
+    }
+      idx--;
+      }
+  
+  /* now free a random number of elements */
 
-	nfree = rand() % items;
-	freecnt = 0;
+  nfree = rand() % items;
+  freecnt = 0;
 
-	for (idx = nfree; idx < items; idx++) {
-	    kfree(pool,ptrs[idx]);
-	    totalsize -= sizes[idx];
-	    freecnt++;
-	    ptrs[idx] = NULL;
-	    sizes[idx] = 0;
-	    if (kmemchk(pool,0) < 0) {
-		kmemchk(pool,1);
-		exit(1);
-		}
-	    }
+  for (idx = nfree; idx < items; idx++) {
+      kfree(pool,ptrs[idx]);
+      totalsize -= sizes[idx];
+      freecnt++;
+      ptrs[idx] = NULL;
+      sizes[idx] = 0;
+      if (kmemchk(pool,0) < 0) {
+    kmemchk(pool,1);
+    exit(1);
+    }
+      }
 
-	items -= freecnt;
+  items -= freecnt;
 
-	printf(".");
+  printf(".");
 
-	}
+  }
 
     kmemchk(pool,1);
 
     exit(0);
 }
 
-#endif	 /* TESTPROG */
+#endif   /* TESTPROG */
 
 
 static unsigned char heap[1*1024*1024];
@@ -606,12 +606,12 @@ static int kmem_init_done=0;
 
 void kmem_init(void)
 {
-    if(kmem_init_done){
+    if (kmem_init_done) {
         printf("Calling kmem_init() before usb_init() is deprecated.\n");
         return;
     }
     kmem_init_done=1;
 
     mempool_t *pool = &kmempool;
-	kmeminit(pool, heap, sizeof(heap));
+  kmeminit(pool, heap, sizeof(heap));
 }

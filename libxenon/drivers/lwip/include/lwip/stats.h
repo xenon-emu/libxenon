@@ -156,7 +156,7 @@ void stats_init(void);
                                 if (lwip_stats.x.max < lwip_stats.x.used) { \
                                     lwip_stats.x.max = lwip_stats.x.used; \
                                 } \
-                             } while(0)
+                             } while (0)
 #else /* LWIP_STATS */
 #define stats_init()
 #define STATS_INC(x)

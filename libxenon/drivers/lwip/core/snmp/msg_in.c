@@ -796,7 +796,7 @@ snmp_msg_event(u8_t request_id)
     {
       snmp_msg_get_event(request_id, msg_ps);
     }
-    else if(msg_ps->rt == SNMP_ASN1_PDU_SET_REQ)
+    else if (msg_ps->rt == SNMP_ASN1_PDU_SET_REQ)
     {
       snmp_msg_set_event(request_id, msg_ps);
     }
@@ -1237,7 +1237,7 @@ snmp_pdu_dec_varbindlist(struct pbuf *p, u16_t ofs, u16_t *ofs_ret, struct snmp_
             u8_t i = oid_value.len;
             s32_t *vptr = (s32_t*)vb->value;
 
-            while(i > 0)
+            while (i > 0)
             {
               i--;
               vptr[i] = oid_value.id[i];
@@ -1325,7 +1325,7 @@ snmp_varbind_alloc(struct snmp_obj_id *oid, u8_t type, u8_t len)
         memp_free(MEMP_SNMP_VARBIND, vb);
         return NULL;
       }
-      while(i > 0)
+      while (i > 0)
       {
         i--;
         vb->ident[i] = oid->id[i];

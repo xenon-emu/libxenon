@@ -91,7 +91,7 @@ void              netbuf_first    (struct netbuf *buf);
 #endif /* LWIP_NETBUF_RECVINFO */
 #if LWIP_CHECKSUM_ON_COPY
 #define netbuf_set_chksum(buf, chksum) do { (buf)->flags = NETBUF_FLAG_CHKSUM; \
-                                            (buf)->toport_chksum = chksum; } while(0)
+                                            (buf)->toport_chksum = chksum; } while (0)
 #endif /* LWIP_CHECKSUM_ON_COPY */
 
 #ifdef __cplusplus

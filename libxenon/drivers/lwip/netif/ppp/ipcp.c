@@ -672,7 +672,7 @@ ipcp_nakci(fsm *f, u_char *p, int len)
   while (len > CILEN_VOID) {
     GETCHAR(citype, p);
     GETCHAR(cilen, p);
-    if( (len -= cilen) < 0 ) {
+    if ( (len -= cilen) < 0 ) {
       goto bad;
     }
     next = p + cilen - 2;

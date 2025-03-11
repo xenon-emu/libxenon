@@ -1,7 +1,7 @@
 /*  *********************************************************************
     *  Broadcom Common Firmware Environment (CFE)
     *  
-    *  USB Serial Port Driver			File: usbserial.c	
+    *  USB Serial Port Driver      File: usbserial.c  
     *  
     *  This device can talk to a few of those usb->serial converters
     *  out there.
@@ -82,7 +82,7 @@
     *  Constants
     ********************************************************************* */
 
-#define USER_FIFOSIZE	256
+#define USER_FIFOSIZE  256
 
 /*  *********************************************************************
     *  Structures
@@ -93,9 +93,9 @@
 
 typedef struct usbser_linedata_s {
     uint8_t dLineDataBaud0,dLineDataBaud1,dLineDataBaud2,dLineDataBaud3;
-    uint8_t bLineDataStopBits;	/* 0=1, 1=1.5, 2=2 */
-    uint8_t bLineDataParity;	/* 0=none, 1=odd, 2=even, 3=mark, 4=space */
-    uint8_t bLineDataBits;	/* 5,6,7,8 */
+    uint8_t bLineDataStopBits;  /* 0=1, 1=1.5, 2=2 */
+    uint8_t bLineDataParity;  /* 0=none, 1=odd, 2=even, 3=mark, 4=space */
+    uint8_t bLineDataBits;  /* 5,6,7,8 */
 } usbser_linedata_t;
 
 #define PL_SET_REQ              0x21
@@ -141,8 +141,8 @@ static int usbserial_detach(usbdev_t *dev);
 
 #ifdef _CFE_
 static void usb_uart_probe(cfe_driver_t *drv,
-			   unsigned long probe_a, unsigned long probe_b, 
-			   void *probe_ptr);
+         unsigned long probe_a, unsigned long probe_b, 
+         void *probe_ptr);
 
 static int usb_uart_open(cfe_devctx_t *ctx);
 static int usb_uart_read(cfe_devctx_t *ctx,iocb_buffer_t *buffer);
@@ -157,7 +157,7 @@ const static cfe_devdisp_t usb_uart_dispatch = {
     usb_uart_inpstat,
     usb_uart_write,
     usb_uart_ioctl,
-    usb_uart_close,	
+    usb_uart_close,  
     NULL,
     NULL
 };
@@ -176,7 +176,7 @@ typedef struct usb_uart_s {
     int uart_flowcontrol;
 } usb_uart_t;
 
-#define USBUART_MAXUNITS	4
+#define USBUART_MAXUNITS  4
 static usbdev_t *usbuart_units[USBUART_MAXUNITS];
 #endif
 
@@ -218,12 +218,12 @@ usb_driver_t usbserial_driver = {
     *  Request line data from the device (Prolific-style devices only).
     *  
     *  Input parameters: 
-    *  	   dev - USB device
-    *  	   linedata - pointer to structure
-    *  	   
+    *       dev - USB device
+    *       linedata - pointer to structure
+    *       
     *  Return value:
-    *  	   # of bytes returned 
-    *  	   <0 if error
+    *       # of bytes returned 
+    *       <0 if error
     ********************************************************************* */
 
 static int usbserial_get_linedata(usbdev_t *dev,usbser_linedata_t *ldata)
@@ -233,7 +233,7 @@ static int usbserial_get_linedata(usbdev_t *dev,usbser_linedata_t *ldata)
 
     respbuf =  usb_dma_alloc(32);
     res = usb_std_request(dev, PL_GET_REQ, PL_REQ_GET_LINE_CODING, 0, 0,
-			  respbuf, sizeof(usbser_linedata_t));
+        respbuf, sizeof(usbser_linedata_t));
     if ((res >= 0) && ldata) memcpy(ldata,respbuf,sizeof(usbser_linedata_t));
     usb_dma_free(respbuf);
 
@@ -247,12 +247,12 @@ static int usbserial_get_linedata(usbdev_t *dev,usbser_linedata_t *ldata)
     *  Set line data to the device (Prolific-style devices only).
     *  
     *  Input parameters: 
-    *  	   dev - USB device
-    *  	   linedata - pointer to structure
-    *  	   
+    *       dev - USB device
+    *       linedata - pointer to structure
+    *       
     *  Return value:
-    *  	   # of bytes returned 
-    *  	   <0 if error
+    *       # of bytes returned 
+    *       <0 if error
     ********************************************************************* */
 
 static int usbserial_set_linedata(usbdev_t *dev,usbser_linedata_t *ldata)
@@ -260,7 +260,7 @@ static int usbserial_set_linedata(usbdev_t *dev,usbser_linedata_t *ldata)
     /* Send request to device. */
 
     return usb_std_request(dev, PL_SET_REQ, PL_REQ_SET_LINE_CODING, 0, 0,
-			   (uint8_t *)ldata, sizeof(usbser_linedata_t));
+         (uint8_t *)ldata, sizeof(usbser_linedata_t));
 }
 
 /*  *********************************************************************
@@ -269,11 +269,11 @@ static int usbserial_set_linedata(usbdev_t *dev,usbser_linedata_t *ldata)
     *  Synchronously transmit data via the USB.
     *  
     *  Input parameters: 
-    *  	   dev - device pointer
-    *  	   buffer,len - data we want to send
-    *  	   
+    *       dev - device pointer
+    *       buffer,len - data we want to send
+    *       
     *  Return value:
-    *  	   number of bytes sent.
+    *       number of bytes sent.
     ********************************************************************* */
 
 static int usbserial_tx_data(usbdev_t *dev,hsaddr_t buffer,int len)
@@ -305,10 +305,10 @@ static int usbserial_tx_data(usbdev_t *dev,hsaddr_t buffer,int len)
     *  that have an interrupt pipe.  We ignore this.
     *  
     *  Input parameters: 
-    *  	   ur - usb request
-    *  	   
+    *       ur - usb request
+    *       
     *  Return value:
-    *  	   nothing
+    *       nothing
     ********************************************************************* */
 
 static int usbserial_int_callback(usbreq_t *ur)
@@ -321,10 +321,10 @@ static int usbserial_int_callback(usbreq_t *ur)
      */
 
     if ((ur->ur_status == UR_ERR_CANCELLED) ||
-	(ur->ur_status == UR_ERR_DEVICENOTRESPONDING)) {
-	usb_free_request(ur);
-	return 0;
-	}
+  (ur->ur_status == UR_ERR_DEVICENOTRESPONDING)) {
+  usb_free_request(ur);
+  return 0;
+  }
 
     /* Just requeue the request */
     usb_queue_request(ur);
@@ -339,10 +339,10 @@ static int usbserial_int_callback(usbreq_t *ur)
     *  Callback routine for the regular data pipe.
     *  
     *  Input parameters: 
-    *  	   ur - usb request
-    *  	   
+    *       ur - usb request
+    *       
     *  Return value:
-    *  	   nothing
+    *       nothing
     ********************************************************************* */
 
 static int usbserial_rx_callback(usbreq_t *ur)
@@ -359,18 +359,18 @@ static int usbserial_rx_callback(usbreq_t *ur)
      */
 
     if ((ur->ur_status == UR_ERR_CANCELLED) ||
-	(ur->ur_status == UR_ERR_DEVICENOTRESPONDING)) {
-	usb_free_request(ur);
-	return 0;
-	}
+  (ur->ur_status == UR_ERR_DEVICENOTRESPONDING)) {
+  usb_free_request(ur);
+  return 0;
+  }
 
     /* Add characters to the receive fifo */
     for (idx = 0; idx < ur->ur_xferred; idx++) {
-	iptr = (user->user_inbuf_in + 1) & (USER_FIFOSIZE-1);
-	if (iptr == user->user_inbuf_out) break;	/* overflow */
-	user->user_inbuf[user->user_inbuf_in] = ur->ur_buffer[idx];
-	user->user_inbuf_in = iptr;
-	}
+  iptr = (user->user_inbuf_in + 1) & (USER_FIFOSIZE-1);
+  if (iptr == user->user_inbuf_out) break;  /* overflow */
+  user->user_inbuf[user->user_inbuf_in] = ur->ur_buffer[idx];
+  user->user_inbuf_in = iptr;
+  }
 
     /* Requeue the request */
     usb_queue_request(ur);
@@ -387,11 +387,11 @@ static int usbserial_rx_callback(usbreq_t *ur)
     *  device and allocating our softc here.
     *  
     *  Input parameters: 
-    *  	   dev - usb device, in the "addressed" state.
-    *  	   drv - the driver table entry that matched
-    *  	   
+    *       dev - usb device, in the "addressed" state.
+    *       drv - the driver table entry that matched
+    *       
     *  Return value:
-    *  	   0
+    *       0
     ********************************************************************* */
 
 static int usbserial_attach(usbdev_t *dev,usb_driver_t *drv)
@@ -418,61 +418,61 @@ static int usbserial_attach(usbdev_t *dev,usb_driver_t *drv)
 
     /* Make this table driven eventually. */
     if (softc->vendor_id == 0x050D && softc->dev_id == 0x0109) {
-	/* This is the Belkin "USB PDA Adapter" (MCT-style). */
-	softc->dev_type = DEV_MCT;
-	}
+  /* This is the Belkin "USB PDA Adapter" (MCT-style). */
+  softc->dev_type = DEV_MCT;
+  }
     else {
-	/* Other currently supported devices are based on variations of
+  /* Other currently supported devices are based on variations of
            the Prolific PL-2303 chip, which implements a subset of the
            USB Communications class. */
-	if (devdscr->bMaxPacketSize0 == 0x40) {
-	    /* Linux thinks this distinguishes the HX variant. */
-	    softc->dev_type = DEV_PL_HX;
-	    }
-	else
-	    softc->dev_type = DEV_PL;
-	}
+  if (devdscr->bMaxPacketSize0 == 0x40) {
+      /* Linux thinks this distinguishes the HX variant. */
+      softc->dev_type = DEV_PL_HX;
+      }
+  else
+      softc->dev_type = DEV_PL;
+  }
 
     ifdscr = usb_find_cfg_descr(dev,USB_INTERFACE_DESCRIPTOR_TYPE,0);
     if (ifdscr == NULL) {
-	printf("Could not get interface descriptor\n");
-	return -1;
-	}
+  printf("Could not get interface descriptor\n");
+  return -1;
+  }
 
     if (softc->dev_type == DEV_MCT) {
-	/* In MCT-based devices, the bulk input endpoint descriptor is
+  /* In MCT-based devices, the bulk input endpoint descriptor is
            incorrectly tagged as an interrupt endpoint descriptor.
            For now, we assume known indices; an alternative approach
            would be to choose based on wMaxPacketSize. */
-	intdscr = usb_find_cfg_descr(dev,USB_ENDPOINT_DESCRIPTOR_TYPE,0);
-	indscr = usb_find_cfg_descr(dev,USB_ENDPOINT_DESCRIPTOR_TYPE,1);
-	outdscr = usb_find_cfg_descr(dev,USB_ENDPOINT_DESCRIPTOR_TYPE,2);
-	}
+  intdscr = usb_find_cfg_descr(dev,USB_ENDPOINT_DESCRIPTOR_TYPE,0);
+  indscr = usb_find_cfg_descr(dev,USB_ENDPOINT_DESCRIPTOR_TYPE,1);
+  outdscr = usb_find_cfg_descr(dev,USB_ENDPOINT_DESCRIPTOR_TYPE,2);
+  }
     else {
-	for (idx = 0; idx < ifdscr->bNumEndpoints; idx++) {
-	    epdscr = usb_find_cfg_descr(dev,USB_ENDPOINT_DESCRIPTOR_TYPE,idx);
+  for (idx = 0; idx < ifdscr->bNumEndpoints; idx++) {
+      epdscr = usb_find_cfg_descr(dev,USB_ENDPOINT_DESCRIPTOR_TYPE,idx);
 
-	    if ((epdscr->bmAttributes & USB_ENDPOINT_TYPE_MASK) == 
-		USB_ENDPOINT_TYPE_INTERRUPT) {
-		intdscr = epdscr;
-		}
-	    else if (USB_ENDPOINT_DIR_OUT(epdscr->bEndpointAddress)) {
-		outdscr = epdscr;
-		}
-	    else {
-		indscr = epdscr;
-		}
-	    }
-	}
+      if ((epdscr->bmAttributes & USB_ENDPOINT_TYPE_MASK) == 
+    USB_ENDPOINT_TYPE_INTERRUPT) {
+    intdscr = epdscr;
+    }
+      else if (USB_ENDPOINT_DIR_OUT(epdscr->bEndpointAddress)) {
+    outdscr = epdscr;
+    }
+      else {
+    indscr = epdscr;
+    }
+      }
+  }
 
     if (!indscr || !outdscr) {
-	printf("IN or OUT endpoint descriptors are missing\n");
-	/*
-	 * Could not get descriptors, something is very wrong.
-	 * Leave device addressed but not configured.
-	 */
-	return 0;
-	}
+  printf("IN or OUT endpoint descriptors are missing\n");
+  /*
+   * Could not get descriptors, something is very wrong.
+   * Leave device addressed but not configured.
+   */
+  return 0;
+  }
 
     /* Choose the standard configuration. */
     usb_set_configuration(dev,cfgdscr->bConfigurationValue);
@@ -484,23 +484,23 @@ static int usbserial_attach(usbdev_t *dev,usb_driver_t *drv)
     softc->user_outpipe    = usb_open_pipe(dev,outdscr);
     softc->user_outmps = GETUSBFIELD(outdscr,wMaxPacketSize);
     if (intdscr) {
-	softc->user_intpipe     = usb_open_pipe(dev,intdscr);
-	softc->user_intmps = GETUSBFIELD(intdscr,wMaxPacketSize);
-	}
+  softc->user_intpipe     = usb_open_pipe(dev,intdscr);
+  softc->user_intmps = GETUSBFIELD(intdscr,wMaxPacketSize);
+  }
     else {
-	softc->user_intpipe = -1;
-	softc->user_intmps = 0;
-	}
+  softc->user_intpipe = -1;
+  softc->user_intmps = 0;
+  }
 
 #ifdef _CFE_
     softc->user_unit = -1;
     for (idx = 0; idx < USBUART_MAXUNITS; idx++) {
-	if (usbuart_units[idx] == NULL) {
-	    softc->user_unit = idx;
-	    usbuart_units[idx] = dev;
-	    break;
-	    }
-	}
+  if (usbuart_units[idx] == NULL) {
+      softc->user_unit = idx;
+      usbuart_units[idx] = dev;
+      break;
+      }
+  }
 
     console_log("USBSERIAL: Unit %d connected",softc->user_unit);
     console_log("  vendor %04x, product %04x", softc->vendor_id, softc->dev_id);
@@ -510,54 +510,54 @@ static int usbserial_attach(usbdev_t *dev,usb_driver_t *drv)
     if (softc->dev_type == DEV_MCT) {
         usbser_bauddata_t *bdata;
 
-	bdata = usb_dma_alloc(sizeof(usbser_bauddata_t));
-	PUTDWFIELD(bdata,dBaudData,0xC);    /* encoding of 115200 */
-	usb_std_request(dev, MCT_SET_REQ, MCT_REQ_SET_BAUD,
-			0, ifdscr->bInterfaceNumber,
-			(uint8_t *)bdata, sizeof(usbser_bauddata_t));
-	usb_dma_free(bdata);
-	}
+  bdata = usb_dma_alloc(sizeof(usbser_bauddata_t));
+  PUTDWFIELD(bdata,dBaudData,0xC);    /* encoding of 115200 */
+  usb_std_request(dev, MCT_SET_REQ, MCT_REQ_SET_BAUD,
+      0, ifdscr->bInterfaceNumber,
+      (uint8_t *)bdata, sizeof(usbser_bauddata_t));
+  usb_dma_free(bdata);
+  }
     else {
         usbser_linedata_t *ldata;
-	
-	ldata = usb_dma_alloc(sizeof(usbser_linedata_t));
-	PUTDWFIELD(ldata,dLineDataBaud,115200);
-	ldata->bLineDataStopBits = 0;
-	ldata->bLineDataParity = 0;      /* none */
-	ldata->bLineDataBits = 8;
+  
+  ldata = usb_dma_alloc(sizeof(usbser_linedata_t));
+  PUTDWFIELD(ldata,dLineDataBaud,115200);
+  ldata->bLineDataStopBits = 0;
+  ldata->bLineDataParity = 0;      /* none */
+  ldata->bLineDataBits = 8;
 
-	softc->user_linedata = *ldata;   /* XXX needed? */
+  softc->user_linedata = *ldata;   /* XXX needed? */
 
-	usbserial_set_linedata(dev,ldata);
-	usb_dma_free(ldata);
-//	usbserial_get_linedata(dev,NULL);
+  usbserial_set_linedata(dev,ldata);
+  usb_dma_free(ldata);
+//  usbserial_get_linedata(dev,NULL);
 
-	/* The following code follows NetBSD in providing some magic
+  /* The following code follows NetBSD in providing some magic
            "Undocumented (vendor unresponsive)" setup for the HX
            variant of the Prolific part. */
-	if (softc->dev_type == DEV_PL_HX) {
-	    usb_simple_request(dev, 0x40, 0x1, 2, 0x44);
-	    usb_simple_request(dev, 0x40, 0x1, 8, 0);
-	    usb_simple_request(dev, 0x40, 0x1, 9, 0);
-	    }
-	}
+  if (softc->dev_type == DEV_PL_HX) {
+      usb_simple_request(dev, 0x40, 0x1, 2, 0x44);
+      usb_simple_request(dev, 0x40, 0x1, 8, 0);
+      usb_simple_request(dev, 0x40, 0x1, 9, 0);
+      }
+  }
 
 
     softc->user_devinbuf = usb_dma_alloc(softc->user_devinbufsize);
     ur = usb_make_request(dev,softc->user_inpipe,softc->user_devinbuf,
-			  softc->user_devinbufsize,
-			  UR_FLAG_IN | UR_FLAG_SHORTOK);
+        softc->user_devinbufsize,
+        UR_FLAG_IN | UR_FLAG_SHORTOK);
     ur->ur_callback = usbserial_rx_callback;
     usb_queue_request(ur);
 
     if (softc->user_intpipe != -1) {
-	softc->user_intbuf = usb_dma_alloc(softc->user_intmps);
-	ur = usb_make_request(dev,softc->user_intpipe,softc->user_intbuf,
-			      softc->user_intmps,
-			      UR_FLAG_IN | UR_FLAG_SHORTOK);
-	ur->ur_callback = usbserial_int_callback;	
-	usb_queue_request(ur);
-	}
+  softc->user_intbuf = usb_dma_alloc(softc->user_intmps);
+  ur = usb_make_request(dev,softc->user_intpipe,softc->user_intbuf,
+            softc->user_intmps,
+            UR_FLAG_IN | UR_FLAG_SHORTOK);
+  ur->ur_callback = usbserial_int_callback;  
+  usb_queue_request(ur);
+  }
 
     return 0;
 }
@@ -571,10 +571,10 @@ static int usbserial_attach(usbdev_t *dev,usb_driver_t *drv)
     *  will be cancelled automagically.
     *  
     *  Input parameters: 
-    *  	   dev - usb device
-    *  	   
+    *       dev - usb device
+    *       
     *  Return value:
-    *  	   0
+    *       0
     ********************************************************************* */
 
 static int usbserial_detach(usbdev_t *dev)
@@ -589,11 +589,11 @@ static int usbserial_detach(usbdev_t *dev)
 #endif
 
     if (softc) {
-	if (softc->user_devinbuf) usb_dma_free(softc->user_devinbuf);
-	if (softc->user_intbuf) usb_dma_free(softc->user_intbuf);
-	dev->ud_private = NULL;
-	KFREE(softc);
-	}
+  if (softc->user_devinbuf) usb_dma_free(softc->user_devinbuf);
+  if (softc->user_intbuf) usb_dma_free(softc->user_intbuf);
+  dev->ud_private = NULL;
+  KFREE(softc);
+  }
 
     return 0;
 }
@@ -602,8 +602,8 @@ static int usbserial_detach(usbdev_t *dev)
 #ifdef _CFE_
 
 static void usb_uart_probe(cfe_driver_t *drv,
-			   unsigned long probe_a, unsigned long probe_b, 
-			   void *probe_ptr)
+         unsigned long probe_a, unsigned long probe_b, 
+         void *probe_ptr)
 {
     usb_uart_t *softc;
     char descr[80];
@@ -631,20 +631,20 @@ static int usb_uart_read(cfe_devctx_t *ctx, iocb_buffer_t *buffer)
     int blen;
 
     if (!dev) {
-	buffer->buf_retlen = 0;
-	return 0;
-	}
+  buffer->buf_retlen = 0;
+  return 0;
+  }
     user = dev->ud_private;
 
     bptr = buffer->buf_ptr;
     blen = buffer->buf_length;
 
     while ((blen > 0) && (user->user_inbuf_out != user->user_inbuf_in)) {
-	hs_write8(bptr,user->user_inbuf[user->user_inbuf_out]);
-	bptr++;
-	user->user_inbuf_out = (user->user_inbuf_out + 1) & (USER_FIFOSIZE-1);
-	blen--;
-	}
+  hs_write8(bptr,user->user_inbuf[user->user_inbuf_out]);
+  bptr++;
+  user->user_inbuf_out = (user->user_inbuf_out + 1) & (USER_FIFOSIZE-1);
+  blen--;
+  }
 
     buffer->buf_retlen = buffer->buf_length - blen;
     return 0;
@@ -678,9 +678,9 @@ static int usb_uart_write(cfe_devctx_t *ctx, iocb_buffer_t *buffer)
     blen = buffer->buf_length;
 
     if (!dev) {
-	buffer->buf_retlen = blen;
-	return 0;
-	}
+  buffer->buf_retlen = blen;
+  return 0;
+  }
     user = dev->ud_private;
 
     if (blen > user->user_outmps) blen = user->user_outmps;
@@ -700,27 +700,27 @@ static int usb_uart_ioctl(cfe_devctx_t *ctx, iocb_buffer_t *buffer)
     if (!dev) return -1;
 
     switch ((int)buffer->buf_ioctlcmd) {
-	case IOCTL_SERIAL_GETSPEED:
-	    info = softc->uart_speed;
-	    hs_memcpy_to_hs(buffer->buf_ptr,&info,sizeof(info));
-	    break;
-	case IOCTL_SERIAL_SETSPEED:
-	    hs_memcpy_from_hs(&info,buffer->buf_ptr,sizeof(info));
-	    softc->uart_speed = info;
-	    /* NYI */
-	    break;
-	case IOCTL_SERIAL_GETFLOW:
-	    info = softc->uart_flowcontrol;
-	    hs_memcpy_to_hs(buffer->buf_ptr,&info,sizeof(info));
-	    break;
-	case IOCTL_SERIAL_SETFLOW:
-	    hs_memcpy_from_hs(&info,buffer->buf_ptr,sizeof(info));
-	    softc->uart_flowcontrol = info;
-	    /* NYI */
-	    break;
-	default:
-	    return -1;
-	}
+  case IOCTL_SERIAL_GETSPEED:
+      info = softc->uart_speed;
+      hs_memcpy_to_hs(buffer->buf_ptr,&info,sizeof(info));
+      break;
+  case IOCTL_SERIAL_SETSPEED:
+      hs_memcpy_from_hs(&info,buffer->buf_ptr,sizeof(info));
+      softc->uart_speed = info;
+      /* NYI */
+      break;
+  case IOCTL_SERIAL_GETFLOW:
+      info = softc->uart_flowcontrol;
+      hs_memcpy_to_hs(buffer->buf_ptr,&info,sizeof(info));
+      break;
+  case IOCTL_SERIAL_SETFLOW:
+      hs_memcpy_from_hs(&info,buffer->buf_ptr,sizeof(info));
+      softc->uart_flowcontrol = info;
+      /* NYI */
+      break;
+  default:
+      return -1;
+  }
 
     return 0;
 }

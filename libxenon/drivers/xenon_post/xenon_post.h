@@ -2,11 +2,11 @@
 #define __xenon_post_h
 #ifdef __ASSEMBLER__
 #define POST(c) \
-	li		%r3, c; \
-	sldi	%r3, %r3, 56; \
-	lis		%r4, 0x2006; \
-	ori		%r4, %r4, 0x1010; \
-	std		%r3, 0(%r4)
+  li    %r3, c; \
+  sldi  %r3, %r3, 56; \
+  lis    %r4, 0x2006; \
+  ori    %r4, %r4, 0x1010; \
+  std    %r3, 0(%r4)
 #else
 
 #ifdef __cplusplus

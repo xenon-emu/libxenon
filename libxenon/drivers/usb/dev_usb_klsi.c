@@ -1,7 +1,7 @@
 /*  *********************************************************************
     *  Broadcom Common Firmware Environment (CFE)
     *  
-    *  USB Ethernet				File: dev_usb_klsi.c
+    *  USB Ethernet        File: dev_usb_klsi.c
     *  
     *  Driver for USB Ethernet devices using Kawasaki KL5KUSB101B chip.
     *  
@@ -58,7 +58,7 @@
 #define USBETH_TRACE( x, y ... ) ((void)0)
 #endif
 
-#define FAIL				-1
+#define FAIL        -1
 
 #define CACHE_ALIGN    32       /* XXX place holder, big enough to now. */
 #define ALIGN(n,align) (((n)+((align)-1)) & ~((align)-1))
@@ -84,11 +84,11 @@ static void hexdump( unsigned char *src, int srclen, int rowlen, int rows )
     srcstp = src + srclen;
 
     for( rowptr = src; rowptr < src + rowlen * rows; rowptr += rowlen ) {
-	for( byteptr = rowptr; byteptr < rowptr + rowlen && byteptr < srcstp; byteptr++ ) {
-	    xprintf( "%2X ", *byteptr );
-	    }
-	xprintf( "\n" );
-	}
+  for( byteptr = rowptr; byteptr < rowptr + rowlen && byteptr < srcstp; byteptr++ ) {
+      xprintf( "%2X ", *byteptr );
+      }
+  xprintf( "\n" );
+  }
     xprintf( "\n" );
 }
 #else
@@ -143,14 +143,14 @@ static int klsi_load( klsi_softc_t *softc )
     usbdev_t *dev = softc->dev;
 
     usb_std_request( dev, (USBREQ_TYPE_VENDOR | USBREQ_DIR_OUT),
-		     KLSI_SEND_SCAN, 0, 0,
-		     (uint8_t *)kue_code_seg, sizeof(kue_code_seg) );
+         KLSI_SEND_SCAN, 0, 0,
+         (uint8_t *)kue_code_seg, sizeof(kue_code_seg) );
     usb_std_request( dev, (USBREQ_TYPE_VENDOR | USBREQ_DIR_OUT),
-		     KLSI_SEND_SCAN, 0, 0,
-		     (uint8_t *)kue_fix_seg, sizeof(kue_fix_seg) );
+         KLSI_SEND_SCAN, 0, 0,
+         (uint8_t *)kue_fix_seg, sizeof(kue_fix_seg) );
     usb_std_request( dev, (USBREQ_TYPE_VENDOR | USBREQ_DIR_OUT),
-		     KLSI_SEND_SCAN, 0, 0,
-		     (uint8_t *)kue_trig_seg, sizeof(kue_trig_seg) );
+         KLSI_SEND_SCAN, 0, 0,
+         (uint8_t *)kue_trig_seg, sizeof(kue_trig_seg) );
 
     cfe_sleep(CFE_HZ/10);
 
@@ -171,50 +171,50 @@ static int klsi_init_device( klsi_softc_t *softc )
     vendor_id = (dev_desc.idVendorHigh  << 8) + dev_desc.idVendorLow;
     device_id = (dev_desc.idProductHigh << 8) + dev_desc.idProductLow;
 
-    while( *ptr != -1 )	{
-	if( (vendor_id == ptr[0]) && (device_id == ptr[1]) ) {
-	    softc->ven_code = ptr[2];
-	    break;
-	    }
-	ptr += 3;
-	}
-    if( *ptr == -1 ) {
-	xprintf( "Unknown Kawasaki USB-Ethernet device\n" );
-	return -1;
-	}
+    while ( *ptr != -1 )  {
+  if ( (vendor_id == ptr[0]) && (device_id == ptr[1]) ) {
+      softc->ven_code = ptr[2];
+      break;
+      }
+  ptr += 3;
+  }
+    if ( *ptr == -1 ) {
+  xprintf( "Unknown Kawasaki USB-Ethernet device\n" );
+  return -1;
+  }
 
     /* load the on-chip firmware, if necessary */
     bcd_dev = ((dev->ud_devdescr.bcdDeviceHigh << 8) +
-	       dev->ud_devdescr.bcdDeviceLow);
+         dev->ud_devdescr.bcdDeviceLow);
     if ((bcd_dev & 0x0200) == 0) {
-	klsi_load(softc);
-	/* Should reload device descriptor here. */
-	usb_set_configuration(dev, dev->ud_cfgdescr->bConfigurationValue);
-	cfe_sleep(CFE_HZ/10);
-	}
+  klsi_load(softc);
+  /* Should reload device descriptor here. */
+  usb_set_configuration(dev, dev->ud_cfgdescr->bConfigurationValue);
+  cfe_sleep(CFE_HZ/10);
+  }
     desc = usb_dma_alloc(sizeof(klsi_ether_desc_t));
     usb_std_request( dev, (USBREQ_TYPE_VENDOR | USBREQ_DIR_IN),
-		     KLSI_GET_ETH_DESC, 0, 0,
-		     (uint8_t *)desc, sizeof(klsi_ether_desc_t));
+         KLSI_GET_ETH_DESC, 0, 0,
+         (uint8_t *)desc, sizeof(klsi_ether_desc_t));
 
     if (USBETH_DEBUG) {
-	int i;
-	printf("klsi [dev %04x] ether descriptor\n", bcd_dev);
-	for (i = 0; i < sizeof(klsi_ether_desc_t); i++) {
-	    printf(" %02x", ((uint8_t *)desc)[i]);
-	    }
-	printf("\n");
-	}
+  int i;
+  printf("klsi [dev %04x] ether descriptor\n", bcd_dev);
+  for (i = 0; i < sizeof(klsi_ether_desc_t); i++) {
+      printf(" %02x", ((uint8_t *)desc)[i]);
+      }
+  printf("\n");
+  }
 
     memcpy( softc->mac_addr, desc->klsi_macaddr, 6);
     usb_dma_free(desc);
 
     usb_simple_request( dev, (USBREQ_TYPE_VENDOR | USBREQ_DIR_OUT),
-			KLSI_SET_URB_SIZE, 64, 0);
+      KLSI_SET_URB_SIZE, 64, 0);
 
     /* display adapter info */
     xprintf( "%s USB-Ethernet Adapter (%a)\n",
-	     VENDOR_NAMES[softc->ven_code], softc->mac_addr);
+       VENDOR_NAMES[softc->ven_code], softc->mac_addr);
 
     return 0;
 }
@@ -229,8 +229,8 @@ static int klsi_get_dev_addr( void *ctx, hsaddr_t mac_addr )
 static void klsi_queue_rx( klsi_softc_t *softc )
 {
     softc->rx_ur = usb_make_request(softc->dev, softc->bulk_inpipe,
-				    softc->rxbuf, sizeof(softc->rxbuf),
-				    (UR_FLAG_IN | UR_FLAG_SHORTOK));
+            softc->rxbuf, sizeof(softc->rxbuf),
+            (UR_FLAG_IN | UR_FLAG_SHORTOK));
     usb_queue_request(softc->rx_ur);
 }
 
@@ -247,30 +247,30 @@ static int klsi_get_eth_frame( void *ctx, hsaddr_t buf )
     klsi_softc_t *softc = (klsi_softc_t *) ctx;
     uint8_t *rxbuf;
 
-    if( !softc->rx_ur->ur_inprogress ) {
-	rxbuf = softc->rxbuf;
-	len = softc->rx_ur->ur_xferred;
+    if ( !softc->rx_ur->ur_inprogress ) {
+  rxbuf = softc->rxbuf;
+  len = softc->rx_ur->ur_xferred;
 
-	/* The klsi chip evidently completes the request with a
-	   single zero byte when there is no packet available. */
-	if (len >= 2)
-	    len = rxbuf[0] + (rxbuf[1] << 8);
-	else
-	    len = 0;
-	rxbuf += 2;
+  /* The klsi chip evidently completes the request with a
+     single zero byte when there is no packet available. */
+  if (len >= 2)
+      len = rxbuf[0] + (rxbuf[1] << 8);
+  else
+      len = 0;
+  rxbuf += 2;
 
-	if (len > 0) {
+  if (len > 0) {
 #if USBETH_DEBUG
-	    xprintf( "Incoming packet :\n" );
-	    hexdump( rxbuf, len, 16, len / 16 + 1 );
+      xprintf( "Incoming packet :\n" );
+      hexdump( rxbuf, len, 16, len / 16 + 1 );
 #endif
-	    hs_memcpy_to_hs( buf, rxbuf, len );
-	    }
-	usb_free_request(softc->rx_ur);
-	klsi_queue_rx( softc );
-	}
+      hs_memcpy_to_hs( buf, rxbuf, len );
+      }
+  usb_free_request(softc->rx_ur);
+  klsi_queue_rx( softc );
+  }
     else
-	xprintf( "Bulk data is not available yet!\n" );
+  xprintf( "Bulk data is not available yet!\n" );
 
     return( len );
 }
@@ -297,7 +297,7 @@ static int klsi_send_eth_frame( void *ctx, hsaddr_t buf, int len )
     hexdump( txbuf, txlen, 16, txlen / 16 + 1 );
 #endif
     ur = usb_make_request(softc->dev, softc->bulk_outpipe,
-	                      txbuf, txlen, UR_FLAG_OUT);
+                        txbuf, txlen, UR_FLAG_OUT);
     usb_sync_request(ur);
     usb_free_request(ur);
     usb_dma_free(txbuf);
@@ -309,8 +309,8 @@ static void klsi_open_device( klsi_softc_t *softc )
 {
     /* Accept broadcast and own packets */
     usb_simple_request( softc->dev, (USBREQ_TYPE_VENDOR | USBREQ_DIR_OUT),
-			KLSI_SET_PKT_FILTER,
-			KLSI_RX_UNICAST | KLSI_RX_BROADCAST, 0);
+      KLSI_SET_PKT_FILTER,
+      KLSI_RX_UNICAST | KLSI_RX_BROADCAST, 0);
 
     /* kick start the receive */
     klsi_queue_rx( softc );
@@ -321,7 +321,7 @@ static void klsi_close_device( klsi_softc_t *softc )
     usbdev_t *dev = softc->dev;
 
     usb_simple_request( dev, (USBREQ_TYPE_VENDOR | USBREQ_DIR_OUT),
-			KLSI_SET_PKT_FILTER, 0, 0);
+      KLSI_SET_PKT_FILTER, 0, 0);
 }
 
 
@@ -344,7 +344,7 @@ static void klsi_close_device( klsi_softc_t *softc )
     *      0
     ********************************************************************* */
 
-const cfe_driver_t usbklsidrv;		/* forward declaration */
+const cfe_driver_t usbklsidrv;    /* forward declaration */
 
 static int klsi_attach(usbdev_t *dev, usb_driver_t *drv)
 {
@@ -359,43 +359,43 @@ static int klsi_attach(usbdev_t *dev, usb_driver_t *drv)
     dev->ud_drv = drv;
 
     softc = (klsi_softc_t *) KMALLOC( sizeof(klsi_softc_t), 0 );
-    if( softc == NULL )	{
-	xprintf( "Failed to allocate softc memory.\n" );
-	return -1;
-	}
+    if ( softc == NULL )  {
+  xprintf( "Failed to allocate softc memory.\n" );
+  return -1;
+  }
     memset( softc, 0, sizeof(klsi_softc_t) );
     dev->ud_private = softc;
     softc->dev = dev;
 
     ifdscr = usb_find_cfg_descr(dev,USB_INTERFACE_DESCRIPTOR_TYPE,0);
     if (ifdscr == NULL) {
-	xprintf("USBETH: ERROR...no interace descriptor\n");
-	return -1;
-	}
+  xprintf("USBETH: ERROR...no interace descriptor\n");
+  return -1;
+  }
 
     for (idx = 0; idx < 2; idx++) {
-	epdscr = usb_find_cfg_descr(dev,USB_ENDPOINT_DESCRIPTOR_TYPE,idx);
-	if (USB_ENDPOINT_DIR_OUT(epdscr->bEndpointAddress))
-	    outdscr = epdscr;
-	else
-	    indscr = epdscr;
-	}
+  epdscr = usb_find_cfg_descr(dev,USB_ENDPOINT_DESCRIPTOR_TYPE,idx);
+  if (USB_ENDPOINT_DIR_OUT(epdscr->bEndpointAddress))
+      outdscr = epdscr;
+  else
+      indscr = epdscr;
+  }
 
     if (!indscr || !outdscr) {
-	/*
-	 * Could not get descriptors, something is very wrong.
-	 * Leave device addressed but not configured.
-	 */
-	xprintf("USBETH: ERROR...no endpoint descriptors\n");
-	return -1;
-	}
+  /*
+   * Could not get descriptors, something is very wrong.
+   * Leave device addressed but not configured.
+   */
+  xprintf("USBETH: ERROR...no endpoint descriptors\n");
+  return -1;
+  }
 
     /* Choose the standard configuration. */
     usb_set_configuration(dev,cfgdscr->bConfigurationValue);
 
     /* Quit if not able to initialize the device */
     if (klsi_init_device(softc) < 0)
-	return -1;
+  return -1;
 
     /* Open the pipes. */
     softc->bulk_inpipe     = usb_open_pipe(dev,indscr);
@@ -430,12 +430,12 @@ static int klsi_detach(usbdev_t *dev)
     klsi_softc_t *softc = (klsi_softc_t *) dev->ud_private;
 
     if (softc != NULL) {
-	usbeth_unregister( softc );
-	klsi_close_device ( softc );
-	dev->ud_private = NULL;
-	softc->dev = NULL;
-	KFREE(softc);
-	}
+  usbeth_unregister( softc );
+  klsi_close_device ( softc );
+  dev->ud_private = NULL;
+  softc->dev = NULL;
+  KFREE(softc);
+  }
 
     return 0;
 }

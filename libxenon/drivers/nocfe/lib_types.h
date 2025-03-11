@@ -1,7 +1,7 @@
 /*  *********************************************************************
     *  Broadcom Common Firmware Environment (CFE)
     *  
-    *  Basic types				File: lib_types.h
+    *  Basic types        File: lib_types.h
     *  
     *  This module defines the basic types used in CFE.  Simple
     *  types, such as uint64_t, are defined here.
@@ -58,7 +58,7 @@
 #include <stdint.h>
 #include <xetypes.h>
 
-#define unsigned signed		/* Kludge to get unsigned size-shaped type. */
+#define unsigned signed    /* Kludge to get unsigned size-shaped type. */
 typedef __SIZE_TYPE__ intptr_t;
 #undef unsigned
 typedef __SIZE_TYPE__ uintptr_t;

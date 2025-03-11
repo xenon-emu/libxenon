@@ -130,7 +130,7 @@ fsm_lowerup(fsm *f)
       break;
 
     case LS_STARTING:
-      if( f->flags & OPT_SILENT ) {
+      if ( f->flags & OPT_SILENT ) {
         f->state = LS_STOPPED;
       } else {
         /* Send an initial configure-request */
@@ -168,7 +168,7 @@ fsm_lowerdown(fsm *f)
 
     case LS_STOPPED:
       f->state = LS_STARTING;
-      if( f->callbacks->starting ) {
+      if ( f->callbacks->starting ) {
         (*f->callbacks->starting)(f);
       }
       break;
@@ -187,7 +187,7 @@ fsm_lowerdown(fsm *f)
       break;
 
     case LS_OPENED:
-      if( f->callbacks->down ) {
+      if ( f->callbacks->down ) {
         (*f->callbacks->down)(f);
       }
       f->state = LS_STARTING;
@@ -216,13 +216,13 @@ fsm_open(fsm *f)
   switch( f->state ) {
     case LS_INITIAL:
       f->state = LS_STARTING;
-      if( f->callbacks->starting ) {
+      if ( f->callbacks->starting ) {
         (*f->callbacks->starting)(f);
       }
       break;
 
     case LS_CLOSED:
-      if( f->flags & OPT_SILENT ) {
+      if ( f->flags & OPT_SILENT ) {
         f->state = LS_STOPPED;
       } else {
         /* Send an initial configure-request */
@@ -236,7 +236,7 @@ fsm_open(fsm *f)
       /* fall through */
     case LS_STOPPED:
     case LS_OPENED:
-      if( f->flags & OPT_RESTART ) {
+      if ( f->flags & OPT_RESTART ) {
         fsm_lowerdown(f);
         fsm_lowerup(f);
       }
@@ -291,9 +291,9 @@ fsm_close(fsm *f, char *reason)
     case LS_ACKRCVD:
     case LS_ACKSENT:
     case LS_OPENED:
-      if( f->state != LS_OPENED ) {
+      if ( f->state != LS_OPENED ) {
         UNTIMEOUT(fsm_timeout, f);  /* Cancel timeout */
-      } else if( f->callbacks->down ) {
+      } else if ( f->callbacks->down ) {
         (*f->callbacks->down)(f);  /* Inform upper layers we're down */
       }
       /* Init restart counter, send Terminate-Request */
@@ -323,14 +323,14 @@ fsm_timeout(void *arg)
   switch (f->state) {
     case LS_CLOSING:
     case LS_STOPPING:
-      if( f->retransmits <= 0 ) {
+      if ( f->retransmits <= 0 ) {
         FSMDEBUG(LOG_WARNING, ("%s: timeout sending Terminate-Request state=%d (%s)\n",
              PROTO_NAME(f), f->state, ppperr_strerr[f->state]));
         /*
          * We've waited for an ack long enough.  Peer probably heard us.
          */
         f->state = (f->state == LS_CLOSING)? LS_CLOSED: LS_STOPPED;
-        if( f->callbacks->finished ) {
+        if ( f->callbacks->finished ) {
           (*f->callbacks->finished)(f);
         }
       } else {
@@ -351,7 +351,7 @@ fsm_timeout(void *arg)
         FSMDEBUG(LOG_WARNING, ("%s: timeout sending Config-Requests state=%d (%s)\n",
          PROTO_NAME(f), f->state, ppperr_strerr[f->state]));
         f->state = LS_STOPPED;
-        if( (f->flags & OPT_PASSIVE) == 0 && f->callbacks->finished ) {
+        if ( (f->flags & OPT_PASSIVE) == 0 && f->callbacks->finished ) {
           (*f->callbacks->finished)(f);
         }
       } else {
@@ -362,7 +362,7 @@ fsm_timeout(void *arg)
           (*f->callbacks->retransmit)(f);
         }
         fsm_sconfreq(f, 1);    /* Re-send Configure-Request */
-        if( f->state == LS_ACKRCVD ) {
+        if ( f->state == LS_ACKRCVD ) {
           f->state = LS_REQSENT;
         }
       }
@@ -409,7 +409,7 @@ fsm_input(fsm *f, u_char *inpacket, int l)
   }
   len -= HEADERLEN;    /* subtract header length */
 
-  if( f->state == LS_INITIAL || f->state == LS_STARTING ) {
+  if ( f->state == LS_INITIAL || f->state == LS_STARTING ) {
     FSMDEBUG(LOG_INFO, ("fsm_input(%x): Rcvd packet in state %d (%s).\n",
         f->protocol, f->state, ppperr_strerr[f->state]));
     return;
@@ -446,7 +446,7 @@ fsm_input(fsm *f, u_char *inpacket, int l)
     
     default:
       FSMDEBUG(LOG_INFO, ("fsm_input(%s): default: \n", PROTO_NAME(f)));
-      if( !f->callbacks->extcode ||
+      if ( !f->callbacks->extcode ||
           !(*f->callbacks->extcode)(f, code, id, inp, len) ) {
         fsm_sdata(f, CODEREJ, ++f->id, inpacket, len + HEADERLEN);
       }
@@ -476,7 +476,7 @@ fsm_rconfreq(fsm *f, u_char id, u_char *inp, int len)
 
     case LS_OPENED:
       /* Go down and restart negotiation */
-      if( f->callbacks->down ) {
+      if ( f->callbacks->down ) {
         (*f->callbacks->down)(f);  /* Inform upper layers */
       }
       fsm_sconfreq(f, 0);    /* Send initial Configure-Request */
@@ -521,7 +521,7 @@ fsm_rconfreq(fsm *f, u_char id, u_char *inp, int len)
     if (f->state != LS_ACKRCVD) {
       f->state = LS_REQSENT;
     }
-    if( code == CONFNAK ) {
+    if ( code == CONFNAK ) {
       ++f->nakloops;
     }
   }
@@ -540,7 +540,7 @@ fsm_rconfack(fsm *f, int id, u_char *inp, int len)
   if (id != f->reqid || f->seen_ack) {   /* Expected id? */
     return; /* Nope, toss... */
   }
-  if( !(f->callbacks->ackci? (*f->callbacks->ackci)(f, inp, len): (len == 0)) ) {
+  if ( !(f->callbacks->ackci? (*f->callbacks->ackci)(f, inp, len): (len == 0)) ) {
     /* Ack is bad - ignore it */
     FSMDEBUG(LOG_INFO, ("%s: received bad Ack (length %d)\n",
           PROTO_NAME(f), len));
@@ -696,7 +696,7 @@ fsm_rtermack(fsm *f)
     case LS_CLOSING:
       UNTIMEOUT(fsm_timeout, f);
       f->state = LS_CLOSED;
-      if( f->callbacks->finished ) {
+      if ( f->callbacks->finished ) {
         (*f->callbacks->finished)(f);
       }
       break;
@@ -704,7 +704,7 @@ fsm_rtermack(fsm *f)
     case LS_STOPPING:
       UNTIMEOUT(fsm_timeout, f);
       f->state = LS_STOPPED;
-      if( f->callbacks->finished ) {
+      if ( f->callbacks->finished ) {
         (*f->callbacks->finished)(f);
       }
       break;
@@ -746,7 +746,7 @@ fsm_rcoderej(fsm *f, u_char *inp, int len)
   FSMDEBUG(LOG_WARNING, ("%s: Rcvd Code-Reject for code %d, id %d\n",
         PROTO_NAME(f), code, id));
   
-  if( f->state == LS_ACKRCVD ) {
+  if ( f->state == LS_ACKRCVD ) {
     f->state = LS_REQSENT;
   }
 }
@@ -766,7 +766,7 @@ fsm_protreject(fsm *f)
       /* fall through */
     case LS_CLOSED:
       f->state = LS_CLOSED;
-      if( f->callbacks->finished ) {
+      if ( f->callbacks->finished ) {
         (*f->callbacks->finished)(f);
       }
       break;
@@ -779,13 +779,13 @@ fsm_protreject(fsm *f)
       /* fall through */
     case LS_STOPPED:
       f->state = LS_STOPPED;
-      if( f->callbacks->finished ) {
+      if ( f->callbacks->finished ) {
         (*f->callbacks->finished)(f);
       }
       break;
     
     case LS_OPENED:
-      if( f->callbacks->down ) {
+      if ( f->callbacks->down ) {
         (*f->callbacks->down)(f);
       }
       /* Init restart counter, send Terminate-Request */
@@ -814,15 +814,15 @@ fsm_sconfreq(fsm *f, int retransmit)
   u_char *outp;
   int cilen;
   
-  if( f->state != LS_REQSENT && f->state != LS_ACKRCVD && f->state != LS_ACKSENT ) {
+  if ( f->state != LS_REQSENT && f->state != LS_ACKRCVD && f->state != LS_ACKSENT ) {
     /* Not currently negotiating - reset options */
-    if( f->callbacks->resetci ) {
+    if ( f->callbacks->resetci ) {
       (*f->callbacks->resetci)(f);
     }
     f->nakloops = 0;
   }
   
-  if( !retransmit ) {
+  if ( !retransmit ) {
     /* New request - reset retransmission counter, use new ID */
     f->retransmits = f->maxconfreqtransmits;
     f->reqid = ++f->id;
@@ -834,9 +834,9 @@ fsm_sconfreq(fsm *f, int retransmit)
    * Make up the request packet
    */
   outp = outpacket_buf[f->unit] + PPP_HDRLEN + HEADERLEN;
-  if( f->callbacks->cilen && f->callbacks->addci ) {
+  if ( f->callbacks->cilen && f->callbacks->addci ) {
     cilen = (*f->callbacks->cilen)(f);
-    if( cilen > peer_mru[f->unit] - (int)HEADERLEN ) {
+    if ( cilen > peer_mru[f->unit] - (int)HEADERLEN ) {
       cilen = peer_mru[f->unit] - HEADERLEN;
     }
     if (f->callbacks->addci) {

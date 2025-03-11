@@ -795,7 +795,7 @@ tcp_slowtmr(void)
         }
       } else {
         /* Increase the retransmission timer if it is running */
-        if(pcb->rtime >= 0)
+        if (pcb->rtime >= 0)
           ++pcb->rtime;
 
         if (pcb->unacked != NULL && pcb->rtime >= pcb->rto) {
@@ -840,15 +840,15 @@ tcp_slowtmr(void)
     }
 
     /* Check if KEEPALIVE should be sent */
-    if((pcb->so_options & SOF_KEEPALIVE) &&
+    if ((pcb->so_options & SOF_KEEPALIVE) &&
        ((pcb->state == ESTABLISHED) ||
         (pcb->state == CLOSE_WAIT))) {
 #if LWIP_TCP_KEEPALIVE
-      if((u32_t)(tcp_ticks - pcb->tmr) >
+      if ((u32_t)(tcp_ticks - pcb->tmr) >
          (pcb->keep_idle + (pcb->keep_cnt*pcb->keep_intvl))
          / TCP_SLOW_INTERVAL)
 #else      
-      if((u32_t)(tcp_ticks - pcb->tmr) >
+      if ((u32_t)(tcp_ticks - pcb->tmr) >
          (pcb->keep_idle + TCP_MAXIDLE) / TCP_SLOW_INTERVAL)
 #endif /* LWIP_TCP_KEEPALIVE */
       {
@@ -860,11 +860,11 @@ tcp_slowtmr(void)
         ++pcb_reset;
       }
 #if LWIP_TCP_KEEPALIVE
-      else if((u32_t)(tcp_ticks - pcb->tmr) > 
+      else if ((u32_t)(tcp_ticks - pcb->tmr) > 
               (pcb->keep_idle + pcb->keep_cnt_sent * pcb->keep_intvl)
               / TCP_SLOW_INTERVAL)
 #else
-      else if((u32_t)(tcp_ticks - pcb->tmr) > 
+      else if ((u32_t)(tcp_ticks - pcb->tmr) > 
               (pcb->keep_idle + pcb->keep_cnt_sent * TCP_KEEPINTVL_DEFAULT) 
               / TCP_SLOW_INTERVAL)
 #endif /* LWIP_TCP_KEEPALIVE */
@@ -994,7 +994,7 @@ tcp_fasttmr(void)
 {
   struct tcp_pcb *pcb = tcp_active_pcbs;
 
-  while(pcb != NULL) {
+  while (pcb != NULL) {
     struct tcp_pcb *next = pcb->next;
     /* If there is data which was previously "refused" by upper layer */
     if (pcb->refused_data != NULL) {

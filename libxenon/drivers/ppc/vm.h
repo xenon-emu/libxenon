@@ -16,7 +16,7 @@
 #define VM_WIMG_GUARDED_READ_ONLY (VM_WIMG_GUARDED|VM_WIMG_MODIFIER_READ_ONLY)
 
 typedef void* (*vm_segfault_handler_t)(int, void *,void *,int); // processor id, address of the op causing the segfault, accessed address, write?
-																// return value is address of next op, NULL for no change
+                                // return value is address of next op, NULL for no change
 
 void vm_create_user_mapping(uint32_t virt_addr, uint64_t phys_addr, int size, int wimg);
 void vm_destroy_user_mapping(uint32_t virt_addr, int size);

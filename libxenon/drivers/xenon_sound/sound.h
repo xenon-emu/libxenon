@@ -5,7 +5,7 @@
 extern "C" {
 #endif
 
-	/* you init, you get the nr. of LE, 16bit x 2 channels, signed audio bytes to write, and submit that as max. */
+  /* you init, you get the nr. of LE, 16bit x 2 channels, signed audio bytes to write, and submit that as max. */
 
 void xenon_sound_init(void);
 void xenon_sound_submit(void *data, int len);

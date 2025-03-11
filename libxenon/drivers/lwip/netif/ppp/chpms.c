@@ -248,7 +248,7 @@ Expand(u_char *in, u_char *out)
   int j, c;
   int i;
 
-  for(i = 0; i < 64; in++){
+  for(i = 0; i < 64; in++) {
     c = *in;
     for(j = 7; j >= 0; j--) {
       *out++ = (c >> j) & 01;

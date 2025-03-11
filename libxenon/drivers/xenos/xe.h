@@ -81,17 +81,17 @@ extern "C" {
 #define XE_CLIP_ENABLE_PLANE4  0x0010
 #define XE_CLIP_ENABLE_PLANE5  0x0020
 #define XE_CLIP_MASTER_DISABLE 0x10000
-	
+  
 #define XE_FILL_POINT 0x01
 #define XE_FILL_WIREFRAME 0x25
 #define XE_FILL_SOLID 0x00
 
 struct XenosLock
 {
-	void *start;
-	u32 phys;
-	int size;
-	int flags;
+  void *start;
+  u32 phys;
+  int size;
+  int flags;
 };
 
 #define XE_SHADER_MAX_INSTANCES 16
@@ -100,37 +100,37 @@ struct XenosLock
 
 struct XenosShader
 {
-	void *shader;
-	u32 size;
-			/* we might need more than once instance if we want to use a shader with different VBFs */
-	u32 shader_phys[XE_SHADER_MAX_INSTANCES], shader_phys_size, program_control, context_misc;
-	void *shader_instance[XE_SHADER_MAX_INSTANCES];
+  void *shader;
+  u32 size;
+      /* we might need more than once instance if we want to use a shader with different VBFs */
+  u32 shader_phys[XE_SHADER_MAX_INSTANCES], shader_phys_size, program_control, context_misc;
+  void *shader_instance[XE_SHADER_MAX_INSTANCES];
 };
 
-	/* the shader file format */
+  /* the shader file format */
 struct XenosShaderHeader
 {
-	u32 magic;
-	u32 offset;
-	
-	u32 unk1[3];
+  u32 magic;
+  u32 offset;
+  
+  u32 unk1[3];
 
-	u32 off_constants, off_shader;
+  u32 off_constants, off_shader;
 
-	u32 unk2[2];
+  u32 unk2[2];
 };
 
 struct XenosShaderData
 {
-	u32 sh_off, sh_size;
-	u32 program_control, context_misc;
-	
-	u32 unk1[4];
+  u32 sh_off, sh_size;
+  u32 program_control, context_misc;
+  
+  u32 unk1[4];
 };
 
 struct XenosShaderVertex
 {
-	u32 cnt0, cnt_vfetch, cnt2;
+  u32 cnt0, cnt_vfetch, cnt2;
 };
 
 #pragma pack(pop)
@@ -143,19 +143,19 @@ struct XenosShaderVertex
 #define SWIZZLE_XYZ0 0x0C8 // 000 010 001 000
 #define SWIZZLE_XY0_ 0xE08 // 111 000 001 000
 
-	/* each vertex buffer element fills FOUR FLOAT components.
-	   the 'usage' specifies which of them (position, color, texuv, ..)
-	   the 'fmt' specified in which form they lie in memory. if you 
-	     specify float3, the remaining component will be filled up with
-	     the 0 or 1, according to the swizzling.
-	*/
+  /* each vertex buffer element fills FOUR FLOAT components.
+     the 'usage' specifies which of them (position, color, texuv, ..)
+     the 'fmt' specified in which form they lie in memory. if you 
+       specify float3, the remaining component will be filled up with
+       the 0 or 1, according to the swizzling.
+  */
 
 #define XE_TYPE_FLOAT2    37
 #define XE_TYPE_FLOAT3    57
 #define XE_TYPE_FLOAT4    38
 #define XE_TYPE_UBYTE4    6
 
-	/* the usage must match the shader */
+  /* the usage must match the shader */
 #define XE_USAGE_POSITION     0
 #define XE_USAGE_BLENDWEIGHTS 1
 #define XE_USAGE_BLENDINDICES 2
@@ -171,7 +171,7 @@ struct XenosShaderVertex
 #define XE_USAGE_DEPTH       12
 #define XE_USAGE_SAMPLE      13
 
-	/* texture formats */
+  /* texture formats */
 #define XE_FMT_MASK          0x3F
 #define XE_FMT_8             2
 #define XE_FMT_8888          6
@@ -185,41 +185,41 @@ struct XenosShaderVertex
 
 struct XenosVBFElement
 {
-	int usage; /* XE_USAGE */
-	int index;
-	int fmt; /* XE_TYPE */
+  int usage; /* XE_USAGE */
+  int index;
+  int fmt; /* XE_TYPE */
 };
 
 struct XenosVBFFormat
 {
-	int num;
-	struct XenosVBFElement e[10];
+  int num;
+  struct XenosVBFElement e[10];
 };
 
 struct XenosSurface
 {
-	int width, height, wpitch, hpitch, tiled, format;
-	u32 ptr, ptr_mip;
-	int bypp;
+  int width, height, wpitch, hpitch, tiled, format;
+  u32 ptr, ptr_mip;
+  int bypp;
 
     int use_filtering;
     int u_addressing,v_addressing;
-    	
-	void *base;
+      
+  void *base;
 
-	struct XenosLock lock;
+  struct XenosLock lock;
 };
 
 struct XenosVertexBuffer
 {
-	u32 phys_base;
-	int vertices;
-	int size, space; /* in DWORDs */
-	void *base;
-	
-	struct XenosLock lock;
-	
-	struct XenosVertexBuffer *next;
+  u32 phys_base;
+  int vertices;
+  int size, space; /* in DWORDs */
+  void *base;
+  
+  struct XenosLock lock;
+  
+  struct XenosVertexBuffer *next;
 };
 
 #define XE_FMT_INDEX16 0
@@ -227,31 +227,31 @@ struct XenosVertexBuffer
 
 struct XenosIndexBuffer
 {
-	u32 phys_base;
-	int indices; /* actual size, in indices */
-	int size; /* in bytes */
-	void *base;
-	int fmt; /* 0 for 16bit, 1 for 32bit */
-	
-	struct XenosLock lock;
+  u32 phys_base;
+  int indices; /* actual size, in indices */
+  int size; /* in bytes */
+  void *base;
+  int fmt; /* 0 for 16bit, 1 for 32bit */
+  
+  struct XenosLock lock;
 };
 
 struct XenosDevice
 {
-	float alu_constants[256 * 4 * 2];
-	u32 fetch_constants[96 * 2];
-	
-	u32 alu_dirty; /* 16 * 4 constants per bit */
-	u32 fetch_dirty; /* 3 * 2 per bit */
+  float alu_constants[256 * 4 * 2];
+  u32 fetch_constants[96 * 2];
+  
+  u32 alu_dirty; /* 16 * 4 constants per bit */
+  u32 fetch_dirty; /* 3 * 2 per bit */
 
-	float clipplane[6*4];
-	
-	u32 integer_constants[10*4];
-	u32 controlpacket[9], stencildata[2];
-	unsigned int alpharef; // should be moved into state
+  float clipplane[6*4];
+  
+  u32 integer_constants[10*4];
+  u32 controlpacket[9], stencildata[2];
+  unsigned int alpharef; // should be moved into state
 
-	struct XenosShader *vs, *ps;
-	int vs_index;
+  struct XenosShader *vs, *ps;
+  int vs_index;
 
 #define DIRTY_ALU      0x0001
 #define DIRTY_FETCH    0x0002
@@ -260,43 +260,43 @@ struct XenosDevice
 #define DIRTY_CONTROL  0x0010
 #define DIRTY_SHADER   0x0020
 #define DIRTY_MISC     0x0040
-	int dirty;
+  int dirty;
 
-		/* private */
-	u32 rb_secondary_base;
-	volatile void *rb, *rb_primary, *rb_secondary;
-	int rb_primary_wptr, rb_secondary_wptr;
-	int rb_secondary_boundary;
+    /* private */
+  u32 rb_secondary_base;
+  volatile void *rb, *rb_primary, *rb_secondary;
+  int rb_primary_wptr, rb_secondary_wptr;
+  int rb_secondary_boundary;
 
-	volatile unsigned int *regs;
+  volatile unsigned int *regs;
 
-	struct XenosSurface tex_fb;
-	struct XenosSurface default_fb;
-	
-	struct XenosSurface *rt;
-	int last_wptr;
-	
-	int vp_xres, vp_yres;
-	int frameidx;
-	
-	u32 clear_color;
-	u32 clear_stencil_z;
-	int msaa_samples;
+  struct XenosSurface tex_fb;
+  struct XenosSurface default_fb;
+  
+  struct XenosSurface *rt;
+  int last_wptr;
+  
+  int vp_xres, vp_yres;
+  int frameidx;
+  
+  u32 clear_color;
+  u32 clear_stencil_z;
+  int msaa_samples;
 
-	struct XenosVertexBuffer *vb_current, *vb_head;
-	int vb_current_pitch;
+  struct XenosVertexBuffer *vb_current, *vb_head;
+  int vb_current_pitch;
 
-	struct XenosVertexBuffer *vb_pool;
-	struct XenosVertexBuffer *vb_pool_after_frame;
-	
-	int tris_drawn;
-	struct XenosIndexBuffer *current_ib;
-	struct XenosVertexBuffer *current_vb;
-	
-	int edram_colorformat, edram_depthbase, edram_color0base, edram_hizpitch, edram_pitch;
-	
-	int scissor_enable;
-	int scissor_ltrb[4];
+  struct XenosVertexBuffer *vb_pool;
+  struct XenosVertexBuffer *vb_pool_after_frame;
+  
+  int tris_drawn;
+  struct XenosIndexBuffer *current_ib;
+  struct XenosVertexBuffer *current_vb;
+  
+  int edram_colorformat, edram_depthbase, edram_color0base, edram_hizpitch, edram_pitch;
+  
+  int scissor_enable;
+  int scissor_ltrb[4];
 };
 
 void Xe_Init(struct XenosDevice *xe);
@@ -312,9 +312,9 @@ void Xe_Resolve(struct XenosDevice *xe);
 #define XE_CLEAR_DS     2
 
 void Xe_ResolveInto(struct XenosDevice *xe, struct XenosSurface *surface, int source, int clear);
-	
-	/* Xe_Clear always clears the complete rendertarget. No excuses. If you want arbitrary targets, use traditional draw.
-	   (reason: resolve cannot handle arbitrary shapes) */
+  
+  /* Xe_Clear always clears the complete rendertarget. No excuses. If you want arbitrary targets, use traditional draw.
+     (reason: resolve cannot handle arbitrary shapes) */
 void Xe_Clear(struct XenosDevice *xe, int flags);
 struct XenosSurface *Xe_GetFramebufferSurface(struct XenosDevice *xe);
 void Xe_SetFrameBufferSurface(struct XenosDevice *xe, struct XenosSurface *fb);
@@ -351,11 +351,11 @@ void Xe_SetAlphaFunc(struct XenosDevice *xe, unsigned int func);
 void Xe_SetAlphaRef(struct XenosDevice *xe, float alpharef);
 void Xe_SetScissor(struct XenosDevice *xe, int enable, int left, int top, int right, int bottom);
 
-	/* bfff is a bitfield {backface,frontface} */
+  /* bfff is a bitfield {backface,frontface} */
 void Xe_SetStencilEnable(struct XenosDevice *xe, unsigned int enable);
 void Xe_SetStencilFunc(struct XenosDevice *xe, int bfff, unsigned int func);
 
-	/* -1 to leave old value */
+  /* -1 to leave old value */
 void Xe_SetStencilOp(struct XenosDevice *xe, int bfff, int fail, int zfail, int pass);
 
 void Xe_SetStencilRef(struct XenosDevice *xe, int bfff, int ref);

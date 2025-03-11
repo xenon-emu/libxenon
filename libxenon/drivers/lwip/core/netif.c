@@ -61,13 +61,13 @@
 #endif /* LWIP_DHCP */
 
 #if LWIP_NETIF_STATUS_CALLBACK
-#define NETIF_STATUS_CALLBACK(n) do{ if (n->status_callback) { (n->status_callback)(n); }}while(0)
+#define NETIF_STATUS_CALLBACK(n) do { if (n->status_callback) { (n->status_callback)(n); }} while (0)
 #else
 #define NETIF_STATUS_CALLBACK(n)
 #endif /* LWIP_NETIF_STATUS_CALLBACK */ 
 
 #if LWIP_NETIF_LINK_CALLBACK
-#define NETIF_LINK_CALLBACK(n) do{ if (n->link_callback) { (n->link_callback)(n); }}while(0)
+#define NETIF_LINK_CALLBACK(n) do { if (n->link_callback) { (n->link_callback)(n); }} while (0)
 #else
 #define NETIF_LINK_CALLBACK(n)
 #endif /* LWIP_NETIF_LINK_CALLBACK */ 
@@ -617,7 +617,7 @@ netif_loop_output(struct netif *netif, struct pbuf *p,
 #if LWIP_LOOPBACK_MAX_PBUFS
   clen = pbuf_clen(r);
   /* check for overflow or too many pbuf on queue */
-  if(((netif->loop_cnt_current + clen) < netif->loop_cnt_current) ||
+  if (((netif->loop_cnt_current + clen) < netif->loop_cnt_current) ||
      ((netif->loop_cnt_current + clen) > LWIP_LOOPBACK_MAX_PBUFS)) {
     pbuf_free(r);
     LINK_STATS_INC(link.memerr);
@@ -644,7 +644,7 @@ netif_loop_output(struct netif *netif, struct pbuf *p,
   for (last = r; last->next != NULL; last = last->next);
 
   SYS_ARCH_PROTECT(lev);
-  if(netif->loop_first != NULL) {
+  if (netif->loop_first != NULL) {
     LWIP_ASSERT("if first != NULL, last must also be != NULL", netif->loop_last != NULL);
     netif->loop_last->next = r;
     netif->loop_last = last;

@@ -1,7 +1,7 @@
 /*  *********************************************************************
     *  Broadcom Common Firmware Environment (CFE)
     *
-    *  USB Mass-Storage driver			File: usbmass.c
+    *  USB Mass-Storage driver      File: usbmass.c
     *
     *  This driver deals with mass-storage devices that support
     *  the SCSI Transparent command set and USB Bulk-Only protocol
@@ -66,23 +66,23 @@
     *  USB Mass-Storage class Constants
     ********************************************************************* */
 
-#define USBMASS_CBI_PROTOCOL	0
+#define USBMASS_CBI_PROTOCOL  0
 #define USBMASS_CBI_NOCOMPLETE_PROTOCOL 1
 #define USBMASS_BULKONLY_PROTOCOL 0x50
 
-#define USBMASS_SUBCLASS_RBC	0x01
+#define USBMASS_SUBCLASS_RBC  0x01
 #define USBMASS_SUBCLASS_SFF8020 0x02
-#define USBMASS_SUBCLASS_QIC157	0x03
-#define USBMASS_SUBCLASS_UFI	0x04
+#define USBMASS_SUBCLASS_QIC157  0x03
+#define USBMASS_SUBCLASS_UFI  0x04
 #define USBMASS_SUBCLASS_SFF8070 0x05
-#define USBMASS_SUBCLASS_SCSI	0x06
+#define USBMASS_SUBCLASS_SCSI  0x06
 
-#define USBMASS_CSW_PASS	0x00
-#define USBMASS_CSW_FAILED	0x01
-#define USBMASS_CSW_PHASEERR	0x02
+#define USBMASS_CSW_PASS  0x00
+#define USBMASS_CSW_FAILED  0x01
+#define USBMASS_CSW_PHASEERR  0x02
 
-#define USBMASS_CBW_SIGNATURE	0x43425355
-#define USBMASS_CSW_SIGNATURE	0x53425355
+#define USBMASS_CBW_SIGNATURE  0x43425355
+#define USBMASS_CSW_SIGNATURE  0x53425355
 
 /*  *********************************************************************
     *  USB Mass-Storage class Structures
@@ -92,7 +92,7 @@ typedef struct usbmass_cbw_s {
     uint8_t dCBWSignature0,dCBWSignature1,dCBWSignature2,dCBWSignature3;
     uint8_t dCBWTag0,dCBWTag1,dCBWTag2,dCBWTag3;
     uint8_t dCBWDataTransferLength0,dCBWDataTransferLength1,
-	dCBWDataTransferLength2,dCBWDataTransferLength3;
+  dCBWDataTransferLength2,dCBWDataTransferLength3;
     uint8_t bmCBWFlags;
     uint8_t bCBWLUN;
     uint8_t bCBWCBLength;
@@ -160,7 +160,7 @@ usb_driver_t usbmass_driver = {
     usbmass_detach
 };
 
-usbdev_t *usbmass_dev = NULL;		/* XX hack for testing only */
+usbdev_t *usbmass_dev = NULL;    /* XX hack for testing only */
 
 /*  *********************************************************************
     *  usbmass_mass_storage_reset(dev,ifc)
@@ -168,11 +168,11 @@ usbdev_t *usbmass_dev = NULL;		/* XX hack for testing only */
     *  Do a bulk-only mass-storage reset.
     *
     *  Input parameters:
-    *  	   dev - device to reset
+    *       dev - device to reset
     *      ifc - interface number to reset (bInterfaceNum)
     *
     *  Return value:
-    *  	   status
+    *       status
     ********************************************************************* */
 
 #define usbmass_mass_storage_reset(dev,ifc) \
@@ -185,11 +185,11 @@ usbdev_t *usbmass_dev = NULL;		/* XX hack for testing only */
     *  Get maximum LUN from device
     *
     *  Input parameters:
-    *  	   dev - device to reset
+    *       dev - device to reset
     *      lunp - pointer to int to receive max lun
     *
     *  Return value:
-    *  	   status
+    *       status
     ********************************************************************* */
 
 static int usbmass_get_max_lun(usbdev_t *dev,int *lunp)
@@ -214,10 +214,10 @@ static int usbmass_get_max_lun(usbdev_t *dev,int *lunp)
     *  Do whatever it takes to unstick a stalled mass-storage device.
     *
     *  Input parameters:
-    *  	   dev - usb device
+    *       dev - usb device
     *
     *  Return value:
-    *  	   nothing
+    *       nothing
     ********************************************************************* */
 
 static void usbmass_stall_recovery(usbdev_t *dev)
@@ -238,12 +238,12 @@ static void usbmass_stall_recovery(usbdev_t *dev)
     *  Reads a sector from the device.
     *
     *  Input parameters:
-    *  	   dev - usb device
-    *  	   sectornum - sector number to read
-    *  	   buffer - place to put sector we read
+    *       dev - usb device
+    *       sectornum - sector number to read
+    *       buffer - place to put sector we read
     *
     *  Return value:
-    *  	   status
+    *       status
     ********************************************************************* */
 
 int usbmass_request_sense(usbdev_t *dev)
@@ -272,14 +272,14 @@ int usbmass_request_sense(usbdev_t *dev)
     PUTCBWFIELD(cbw,dCBWSignature,USBMASS_CBW_SIGNATURE);
     PUTCBWFIELD(cbw,dCBWTag,softc->umass_curtag);
     PUTCBWFIELD(cbw,dCBWDataTransferLength,18);
-    cbw->bmCBWFlags = 0x80;		/* IN */
+    cbw->bmCBWFlags = 0x80;    /* IN */
     cbw->bCBWLUN = 0;
     cbw->bCBWCBLength = 12;
-    cbw->CBWCB[0] = 0x3;		/* REQUEST SENSE */
+    cbw->CBWCB[0] = 0x3;    /* REQUEST SENSE */
     cbw->CBWCB[1] = 0;
     cbw->CBWCB[2] = 0;
     cbw->CBWCB[3] = 0;
-    cbw->CBWCB[4] = 18;			/* allocation length */
+    cbw->CBWCB[4] = 18;      /* allocation length */
     cbw->CBWCB[5] = 0;
     cbw->CBWCB[6] = 0;
     cbw->CBWCB[7] = 0;
@@ -293,7 +293,7 @@ int usbmass_request_sense(usbdev_t *dev)
      */
 
     res = usb_make_sync_request(dev,softc->umass_outpipe,(uint8_t *) cbw,
-				sizeof(usbmass_cbw_t),UR_FLAG_OUT);
+        sizeof(usbmass_cbw_t),UR_FLAG_OUT);
 
     /*
      * Get the data
@@ -301,7 +301,7 @@ int usbmass_request_sense(usbdev_t *dev)
 
     memset(sector,0,18);
     res = usb_make_sync_request(dev,softc->umass_inpipe,sector,
-				18,UR_FLAG_IN | UR_FLAG_SHORTOK);
+        18,UR_FLAG_IN | UR_FLAG_SHORTOK);
 
     /*
      * Get the Status
@@ -309,7 +309,7 @@ int usbmass_request_sense(usbdev_t *dev)
 
     memset(csw,0,sizeof(usbmass_csw_t));
     res = usb_make_sync_request(dev,softc->umass_inpipe,(uint8_t *) csw,
-				sizeof(usbmass_csw_t),UR_FLAG_IN);
+        sizeof(usbmass_csw_t),UR_FLAG_IN);
 
     KFREE(cbwcsw);
 
@@ -325,19 +325,19 @@ int usbmass_request_sense(usbdev_t *dev)
     *  Reads a sector from the device.
     *
     *  Input parameters:
-    *  	   dev - usb device
-    *  	   sectornum - sector number to read
-    * 	   seccnt - count of sectors to read
-    *  	   buffer - place to put sector we read
+    *       dev - usb device
+    *       sectornum - sector number to read
+    *      seccnt - count of sectors to read
+    *       buffer - place to put sector we read
     *
     *  Return value:
-    *  	   status
+    *       status
     ********************************************************************* */
 
 int usbmass_read_sector(usbdev_t *dev,uint32_t sectornum,uint32_t seccnt,
-			hsaddr_t buffer);
+      hsaddr_t buffer);
 int usbmass_read_sector(usbdev_t *dev,uint32_t sectornum,uint32_t seccnt,
-				hsaddr_t buffer)
+        hsaddr_t buffer)
 {
     usbreq_t *ur1;
     usbreq_t *ur2;
@@ -347,12 +347,12 @@ int usbmass_read_sector(usbdev_t *dev,uint32_t sectornum,uint32_t seccnt,
     usbmass_cbw_t *cbw;
     usbmass_csw_t *csw;
 
-	usbmass_softc_t *softc;
-	int res;
+  usbmass_softc_t *softc;
+  int res;
 
     softc = (usbmass_softc_t *) dev->ud_private;
 
-    sector = (uint8_t *) HSADDR2PTR(buffer);		/* XXX not 64-bit compatible */
+    sector = (uint8_t *) HSADDR2PTR(buffer);    /* XXX not 64-bit compatible */
 
     cbw = (usbmass_cbw_t *) KMALLOC(sizeof(usbmass_cbw_t),32);
     csw = (usbmass_csw_t *) KMALLOC(sizeof(usbmass_csw_t),32);
@@ -364,12 +364,12 @@ int usbmass_read_sector(usbdev_t *dev,uint32_t sectornum,uint32_t seccnt,
     PUTCBWFIELD(cbw,dCBWSignature,USBMASS_CBW_SIGNATURE);
     PUTCBWFIELD(cbw,dCBWTag,softc->umass_curtag);
     PUTCBWFIELD(cbw,dCBWDataTransferLength,(512*seccnt));
-    cbw->bmCBWFlags = 0x80;		/* IN */
+    cbw->bmCBWFlags = 0x80;    /* IN */
     cbw->bCBWLUN = 0;
     cbw->bCBWCBLength = 10;
-    cbw->CBWCB[0] = 0x28;		/* READ */
+    cbw->CBWCB[0] = 0x28;    /* READ */
     cbw->CBWCB[1] = 0;
-    cbw->CBWCB[2] = (sectornum >> 24) & 0xFF;	/* LUN 0 & MSB's of sector */
+    cbw->CBWCB[2] = (sectornum >> 24) & 0xFF;  /* LUN 0 & MSB's of sector */
     cbw->CBWCB[3] = (sectornum >> 16) & 0xFF;
     cbw->CBWCB[4] = (sectornum >>  8) & 0xFF;
     cbw->CBWCB[5] = (sectornum >>  0) & 0xFF;
@@ -385,18 +385,18 @@ int usbmass_read_sector(usbdev_t *dev,uint32_t sectornum,uint32_t seccnt,
      */
 
     ur1 = usb_make_request(dev,softc->umass_outpipe,(uint8_t *) cbw,
-				sizeof(usbmass_cbw_t),UR_FLAG_OUT);
+        sizeof(usbmass_cbw_t),UR_FLAG_OUT);
 
-	usb_queue_request(ur1);
+  usb_queue_request(ur1);
 
-	/*
+  /*
      * Get the data
      */
 
-	ur2 = usb_make_request(dev,softc->umass_inpipe,sector,
-				512*seccnt,UR_FLAG_IN | UR_FLAG_SHORTOK);
+  ur2 = usb_make_request(dev,softc->umass_inpipe,sector,
+        512*seccnt,UR_FLAG_IN | UR_FLAG_SHORTOK);
 
-	usb_queue_request(ur2);
+  usb_queue_request(ur2);
 
     /*
      * Get the Status
@@ -404,49 +404,49 @@ int usbmass_read_sector(usbdev_t *dev,uint32_t sectornum,uint32_t seccnt,
 
     memset(csw,0,sizeof(usbmass_csw_t));
     ur3 = usb_make_request(dev,softc->umass_inpipe,(uint8_t *) csw,
-				sizeof(usbmass_csw_t),UR_FLAG_IN);
+        sizeof(usbmass_csw_t),UR_FLAG_IN);
 
-	usb_queue_request(ur3);
+  usb_queue_request(ur3);
 
-	res=usb_wait_request(ur1);
-	usb_free_request(ur1);
+  res=usb_wait_request(ur1);
+  usb_free_request(ur1);
     if (res == 4) {
-		usbmass_stall_recovery(dev);
-		KFREE(cbw);
-		KFREE(csw);
-		return -1;
-	}
+    usbmass_stall_recovery(dev);
+    KFREE(cbw);
+    KFREE(csw);
+    return -1;
+  }
 
-	res=usb_wait_request(ur2);
-	usb_free_request(ur2);
+  res=usb_wait_request(ur2);
+  usb_free_request(ur2);
     if (res == 4) {
-		usbmass_stall_recovery(dev);
-		KFREE(cbw);
-		KFREE(csw);
-		return -1;
-	}
+    usbmass_stall_recovery(dev);
+    KFREE(cbw);
+    KFREE(csw);
+    return -1;
+  }
 
-	res=usb_wait_request(ur3);
-	usb_free_request(ur3);
+  res=usb_wait_request(ur3);
+  usb_free_request(ur3);
     if (res == 4) {
-		usbmass_stall_recovery(dev);
-		KFREE(cbw);
-		KFREE(csw);
-		return -1;
-	}
+    usbmass_stall_recovery(dev);
+    KFREE(cbw);
+    KFREE(csw);
+    return -1;
+  }
 
 #if 0
     printf("CSW: Signature=%08X  Tag=%08X  Residue=%08X  Status=%02X\n",
-	   GETCBWFIELD(csw,dCSWSignature),
-	   GETCBWFIELD(csw,dCSWTag),
-	   GETCBWFIELD(csw,dCSWDataResidue),
-	   csw->bCSWStatus);
+     GETCBWFIELD(csw,dCSWSignature),
+     GETCBWFIELD(csw,dCSWTag),
+     GETCBWFIELD(csw,dCSWDataResidue),
+     csw->bCSWStatus);
 #endif
 
     res = (csw->bCSWStatus == USBMASS_CSW_PASS) ? 0 : -1;
 
-	KFREE(cbw);
-	KFREE(csw);
+  KFREE(cbw);
+  KFREE(csw);
 
     return res;
 
@@ -458,17 +458,17 @@ int usbmass_read_sector(usbdev_t *dev,uint32_t sectornum,uint32_t seccnt,
     *  Writes a sector to the device
     *
     *  Input parameters:
-    *  	   dev - usb device
-    *  	   sectornum - sector number to write
-    * 	   seccnt - count of sectors to write
-    *  	   buffer - place to get sector to write
+    *       dev - usb device
+    *       sectornum - sector number to write
+    *      seccnt - count of sectors to write
+    *       buffer - place to get sector to write
     *
     *  Return value:
-    *  	   status
+    *       status
     ********************************************************************* */
 
 static int usbmass_write_sector(usbdev_t *dev,uint32_t sectornum,uint32_t seccnt,
-				hsaddr_t buffer)
+        hsaddr_t buffer)
 {
     uint8_t *cbwcsw;
     uint8_t *sector;
@@ -480,7 +480,7 @@ static int usbmass_write_sector(usbdev_t *dev,uint32_t sectornum,uint32_t seccnt
     softc = (usbmass_softc_t *) dev->ud_private;
 
     cbwcsw = KMALLOC(64,32);
-    sector = (uint8_t *) HSADDR2PTR(buffer);		/* XXX not 64-bit compatible */
+    sector = (uint8_t *) HSADDR2PTR(buffer);    /* XXX not 64-bit compatible */
 
     cbw = (usbmass_cbw_t *) cbwcsw;
     csw = (usbmass_csw_t *) cbwcsw;
@@ -492,12 +492,12 @@ static int usbmass_write_sector(usbdev_t *dev,uint32_t sectornum,uint32_t seccnt
     PUTCBWFIELD(cbw,dCBWSignature,USBMASS_CBW_SIGNATURE);
     PUTCBWFIELD(cbw,dCBWTag,softc->umass_curtag);
     PUTCBWFIELD(cbw,dCBWDataTransferLength,(512*seccnt));
-    cbw->bmCBWFlags = 0x00;		/* OUT */
+    cbw->bmCBWFlags = 0x00;    /* OUT */
     cbw->bCBWLUN = 0;
     cbw->bCBWCBLength = 10;
-    cbw->CBWCB[0] = 0x2A;		/* WRITE */
+    cbw->CBWCB[0] = 0x2A;    /* WRITE */
     cbw->CBWCB[1] = 0;
-    cbw->CBWCB[2] = (sectornum >> 24) & 0xFF;	/* LUN 0 & MSB's of sector */
+    cbw->CBWCB[2] = (sectornum >> 24) & 0xFF;  /* LUN 0 & MSB's of sector */
     cbw->CBWCB[3] = (sectornum >> 16) & 0xFF;
     cbw->CBWCB[4] = (sectornum >>  8) & 0xFF;
     cbw->CBWCB[5] = (sectornum >>  0) & 0xFF;
@@ -513,14 +513,14 @@ static int usbmass_write_sector(usbdev_t *dev,uint32_t sectornum,uint32_t seccnt
      */
 
     res = usb_make_sync_request(dev,softc->umass_outpipe,(uint8_t *) cbw,
-				sizeof(usbmass_cbw_t),UR_FLAG_OUT);
+        sizeof(usbmass_cbw_t),UR_FLAG_OUT);
 
     /*
      * Send the data
      */
 
     res = usb_make_sync_request(dev,softc->umass_outpipe,sector,
-				512*seccnt,UR_FLAG_OUT);
+        512*seccnt,UR_FLAG_OUT);
 
     /*
      * Get the Status
@@ -528,14 +528,14 @@ static int usbmass_write_sector(usbdev_t *dev,uint32_t sectornum,uint32_t seccnt
 
     memset(csw,0,sizeof(usbmass_csw_t));
     res = usb_make_sync_request(dev,softc->umass_inpipe,(uint8_t *) csw,
-				sizeof(usbmass_csw_t),UR_FLAG_IN);
+        sizeof(usbmass_csw_t),UR_FLAG_IN);
 
 #if 0
     printf("CSW: Signature=%08X  Tag=%08X  Residue=%08X  Status=%02X\n",
-	   GETCBWFIELD(csw,dCSWSignature),
-	   GETCBWFIELD(csw,dCSWTag),
-	   GETCBWFIELD(csw,dCSWDataResidue),
-	   csw->bCSWStatus);
+     GETCBWFIELD(csw,dCSWSignature),
+     GETCBWFIELD(csw,dCSWTag),
+     GETCBWFIELD(csw,dCSWDataResidue),
+     csw->bCSWStatus);
 #endif
 
     res = (csw->bCSWStatus == USBMASS_CSW_PASS) ? 0 : -1;
@@ -551,12 +551,12 @@ static int usbmass_write_sector(usbdev_t *dev,uint32_t sectornum,uint32_t seccnt
     *  Reads a sector from the device.
     *
     *  Input parameters:
-    *  	   dev - usb device
-    *  	   sectornum - sector number to read
-    *  	   buffer - place to put sector we read
+    *       dev - usb device
+    *       sectornum - sector number to read
+    *       buffer - place to put sector we read
     *
     *  Return value:
-    *  	   status
+    *       status
     ********************************************************************* */
 
 int usbmass_read_capacity(usbdev_t *dev,uint32_t *size);
@@ -588,10 +588,10 @@ int usbmass_read_capacity(usbdev_t *dev,uint32_t *size)
     PUTCBWFIELD(cbw,dCBWSignature,USBMASS_CBW_SIGNATURE);
     PUTCBWFIELD(cbw,dCBWTag,softc->umass_curtag);
     PUTCBWFIELD(cbw,dCBWDataTransferLength,8);
-    cbw->bmCBWFlags = 0x80;		/* IN */
+    cbw->bmCBWFlags = 0x80;    /* IN */
     cbw->bCBWLUN = 0;
     cbw->bCBWCBLength = 10;
-    cbw->CBWCB[0] = 0x25;		/* READ CAPACITY */
+    cbw->CBWCB[0] = 0x25;    /* READ CAPACITY */
     cbw->CBWCB[1] = 0;
     cbw->CBWCB[2] = 0;
     cbw->CBWCB[3] = 0;
@@ -609,26 +609,26 @@ int usbmass_read_capacity(usbdev_t *dev,uint32_t *size)
      */
 
     res = usb_make_sync_request(dev,softc->umass_outpipe,(uint8_t *) cbw,
-				sizeof(usbmass_cbw_t),UR_FLAG_OUT);
+        sizeof(usbmass_cbw_t),UR_FLAG_OUT);
     if (res == 4) {
-	usbmass_stall_recovery(dev);
-	KFREE(cbwcsw);
-	KFREE(sector);
-	return -1;
-	}
+  usbmass_stall_recovery(dev);
+  KFREE(cbwcsw);
+  KFREE(sector);
+  return -1;
+  }
 
     /*
      * Get the data
      */
 
     res = usb_make_sync_request(dev,softc->umass_inpipe,sector,
-				8,UR_FLAG_IN | UR_FLAG_SHORTOK);
+        8,UR_FLAG_IN | UR_FLAG_SHORTOK);
     if (res == 4) {
-	usbmass_stall_recovery(dev);
-	KFREE(cbwcsw);
-	KFREE(sector);
-	return -1;
-	}
+  usbmass_stall_recovery(dev);
+  KFREE(cbwcsw);
+  KFREE(sector);
+  return -1;
+  }
 
     /*
      * Get the Status
@@ -636,14 +636,14 @@ int usbmass_read_capacity(usbdev_t *dev,uint32_t *size)
 
     memset(csw,0,sizeof(usbmass_csw_t));
     res = usb_make_sync_request(dev,softc->umass_inpipe,(uint8_t *) csw,
-				sizeof(usbmass_csw_t),UR_FLAG_IN);
+        sizeof(usbmass_csw_t),UR_FLAG_IN);
 
     KFREE(cbwcsw);
 
     *size = (((uint32_t) sector[0]) << 24) |
-	(((uint32_t) sector[1]) << 16) |
-	(((uint32_t) sector[2]) << 8) |
-	(((uint32_t) sector[3]) << 0);
+  (((uint32_t) sector[1]) << 16) |
+  (((uint32_t) sector[2]) << 8) |
+  (((uint32_t) sector[3]) << 0);
 
     KFREE(sector);
 
@@ -659,11 +659,11 @@ int usbmass_read_capacity(usbdev_t *dev,uint32_t *size)
     *  device and allocating our softc here.
     *
     *  Input parameters:
-    *  	   dev - usb device, in the "addressed" state.
-    *  	   drv - the driver table entry that matched
+    *       dev - usb device, in the "addressed" state.
+    *       drv - the driver table entry that matched
     *
     *  Return value:
-    *  	   0
+    *       0
     ********************************************************************* */
 
 static int usbmass_attach(usbdev_t *dev,usb_driver_t *drv)
@@ -684,36 +684,36 @@ static int usbmass_attach(usbdev_t *dev,usb_driver_t *drv)
 
     ifdscr = usb_find_cfg_descr(dev,USB_INTERFACE_DESCRIPTOR_TYPE,0);
     if (ifdscr == NULL) {
-	return -1;
-	}
+  return -1;
+  }
 
     if ((ifdscr->bInterfaceSubClass != USBMASS_SUBCLASS_SCSI) ||
-	(ifdscr->bInterfaceProtocol != USBMASS_BULKONLY_PROTOCOL)) {
-	console_log("USBMASS: Do not understand devices with SubClass 0x%02X, Protocol 0x%02X",
-		    ifdscr->bInterfaceSubClass,
-		    ifdscr->bInterfaceProtocol);
-	return -1;
-	}
+  (ifdscr->bInterfaceProtocol != USBMASS_BULKONLY_PROTOCOL)) {
+  console_log("USBMASS: Do not understand devices with SubClass 0x%02X, Protocol 0x%02X",
+        ifdscr->bInterfaceSubClass,
+        ifdscr->bInterfaceProtocol);
+  return -1;
+  }
 
     for (idx = 0; idx < 2; idx++) {
-	epdscr = usb_find_cfg_descr(dev,USB_ENDPOINT_DESCRIPTOR_TYPE,idx);
+  epdscr = usb_find_cfg_descr(dev,USB_ENDPOINT_DESCRIPTOR_TYPE,idx);
 
-	if (USB_ENDPOINT_DIR_OUT(epdscr->bEndpointAddress)) {
-	    outdscr = epdscr;
-	    }
-	else {
-	    indscr = epdscr;
-	    }
-	}
+  if (USB_ENDPOINT_DIR_OUT(epdscr->bEndpointAddress)) {
+      outdscr = epdscr;
+      }
+  else {
+      indscr = epdscr;
+      }
+  }
 
 
     if (!indscr || !outdscr) {
-	/*
-	 * Could not get descriptors, something is very wrong.
-	 * Leave device addressed but not configured.
-	 */
-	return -1;
-	}
+  /*
+   * Could not get descriptors, something is very wrong.
+   * Leave device addressed but not configured.
+   */
+  return -1;
+  }
 
     /*
      * Choose the standard configuration.
@@ -754,10 +754,10 @@ static int usbmass_attach(usbdev_t *dev,usb_driver_t *drv)
     *  will be cancelled automagically.
     *
     *  Input parameters:
-    *  	   dev - usb device
+    *       dev - usb device
     *
     *  Return value:
-    *  	   0
+    *       0
     ********************************************************************* */
 
 static int usbmass_detach(usbdev_t *dev)
@@ -784,10 +784,10 @@ static int usbmass_detach(usbdev_t *dev)
     *  a helper library.
     *
     *  Input parameters:
-    *  	   size - sector size
+    *       size - sector size
     *
     *  Return value:
-    *  	   # of bits to shift
+    *       # of bits to shift
     ********************************************************************* */
 
 #define usbdisk_sectorshift(size) (((size)==2048)?11:9)
@@ -799,18 +799,18 @@ static int usbmass_detach(usbdev_t *dev)
     *  Our probe routine.  Attach an empty USB disk device to the firmware.
     *
     *  Input parameters:
-    *  	   drv - driver structure
-    *  	   probe_a - not used
-    *  	   probe_b - not used
-    *  	   probe_ptr - not used
+    *       drv - driver structure
+    *       probe_a - not used
+    *       probe_b - not used
+    *       probe_ptr - not used
     *
     *  Return value:
-    *  	   nothing
+    *       nothing
     ********************************************************************* */
 
 static void usbdisk_probe(cfe_driver_t *drv,
-			      unsigned long probe_a, unsigned long probe_b,
-			      void *probe_ptr)
+            unsigned long probe_a, unsigned long probe_b,
+            void *probe_ptr)
 {
     usbdisk_t *softc;
     char descr[128];
@@ -821,7 +821,7 @@ static void usbdisk_probe(cfe_driver_t *drv,
 
     softc->usbdisk_sectorsize = 512;
     softc->usbdisk_devtype = BLOCK_DEVTYPE_DISK;
-    softc->usbdisk_ttlsect = 0;		/* not calculated yet */
+    softc->usbdisk_ttlsect = 0;    /* not calculated yet */
     softc->usbdisk_unit = (int)probe_a;
 
     xsprintf(descr,"USB Disk unit %d",(int)probe_a);
@@ -838,10 +838,10 @@ static void usbdisk_probe(cfe_driver_t *drv,
     *  determined.
     *
     *  Input parameters:
-    *  	   ctx - device context
+    *       ctx - device context
     *
     *  Return value:
-    *  	   0 if ok, else error code
+    *       0 if ok, else error code
     ********************************************************************* */
 
 
@@ -872,11 +872,11 @@ static int usbdisk_open(cfe_devctx_t *ctx)
     *  and we may need to read partial sectors.
     *
     *  Input parameters:
-    *  	   ctx - device context
-    *  	   buffer - buffer descriptor
+    *       ctx - device context
+    *       buffer - buffer descriptor
     *
     *  Return value:
-    *  	   number of bytes read, or <0 if an error occured
+    *       number of bytes read, or <0 if an error occured
     ********************************************************************* */
 
 static int usbdisk_read(cfe_devctx_t *ctx,iocb_buffer_t *buffer)
@@ -903,42 +903,42 @@ static int usbdisk_read(cfe_devctx_t *ctx,iocb_buffer_t *buffer)
     numsec = (blen + softc->usbdisk_sectorsize - 1) >> sectorshift;
 
     if (offset & (softc->usbdisk_sectorsize-1)) {
-	lba = (offset >> sectorshift);
-	res = usbmass_read_sector(dev,lba,1,PTR2HSADDR(sector));
-	if (res < 0) goto out;
-	amtcopy = softc->usbdisk_sectorsize - (offset & (softc->usbdisk_sectorsize-1));
-	if (amtcopy > blen) amtcopy = blen;
-	hs_memcpy_to_hs(bptr,&sector[offset & (softc->usbdisk_sectorsize-1)],amtcopy);
-	bptr += amtcopy;
-	offset += amtcopy;
-	blen -= amtcopy;
-	}
+  lba = (offset >> sectorshift);
+  res = usbmass_read_sector(dev,lba,1,PTR2HSADDR(sector));
+  if (res < 0) goto out;
+  amtcopy = softc->usbdisk_sectorsize - (offset & (softc->usbdisk_sectorsize-1));
+  if (amtcopy > blen) amtcopy = blen;
+  hs_memcpy_to_hs(bptr,&sector[offset & (softc->usbdisk_sectorsize-1)],amtcopy);
+  bptr += amtcopy;
+  offset += amtcopy;
+  blen -= amtcopy;
+  }
 
     if (blen >= softc->usbdisk_sectorsize) {
-	int seccnt;
+  int seccnt;
 
-	lba = (offset >> sectorshift);
-	seccnt = (blen >> sectorshift);
+  lba = (offset >> sectorshift);
+  seccnt = (blen >> sectorshift);
 
-	res = usbmass_read_sector(dev,lba,seccnt,bptr);
-	if (res < 0) goto out;
+  res = usbmass_read_sector(dev,lba,seccnt,bptr);
+  if (res < 0) goto out;
 
-	amtcopy = seccnt << sectorshift;
-	bptr += amtcopy;
-	offset += amtcopy;
-	blen -= amtcopy;
-	}
+  amtcopy = seccnt << sectorshift;
+  bptr += amtcopy;
+  offset += amtcopy;
+  blen -= amtcopy;
+  }
 
     if (blen) {
-	lba = (offset >> sectorshift);
-	res = usbmass_read_sector(dev,lba,1,PTR2HSADDR(sector));
-	if (res < 0) goto out;
-	amtcopy = blen;
-	hs_memcpy_to_hs(bptr,sector,amtcopy);
-	bptr += amtcopy;
-	offset += amtcopy;
-	blen -= amtcopy;
-	}
+  lba = (offset >> sectorshift);
+  res = usbmass_read_sector(dev,lba,1,PTR2HSADDR(sector));
+  if (res < 0) goto out;
+  amtcopy = blen;
+  hs_memcpy_to_hs(bptr,sector,amtcopy);
+  bptr += amtcopy;
+  offset += amtcopy;
+  blen -= amtcopy;
+  }
 
 out:
     buffer->buf_retlen = bptr - buffer->buf_ptr;
@@ -953,11 +953,11 @@ out:
     *  to read.
     *
     *  Input parameters:
-    *  	   ctx - device context
-    *  	   inpstat - input status structure
+    *       ctx - device context
+    *       inpstat - input status structure
     *
     *  Return value:
-    *  	   0
+    *       0
     ********************************************************************* */
 
 static int usbdisk_inpstat(cfe_devctx_t *ctx,iocb_inpstat_t *inpstat)
@@ -976,11 +976,11 @@ static int usbdisk_inpstat(cfe_devctx_t *ctx,iocb_inpstat_t *inpstat)
     *  and the changes are merged in.
     *
     *  Input parameters:
-    *  	   ctx - device context
-    *  	   buffer - buffer descriptor
+    *       ctx - device context
+    *       buffer - buffer descriptor
     *
     *  Return value:
-    *  	   number of bytes write, or <0 if an error occured
+    *       number of bytes write, or <0 if an error occured
     ********************************************************************* */
 
 static int usbdisk_write(cfe_devctx_t *ctx,iocb_buffer_t *buffer)
@@ -1007,41 +1007,41 @@ static int usbdisk_write(cfe_devctx_t *ctx,iocb_buffer_t *buffer)
     numsec = (blen + softc->usbdisk_sectorsize - 1) >> sectorshift;
 
     if (offset & (softc->usbdisk_sectorsize-1)) {
-	lba = (offset >> sectorshift);
-	res = usbmass_read_sector(dev,lba,1,PTR2HSADDR(sector));
-	if (res < 0) goto out;
-	amtcopy = softc->usbdisk_sectorsize - (offset & (softc->usbdisk_sectorsize-1));
-	if (amtcopy > blen) amtcopy = blen;
-	hs_memcpy_from_hs(&sector[offset & (softc->usbdisk_sectorsize-1)],bptr,amtcopy);
-	res = usbmass_write_sector(dev,lba,1,PTR2HSADDR(sector));
-	if (res < 0) goto out;
-	bptr += amtcopy;
-	offset += amtcopy;
-	blen -= amtcopy;
-	}
+  lba = (offset >> sectorshift);
+  res = usbmass_read_sector(dev,lba,1,PTR2HSADDR(sector));
+  if (res < 0) goto out;
+  amtcopy = softc->usbdisk_sectorsize - (offset & (softc->usbdisk_sectorsize-1));
+  if (amtcopy > blen) amtcopy = blen;
+  hs_memcpy_from_hs(&sector[offset & (softc->usbdisk_sectorsize-1)],bptr,amtcopy);
+  res = usbmass_write_sector(dev,lba,1,PTR2HSADDR(sector));
+  if (res < 0) goto out;
+  bptr += amtcopy;
+  offset += amtcopy;
+  blen -= amtcopy;
+  }
 
     while (blen >= softc->usbdisk_sectorsize) {
-	amtcopy = softc->usbdisk_sectorsize;
-	lba = (offset >> sectorshift);
-	res = usbmass_write_sector(dev,lba,1,bptr);
-	if (res < 0) goto out;
-	bptr += amtcopy;
-	offset += amtcopy;
-	blen -= amtcopy;
-	}
+  amtcopy = softc->usbdisk_sectorsize;
+  lba = (offset >> sectorshift);
+  res = usbmass_write_sector(dev,lba,1,bptr);
+  if (res < 0) goto out;
+  bptr += amtcopy;
+  offset += amtcopy;
+  blen -= amtcopy;
+  }
 
     if (blen) {
-	lba = (offset >> sectorshift);
-	res = usbmass_read_sector(dev,lba,1,PTR2HSADDR(sector));
-	if (res < 0) goto out;
-	amtcopy = blen;
-	hs_memcpy_from_hs(sector,bptr,amtcopy);
-	res = usbmass_write_sector(dev,lba,1,PTR2HSADDR(sector));
-	if (res < 0) goto out;
-	bptr += amtcopy;
-	offset += amtcopy;
-	blen -= amtcopy;
-	}
+  lba = (offset >> sectorshift);
+  res = usbmass_read_sector(dev,lba,1,PTR2HSADDR(sector));
+  if (res < 0) goto out;
+  amtcopy = blen;
+  hs_memcpy_from_hs(sector,bptr,amtcopy);
+  res = usbmass_write_sector(dev,lba,1,PTR2HSADDR(sector));
+  if (res < 0) goto out;
+  bptr += amtcopy;
+  offset += amtcopy;
+  blen -= amtcopy;
+  }
 
 out:
     buffer->buf_retlen = bptr - buffer->buf_ptr;
@@ -1056,12 +1056,12 @@ out:
     *  Process device I/O control requests for the IDE device.
     *
     *  Input parameters:
-    *  	   ctx - device context
-    *  	   buffer - buffer descriptor
+    *       ctx - device context
+    *       buffer - buffer descriptor
     *
     *  Return value:
-    *  	   0 if ok
-    *  	   else error code
+    *       0 if ok
+    *       else error code
     ********************************************************************* */
 
 static int usbdisk_ioctl(cfe_devctx_t *ctx,iocb_buffer_t *buffer)
@@ -1072,23 +1072,23 @@ static int usbdisk_ioctl(cfe_devctx_t *ctx,iocb_buffer_t *buffer)
     blockdev_info_t devinfo;
 
     switch ((int)buffer->buf_ioctlcmd) {
-	case IOCTL_BLOCK_GETBLOCKSIZE:
-	    info = softc->usbdisk_sectorsize;
-	    hs_memcpy_to_hs(buffer->buf_ptr,&info,sizeof(info));
-	    break;
-	case IOCTL_BLOCK_GETTOTALBLOCKS:
-	    linfo = softc->usbdisk_ttlsect;
-	    hs_memcpy_to_hs(buffer->buf_ptr,&linfo,sizeof(linfo));
-	    break;
-	case IOCTL_BLOCK_GETDEVTYPE:
-	    devinfo.blkdev_totalblocks = softc->usbdisk_ttlsect;
-	    devinfo.blkdev_blocksize = softc->usbdisk_sectorsize;
-	    devinfo.blkdev_devtype = softc->usbdisk_devtype;
-	    hs_memcpy_to_hs(buffer->buf_ptr,&devinfo,sizeof(devinfo));
-	    break;
-	default:
-	    return -1;
-	}
+  case IOCTL_BLOCK_GETBLOCKSIZE:
+      info = softc->usbdisk_sectorsize;
+      hs_memcpy_to_hs(buffer->buf_ptr,&info,sizeof(info));
+      break;
+  case IOCTL_BLOCK_GETTOTALBLOCKS:
+      linfo = softc->usbdisk_ttlsect;
+      hs_memcpy_to_hs(buffer->buf_ptr,&linfo,sizeof(linfo));
+      break;
+  case IOCTL_BLOCK_GETDEVTYPE:
+      devinfo.blkdev_totalblocks = softc->usbdisk_ttlsect;
+      devinfo.blkdev_blocksize = softc->usbdisk_sectorsize;
+      devinfo.blkdev_devtype = softc->usbdisk_devtype;
+      hs_memcpy_to_hs(buffer->buf_ptr,&devinfo,sizeof(devinfo));
+      break;
+  default:
+      return -1;
+  }
 
     return 0;
 }
@@ -1099,10 +1099,10 @@ static int usbdisk_ioctl(cfe_devctx_t *ctx,iocb_buffer_t *buffer)
     *  Close the I/O device.
     *
     *  Input parameters:
-    *  	   ctx - device context
+    *       ctx - device context
     *
     *  Return value:
-    *  	   0 if ok, else error code
+    *       0 if ok, else error code
     ********************************************************************* */
 
 static int usbdisk_close(cfe_devctx_t *ctx)
@@ -1119,48 +1119,48 @@ static int usbdisk_close(cfe_devctx_t *ctx)
 
 int usbmass_read(struct bdev *dev, void *data, lba_t lba, int num)
 {
-	char * p = (char *)data;
-	usbmass_softc_t *softc = dev->ctx;
-	lba += dev->offset;
+  char * p = (char *)data;
+  usbmass_softc_t *softc = dev->ctx;
+  lba += dev->offset;
 
-	int r = 0;
-	while (num)
-	{
-		int tl = num;
-		if (tl>MAX_SECTOR_PER_REQUEST) tl=MAX_SECTOR_PER_REQUEST;
-		if (usbmass_read_sector(softc->dev, lba, tl, PTR2HSADDR(p)))
-			break;
+  int r = 0;
+  while (num)
+  {
+    int tl = num;
+    if (tl>MAX_SECTOR_PER_REQUEST) tl=MAX_SECTOR_PER_REQUEST;
+    if (usbmass_read_sector(softc->dev, lba, tl, PTR2HSADDR(p)))
+      break;
 
-		p += tl*512;
-		num -= tl;
-		r += tl;
-		lba += tl;
-	}
+    p += tl*512;
+    num -= tl;
+    r += tl;
+    lba += tl;
+  }
 
-	return r;
+  return r;
 }
 
 int usbmass_write(struct bdev *dev, const void *data, lba_t lba, int num)
 {
-	char * p = (char *)data;
-	usbmass_softc_t *softc = dev->ctx;
-	lba += dev->offset;
+  char * p = (char *)data;
+  usbmass_softc_t *softc = dev->ctx;
+  lba += dev->offset;
 
-	int r = 0;
-	while (num)
-	{
-		int tl = num;
-		if (tl>MAX_SECTOR_PER_REQUEST) tl=MAX_SECTOR_PER_REQUEST;
-		if (usbmass_write_sector(softc->dev, lba, tl, PTR2HSADDR(p)))
-			break;
+  int r = 0;
+  while (num)
+  {
+    int tl = num;
+    if (tl>MAX_SECTOR_PER_REQUEST) tl=MAX_SECTOR_PER_REQUEST;
+    if (usbmass_write_sector(softc->dev, lba, tl, PTR2HSADDR(p)))
+      break;
 
-		p += tl*512;
-		num -= tl;
-		r += tl;
-		lba += tl;
-	}
+    p += tl*512;
+    num -= tl;
+    r += tl;
+    lba += tl;
+  }
 
-	return r;
+  return r;
 }
 
 #endif

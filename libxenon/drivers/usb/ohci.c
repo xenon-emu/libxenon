@@ -1,7 +1,7 @@
 /*  *********************************************************************
     *  Broadcom Common Firmware Environment (CFE)
     *  
-    *  OHCI device driver			File: ohci.c
+    *  OHCI device driver      File: ohci.c
     *  
     *  Open Host Controller Interface low-level routines
     *  
@@ -52,9 +52,9 @@
 #include <string.h>
 #include <stdint.h>
 #include "usbhack.h"
-#define CPUCFG_COHERENT_DMA 1	/* hack runs on a PC, PCs are coherent */
+#define CPUCFG_COHERENT_DMA 1  /* hack runs on a PC, PCs are coherent */
 #define ENDIAN_BIG 0
-#define ENDIAN_LITTLE 1		/* hack runs on PC, PCs are little endian */
+#define ENDIAN_LITTLE 1    /* hack runs on PC, PCs are little endian */
 #include "lib_malloc.h"
 #include "lib_queue.h"
 #else
@@ -249,17 +249,17 @@ void ohci_dumptd(ohci_softc_t *softc,ohci_td_t *td)
     ctl = BSWAP32(td->td_control);
 
     printf("[%08X] ctl=%08X (DP=%s,DI=%d,T=%d,EC=%d,CC=%d%s) cbp=%08X be=%08X next=%08X\n",
-	   OHCI_VTOP(td),
-	   ctl,
-	   pids[G_OHCI_TD_PID(ctl)],
-	   G_OHCI_TD_DI(ctl),
-	   G_OHCI_TD_DT(ctl),
-	   G_OHCI_TD_EC(ctl),
-	   G_OHCI_TD_CC(ctl),
-	   (ctl & M_OHCI_TD_SHORTOK) ? ",R" : "",
-	   BSWAP32(td->td_cbp),
-	   BSWAP32(td->td_be),
-	   BSWAP32(td->td_next_td));
+     OHCI_VTOP(td),
+     ctl,
+     pids[G_OHCI_TD_PID(ctl)],
+     G_OHCI_TD_DI(ctl),
+     G_OHCI_TD_DT(ctl),
+     G_OHCI_TD_EC(ctl),
+     G_OHCI_TD_CC(ctl),
+     (ctl & M_OHCI_TD_SHORTOK) ? ",R" : "",
+     BSWAP32(td->td_cbp),
+     BSWAP32(td->td_be),
+     BSWAP32(td->td_next_td));
 }
 
 void ohci_dumptdchain(ohci_softc_t *softc,ohci_td_t *td)
@@ -267,21 +267,21 @@ void ohci_dumptdchain(ohci_softc_t *softc,ohci_td_t *td)
     ohci_transfer_t *transfer;
     int idx = 0;
     for (;;) {
-	printf("%d:[%08X] ctl=%08X cbp=%08X be=%08X next=%08X ",
-	       idx,
-	   OHCI_VTOP(td),
-	   BSWAP32(td->td_control),
-	   BSWAP32(td->td_cbp),
-	   BSWAP32(td->td_be),
-	   BSWAP32(td->td_next_td));
+  printf("%d:[%08X] ctl=%08X cbp=%08X be=%08X next=%08X ",
+         idx,
+     OHCI_VTOP(td),
+     BSWAP32(td->td_control),
+     BSWAP32(td->td_cbp),
+     BSWAP32(td->td_be),
+     BSWAP32(td->td_next_td));
 
-	transfer = ohci_transfer_from_td(softc,td);
-	printf("Req=%p",transfer->t_ref);
-	printf("\n");
-	if (!td->td_next_td) break;
-	td = (ohci_td_t *) OHCI_PTOV(BSWAP32(td->td_next_td));
-	idx++;
-	}
+  transfer = ohci_transfer_from_td(softc,td);
+  printf("Req=%p",transfer->t_ref);
+  printf("\n");
+  if (!td->td_next_td) break;
+  td = (ohci_td_t *) OHCI_PTOV(BSWAP32(td->td_next_td));
+  idx++;
+  }
 }
 
 void ohci_dumped(ohci_softc_t *softc,ohci_ed_t *ed)
@@ -292,19 +292,19 @@ void ohci_dumped(ohci_softc_t *softc,ohci_ed_t *ed)
     ctl = BSWAP32(ed->ed_control),
 
     printf("[%08X] Ctl=%08X (MPS=%d%s%s%s,EN=%d,FA=%d,D=%s) Tailp=%08X headp=%08X next=%08X %s\n",
-	   OHCI_VTOP(ed),
-	   ctl,
-	   G_OHCI_ED_MPS(ctl),
-	   (ctl & M_OHCI_ED_LOWSPEED) ? ",LS" : "",
-	   (ctl & M_OHCI_ED_SKIP) ? ",SKIP" : "",
-	   (ctl & M_OHCI_ED_ISOCFMT) ? ",ISOC" : "",
-	   G_OHCI_ED_EN(ctl),
-	   G_OHCI_ED_FA(ctl),
-	   pids[G_OHCI_ED_DIR(ctl)],
-	   BSWAP32(ed->ed_tailp),
-	   BSWAP32(ed->ed_headp),
-	   BSWAP32(ed->ed_next_ed),
-	   BSWAP32(ed->ed_headp) & M_OHCI_ED_HALT ? "HALT" : "");
+     OHCI_VTOP(ed),
+     ctl,
+     G_OHCI_ED_MPS(ctl),
+     (ctl & M_OHCI_ED_LOWSPEED) ? ",LS" : "",
+     (ctl & M_OHCI_ED_SKIP) ? ",SKIP" : "",
+     (ctl & M_OHCI_ED_ISOCFMT) ? ",ISOC" : "",
+     G_OHCI_ED_EN(ctl),
+     G_OHCI_ED_FA(ctl),
+     pids[G_OHCI_ED_DIR(ctl)],
+     BSWAP32(ed->ed_tailp),
+     BSWAP32(ed->ed_headp),
+     BSWAP32(ed->ed_next_ed),
+     BSWAP32(ed->ed_headp) & M_OHCI_ED_HALT ? "HALT" : "");
     if ((ed->ed_headp & M_OHCI_ED_PTRMASK) == 0) return;
     ohci_dumptdchain(softc,OHCI_PTOV(BSWAP32(ed->ed_headp) & M_OHCI_ED_PTRMASK));
 }
@@ -313,13 +313,13 @@ void ohci_dumpedchain(ohci_softc_t *softc,ohci_ed_t *ed)
 {
     int idx = 0;
     for (;;) {
-	printf("---\nED#%d -> ",idx);
-	ohci_dumped(softc,ed);
-	if (!ed->ed_next_ed) break;
-	if (idx > 50) break;
-	ed = (ohci_ed_t *) OHCI_PTOV(BSWAP32(ed->ed_next_ed));
-	idx++;
-	}
+  printf("---\nED#%d -> ",idx);
+  ohci_dumped(softc,ed);
+  if (!ed->ed_next_ed) break;
+  if (idx > 50) break;
+  ed = (ohci_ed_t *) OHCI_PTOV(BSWAP32(ed->ed_next_ed));
+  idx++;
+  }
 }
 
 void ohci_dumpdoneq(ohci_softc_t *softc)
@@ -359,10 +359,10 @@ static void eptstats(ohci_softc_t *softc)
     *  the hardware at this time.
     *  
     *  Input parameters: 
-    *  	   softc - our OHCI controller
-    *  	   
+    *       softc - our OHCI controller
+    *       
     *  Return value:
-    *  	   pointer to endpoint or NULL
+    *       pointer to endpoint or NULL
     ********************************************************************* */
 
 static ohci_endpoint_t *_ohci_allocept(ohci_softc_t *softc)
@@ -372,16 +372,16 @@ static ohci_endpoint_t *_ohci_allocept(ohci_softc_t *softc)
 
 #ifdef _OHCI_DEBUG_
     if (ohcidebug > 2) {
-	printf("AllocEpt: ");eptstats(softc);
-	}
+  printf("AllocEpt: ");eptstats(softc);
+  }
 #endif
 
     e = softc->ohci_endpoint_freelist;
 
     if (!e) {
-	OHCIDEBUG(printf("No endpoints left!\n"));
-	return NULL;
-	}
+  OHCIDEBUG(printf("No endpoints left!\n"));
+  return NULL;
+  }
 
     softc->ohci_endpoint_freelist = e->ep_next;
 
@@ -406,10 +406,10 @@ static ohci_endpoint_t *_ohci_allocept(ohci_softc_t *softc)
     *  but not attached to the hardware.
     *  
     *  Input parameters: 
-    *  	   softc - our OHCI controller
-    *  	   
+    *       softc - our OHCI controller
+    *       
     *  Return value:
-    *  	   transfer descriptor, or NULL
+    *       transfer descriptor, or NULL
     ********************************************************************* */
 
 static ohci_transfer_t *_ohci_allocxfer(ohci_softc_t *softc)
@@ -419,20 +419,20 @@ static ohci_transfer_t *_ohci_allocxfer(ohci_softc_t *softc)
 
 #ifdef _OHCI_DEBUG_
     if (ohcidebug > 2) {
-	int cnt;
-	cnt = 0; 
-	t = softc->ohci_transfer_freelist;
-	while (t) { t = t->t_next; cnt++; }
-	printf("AllocXfer: %d left, %d inuse\n",cnt,OHCI_TDPOOL_SIZE-cnt);
-	}
+  int cnt;
+  cnt = 0; 
+  t = softc->ohci_transfer_freelist;
+  while (t) { t = t->t_next; cnt++; }
+  printf("AllocXfer: %d left, %d inuse\n",cnt,OHCI_TDPOOL_SIZE-cnt);
+  }
 #endif
 
     t = softc->ohci_transfer_freelist;
 
     if (!t) {
-	OHCIDEBUG(printf("No more transfer descriptors!\n"));
-	return NULL;
-	}
+  OHCIDEBUG(printf("No more transfer descriptors!\n"));
+  return NULL;
+  }
 
     softc->ohci_transfer_freelist = t->t_next;
 
@@ -456,11 +456,11 @@ static ohci_transfer_t *_ohci_allocxfer(ohci_softc_t *softc)
     *  Free an endpoint, returning it to the pool.
     *  
     *  Input parameters: 
-    *  	   softc - our OHCI controller
-    *  	   e - endpoint descriptor to return
-    *  	   
+    *       softc - our OHCI controller
+    *       e - endpoint descriptor to return
+    *       
     *  Return value:
-    *  	   nothing
+    *       nothing
     ********************************************************************* */
 
 static void _ohci_freeept(ohci_softc_t *softc,ohci_endpoint_t *e)
@@ -468,13 +468,13 @@ static void _ohci_freeept(ohci_softc_t *softc,ohci_endpoint_t *e)
 
 #ifdef _OHCI_DEBUG_
     if (ohcidebug > 2) {
-	int cnt;
-	ohci_endpoint_t *ee;
-	cnt = 0; 
-	ee = softc->ohci_endpoint_freelist;
-	while (ee) { ee = ee->ep_next; cnt++; }
-	printf("FreeEpt[%p]: %d left, %d inuse\n",e,cnt,OHCI_EDPOOL_SIZE-cnt);
-	}
+  int cnt;
+  ohci_endpoint_t *ee;
+  cnt = 0; 
+  ee = softc->ohci_endpoint_freelist;
+  while (ee) { ee = ee->ep_next; cnt++; }
+  printf("FreeEpt[%p]: %d left, %d inuse\n",e,cnt,OHCI_EDPOOL_SIZE-cnt);
+  }
 #endif
 
     e->ep_next = softc->ohci_endpoint_freelist;
@@ -488,11 +488,11 @@ static void _ohci_freeept(ohci_softc_t *softc,ohci_endpoint_t *e)
     *  Free a transfer descriptor, returning it to the pool.
     *  
     *  Input parameters: 
-    *  	   softc - our OHCI controller
-    *  	   t - transfer descriptor to return
-    *  	   
+    *       softc - our OHCI controller
+    *       t - transfer descriptor to return
+    *       
     *  Return value:
-    *  	   nothing
+    *       nothing
     ********************************************************************* */
 
 static void _ohci_freexfer(ohci_softc_t *softc,ohci_transfer_t *t)
@@ -510,11 +510,11 @@ static void _ohci_freexfer(ohci_softc_t *softc,ohci_transfer_t *t)
     *  lines and invalidate any existing cache entries for those lines.
     *  
     *  Input parameters: 
-    *  	   size - number of bytes requested
-    *  	   align - any protocol-required alignment
-    *  	   
+    *       size - number of bytes requested
+    *       align - any protocol-required alignment
+    *       
     *  Return value:
-    *  	   base pointer, or NULL if request fails
+    *       base pointer, or NULL if request fails
     ********************************************************************* */
 
 #define CACHE_ALIGN    32       /* XXX place holder, big enough to now. */
@@ -528,8 +528,8 @@ static void * _ohci_dma_alloc(size_t size, unsigned int align)
     base = KMALLOC(len, ALIGN(align, CACHE_ALIGN));
 #if (!CPUCFG_COHERENT_DMA)
     if (base != NULL) {
-	OHCI_INVAL_RANGE(base, len);
-	}
+  OHCI_INVAL_RANGE(base, len);
+  }
 #endif
     return base;
 }
@@ -543,11 +543,11 @@ static void * _ohci_dma_alloc(size_t size, unsigned int align)
     *  big chunks from the heap and carving them up.
     *  
     *  Input parameters: 
-    *  	   softc - our OHCI controller
-    *  	   
+    *       softc - our OHCI controller
+    *       
     *  Return value:
-    *  	   0 if ok
-    *  	   else error code
+    *       0 if ok
+    *       else error code
     ********************************************************************* */
 
 static int _ohci_initpools(ohci_softc_t *softc)
@@ -569,9 +569,9 @@ static int _ohci_initpools(ohci_softc_t *softc)
     softc->ohci_hwtdpool = _ohci_dma_alloc(OHCI_TDPOOL_SIZE*sizeof(ohci_td_t),OHCI_TD_ALIGN);
 
     if (!softc->ohci_transfer_pool || !softc->ohci_hwtdpool) {
-	OHCIDEBUG(printf("Could not allocate transfer descriptors\n"));
-	return -1;
-	}
+  OHCIDEBUG(printf("Could not allocate transfer descriptors\n"));
+  return -1;
+  }
 
 #if (!CPUCFG_COHERENT_DMA)
     softc->ohci_hwtdpool = (void *) UNCADDR(PHYSADDR((uint32_t)(softc->ohci_hwtdpool)));
@@ -580,21 +580,21 @@ static int _ohci_initpools(ohci_softc_t *softc)
     softc->ohci_transfer_freelist = NULL;
 
     for (idx = 0; idx < OHCI_TDPOOL_SIZE; idx++) {
-	_ohci_freexfer(softc,softc->ohci_transfer_pool+idx);
-	}
+  _ohci_freexfer(softc,softc->ohci_transfer_pool+idx);
+  }
 
     /*
      * Do the endpoint descriptor pool
      */
-	 
+   
     softc->ohci_endpoint_pool = KMALLOC(OHCI_EDPOOL_SIZE*sizeof(ohci_endpoint_t),CACHE_ALIGN);
 
     softc->ohci_hwedpool = _ohci_dma_alloc(OHCI_EDPOOL_SIZE*sizeof(ohci_ed_t),OHCI_ED_ALIGN);
 
     if (!softc->ohci_endpoint_pool || !softc->ohci_hwedpool) {
-	OHCIDEBUG(printf("Could not allocate transfer descriptors\n"));
-	return -1;
-	}
+  OHCIDEBUG(printf("Could not allocate transfer descriptors\n"));
+  return -1;
+  }
 
 #if (!CPUCFG_COHERENT_DMA)
     softc->ohci_hwedpool = (void *) UNCADDR(PHYSADDR((uint32_t)(softc->ohci_hwedpool)));
@@ -603,8 +603,8 @@ static int _ohci_initpools(ohci_softc_t *softc)
     softc->ohci_endpoint_freelist = NULL;
 
     for (idx = 0; idx < OHCI_EDPOOL_SIZE; idx++) {
-	_ohci_freeept(softc,softc->ohci_endpoint_pool+idx);
-	}
+  _ohci_freeept(softc,softc->ohci_endpoint_pool+idx);
+  }
 
     /*
      * Finally the host communications area
@@ -613,9 +613,9 @@ static int _ohci_initpools(ohci_softc_t *softc)
     softc->ohci_hcca = _ohci_dma_alloc(sizeof(ohci_hcca_t),OHCI_HCCA_ALIGN);
 
     if (!softc->ohci_hcca) {
-	OHCIDEBUG(printf("Could not allocate host communication area\n"));
-	return -1;
-	}
+  OHCIDEBUG(printf("Could not allocate host communication area\n"));
+  return -1;
+  }
 
 #if (!CPUCFG_COHERENT_DMA)
     softc->ohci_hcca = (void *) UNCADDR(PHYSADDR((uint32_t)(softc->ohci_hcca)));
@@ -635,11 +635,11 @@ static int _ohci_initpools(ohci_softc_t *softc)
     *  descriptors and interrupt calls.
     *  
     *  Input parameters: 
-    *  	   bus - bus structure, from ohci_create
-    *  	   
+    *       bus - bus structure, from ohci_create
+    *       
     *  Return value:
-    *  	   0 if ok
-    *  	   else error code
+    *       0 if ok
+    *       else error code
     ********************************************************************* */
 
 static int ohci_start(usbbus_t *bus)
@@ -670,13 +670,13 @@ static int ohci_start(usbbus_t *bus)
 
     OHCI_WRITECSR(softc,R_OHCI_CMDSTATUS,M_OHCI_CMDSTATUS_HCR);
     for (idx = 0; idx < 10000; idx++) {
-	if (!(OHCI_READCSR(softc,R_OHCI_CMDSTATUS) & M_OHCI_CMDSTATUS_HCR)) break;
-	}
+  if (!(OHCI_READCSR(softc,R_OHCI_CMDSTATUS) & M_OHCI_CMDSTATUS_HCR)) break;
+  }
 
     if (OHCI_READCSR(softc,R_OHCI_CMDSTATUS) & M_OHCI_CMDSTATUS_HCR) {
-	/* controller never came out of reset */
-	return -1;
-	}
+  /* controller never came out of reset */
+  return -1;
+  }
 
     /* 
      * Host controller state is now "SUSPEND".  We must exit
@@ -702,9 +702,9 @@ static int ohci_start(usbbus_t *bus)
     reg = OHCI_READCSR(softc,R_OHCI_CONTROL);
 
     reg = M_OHCI_CONTROL_PLE | M_OHCI_CONTROL_CLE | M_OHCI_CONTROL_BLE |
-	M_OHCI_CONTROL_IE |
-	V_OHCI_CONTROL_CBSR(K_OHCI_CBSR_41) | 
-	V_OHCI_CONTROL_HCFS(K_OHCI_HCFS_OPERATIONAL);
+  M_OHCI_CONTROL_IE |
+  V_OHCI_CONTROL_CBSR(K_OHCI_CBSR_41) | 
+  V_OHCI_CONTROL_HCFS(K_OHCI_HCFS_OPERATIONAL);
 
     OHCI_WRITECSR(softc,R_OHCI_CONTROL,reg);
 
@@ -716,10 +716,10 @@ static int ohci_start(usbbus_t *bus)
     reg &= M_OHCI_FMINTERVAL_FIT;
     reg ^= M_OHCI_FMINTERVAL_FIT;
     reg |= V_OHCI_FMINTERVAL_FSMPS(OHCI_CALC_FSMPS(frameint)) |
-	V_OHCI_FMINTERVAL_FI(frameint);
+  V_OHCI_FMINTERVAL_FI(frameint);
     OHCI_WRITECSR(softc,R_OHCI_FMINTERVAL,reg);
 
-    reg = frameint * 9 / 10;		/* calculate 90% */
+    reg = frameint * 9 / 10;    /* calculate 90% */
     OHCI_WRITECSR(softc,R_OHCI_PERIODICSTART,reg);
 
     usb_delay_ms(softc->ohci_bus,10);
@@ -752,11 +752,11 @@ static int ohci_start(usbbus_t *bus)
     *  endpoints anywhere within this tree.
     *  
     *  Input parameters: 
-    *  	   softc - our OHCI controller
-    *  	   
+    *       softc - our OHCI controller
+    *       
     *  Return value:
-    *  	   0 if ok
-    *  	   else error (out of descriptors)
+    *       0 if ok
+    *       else error (out of descriptors)
     ********************************************************************* */
 
 static int _ohci_setupepts(ohci_softc_t *softc)
@@ -800,13 +800,13 @@ static int _ohci_setupepts(ohci_softc_t *softc)
      */
 
     for (idx = 0; idx < OHCI_INTTREE_SIZE; idx++) {
-	e = _ohci_allocept(softc);		/* allocated with sKip bit set */
-	softc->ohci_edtable[idx] = e;
-	child = (idx == 0) ? softc->ohci_isoc_list : softc->ohci_edtable[(idx-1)/2];
-	ed = ohci_ed_from_endpoint(softc,e);
-	ed->ed_next_ed = BSWAP32(child->ep_phys);
-	e->ep_next = child;
-	}
+  e = _ohci_allocept(softc);    /* allocated with sKip bit set */
+  softc->ohci_edtable[idx] = e;
+  child = (idx == 0) ? softc->ohci_isoc_list : softc->ohci_edtable[(idx-1)/2];
+  ed = ohci_ed_from_endpoint(softc,e);
+  ed->ed_next_ed = BSWAP32(child->ep_phys);
+  e->ep_next = child;
+  }
 
     /*
      * We maintain both physical and virtual copies of the interrupt
@@ -814,10 +814,10 @@ static int _ohci_setupepts(ohci_softc_t *softc)
      */
 
     for (idx = 0; idx < OHCI_INTTABLE_SIZE; idx++) {
-	child = softc->ohci_edtable[OHCI_INTTREE_SIZE-OHCI_INTTABLE_SIZE+idx];
-	softc->ohci_inttable[ohci_revbits[idx]] = child;
-	softc->ohci_hcca->hcca_inttable[ohci_revbits[idx]] = BSWAP32(child->ep_phys);
-	}
+  child = softc->ohci_edtable[OHCI_INTTREE_SIZE-OHCI_INTTABLE_SIZE+idx];
+  softc->ohci_inttable[ohci_revbits[idx]] = child;
+  softc->ohci_hcca->hcca_inttable[ohci_revbits[idx]] = BSWAP32(child->ep_phys);
+  }
 
     /*
      * Okay, at this point the tree is built.
@@ -832,10 +832,10 @@ static int _ohci_setupepts(ohci_softc_t *softc)
     *  Stop the OHCI hardware.
     *  
     *  Input parameters: 
-    *  	   bus - our bus structure
-    *  	   
+    *       bus - our bus structure
+    *       
     *  Return value:
-    *  	   nothing
+    *       nothing
     ********************************************************************* */
 
 static void ohci_stop(usbbus_t *bus)
@@ -854,11 +854,11 @@ static void ohci_stop(usbbus_t *bus)
     *  spec so we can add endpoints while the hardware is running.
     *  
     *  Input parameters: 
-    *  	   queue - endpoint descriptor for head of queue
-    *  	   e - endpoint to add to queue
-    *  	   
+    *       queue - endpoint descriptor for head of queue
+    *       e - endpoint to add to queue
+    *       
     *  Return value:
-    *  	   nothing
+    *       nothing
     ********************************************************************* */
 
 static void _ohci_queueept(ohci_softc_t *softc,ohci_endpoint_t *queue,ohci_endpoint_t *newept)
@@ -889,11 +889,11 @@ static void _ohci_queueept(ohci_softc_t *softc,ohci_endpoint_t *queue,ohci_endpo
     *  a running list.
     *  
     *  Input parameters: 
-    *  	   queue - base of queue to look for endpoint on
-    *  	   e - endpoint to remove
-    *  	   
+    *       queue - base of queue to look for endpoint on
+    *       e - endpoint to remove
+    *       
     *  Return value:
-    *  	   nothing
+    *       nothing
     ********************************************************************* */
 
 static void _ohci_deqept(ohci_softc_t *softc,ohci_endpoint_t *queue,ohci_endpoint_t *e)
@@ -907,9 +907,9 @@ static void _ohci_deqept(ohci_softc_t *softc,ohci_endpoint_t *queue,ohci_endpoin
     while (cur && (cur->ep_next != e)) cur = cur->ep_next;
 
     if (cur == NULL) {
-	OHCIDEBUG(printf("Could not remove EP %08X: not on the list!\n",(uint32_t) (intptr_t)e));
-	return;
-	}
+  OHCIDEBUG(printf("Could not remove EP %08X: not on the list!\n",(uint32_t) (intptr_t)e));
+  return;
+  }
 
     /*
      * Remove from our regular list
@@ -936,10 +936,10 @@ static void _ohci_deqept(ohci_softc_t *softc,ohci_endpoint_t *queue,ohci_endpoin
     *  "done" queue so we can examine the results.
     *  
     *  Input parameters: 
-    *  	   softc - our OHCI controller
-    *  	   
+    *       softc - our OHCI controller
+    *       
     *  Return value:
-    *  	   nothing
+    *       nothing
     ********************************************************************* */
 
 static void ohci_intr_procdoneq(ohci_softc_t *softc, uint32_t donehead)
@@ -950,7 +950,7 @@ static void ohci_intr_procdoneq(ohci_softc_t *softc, uint32_t donehead)
     int val;
     usbreq_t *ur;
 
-    /*	
+    /*  
      * Get the head of the queue
      */
 
@@ -966,87 +966,87 @@ static void ohci_intr_procdoneq(ohci_softc_t *softc, uint32_t donehead)
     while (doneq) {
 
 #ifdef _OHCI_DEBUG_
-	ohci_ed_t *ed;
-	ohci_endpoint_t *ept;
-	usbreq_t *xur = transfer->t_ref;
+  ohci_ed_t *ed;
+  ohci_endpoint_t *ept;
+  usbreq_t *xur = transfer->t_ref;
 
-	if (ohcidebug > 1) {
-	    if (xur) {
-		ept = (ohci_endpoint_t *) xur->ur_pipe->up_hwendpoint;
-		ed = ohci_ed_from_endpoint(softc,ept);
-//		printf("ProcDoneQ:ED [%08X] -> ",ept->ep_phys);
-//		ohci_dumped(softc,ed);
-		}
-	    }
+  if (ohcidebug > 1) {
+      if (xur) {
+    ept = (ohci_endpoint_t *) xur->ur_pipe->up_hwendpoint;
+    ed = ohci_ed_from_endpoint(softc,ept);
+//    printf("ProcDoneQ:ED [%08X] -> ",ept->ep_phys);
+//    ohci_dumped(softc,ed);
+    }
+      }
 
-	/* 
-	 * Get the pointer to next one before freeing this one
-	 */
+  /* 
+   * Get the pointer to next one before freeing this one
+   */
 
-	if (ohcidebug > 1) {
-	    ur = transfer->t_ref;
-	    printf("Done(%d): ",ur ? ur->ur_tdcount : -1);
-	    ohci_dumptd(softc,td);
-	    }
+  if (ohcidebug > 1) {
+      ur = transfer->t_ref;
+      printf("Done(%d): ",ur ? ur->ur_tdcount : -1);
+      ohci_dumptd(softc,td);
+      }
 #endif
 
-	doneq = BSWAP32(td->td_next_td);
+  doneq = BSWAP32(td->td_next_td);
 
-	val = G_OHCI_TD_CC(BSWAP32(td->td_control));
+  val = G_OHCI_TD_CC(BSWAP32(td->td_control));
 
 #ifdef _OHCI_DEBUG_
-	if (val != 0) {
-	    ur = transfer->t_ref;
-	    printf("[%p Transfer error: %d %s %04X/%02X len=%d/%d (%s)]\n",ur,val,
-		   (ur->ur_flags & UR_FLAG_IN) ? "IN":"OUT",
-		   ur->ur_pipe ? ur->ur_pipe->up_flags : 0,
-		   ur->ur_pipe ? ur->ur_pipe->up_num : 0,
-		   ur->ur_xferred,ur->ur_length,
-		   ur->ur_dev->ud_drv->udrv_name);
-	    }
+  if (val != 0) {
+      ur = transfer->t_ref;
+      printf("[%p Transfer error: %d %s %04X/%02X len=%d/%d (%s)]\n",ur,val,
+       (ur->ur_flags & UR_FLAG_IN) ? "IN":"OUT",
+       ur->ur_pipe ? ur->ur_pipe->up_flags : 0,
+       ur->ur_pipe ? ur->ur_pipe->up_num : 0,
+       ur->ur_xferred,ur->ur_length,
+       ur->ur_dev->ud_drv->udrv_name);
+      }
 #endif
 
-	/*
-	 * See if it's time to call the callback.
-	 */
-	ur = transfer->t_ref;
-	if (ur) {
-	    ur->ur_status = val;
-	    ur->ur_tdcount--;
-	    if (BSWAP32(td->td_cbp) == 0) {
-		ur->ur_xferred += transfer->t_length; 
-		}
-	    else {
-		ur->ur_xferred += transfer->t_length - 
-		    (BSWAP32(td->td_be) - BSWAP32(td->td_cbp) + 1);
-		}
-	    if (ur->ur_tdcount == 0) {
-		/* Noncoherent DMA: need to invalidate, since data is in phys mem */
-		if ((ur->ur_flags & (UR_FLAG_OUT | UR_FLAG_STATUS_OUT)) == 0)
-		    OHCI_INVAL_RANGE(ur->ur_buffer,ur->ur_xferred);
+  /*
+   * See if it's time to call the callback.
+   */
+  ur = transfer->t_ref;
+  if (ur) {
+      ur->ur_status = val;
+      ur->ur_tdcount--;
+      if (BSWAP32(td->td_cbp) == 0) {
+    ur->ur_xferred += transfer->t_length; 
+    }
+      else {
+    ur->ur_xferred += transfer->t_length - 
+        (BSWAP32(td->td_be) - BSWAP32(td->td_cbp) + 1);
+    }
+      if (ur->ur_tdcount == 0) {
+    /* Noncoherent DMA: need to invalidate, since data is in phys mem */
+    if ((ur->ur_flags & (UR_FLAG_OUT | UR_FLAG_STATUS_OUT)) == 0)
+        OHCI_INVAL_RANGE(ur->ur_buffer,ur->ur_xferred);
 
-		/* If device was being removed, change return code to "cancelled" */
-		if (ur->ur_dev && (ur->ur_dev->ud_flags & UD_FLAG_REMOVING)) {
-		    OHCIDEBUG(printf("Changing status of %p to CANCELLED\n",ur));
-		    val = K_OHCI_CC_CANCELLED;
-		    }
+    /* If device was being removed, change return code to "cancelled" */
+    if (ur->ur_dev && (ur->ur_dev->ud_flags & UD_FLAG_REMOVING)) {
+        OHCIDEBUG(printf("Changing status of %p to CANCELLED\n",ur));
+        val = K_OHCI_CC_CANCELLED;
+        }
 
-		usb_complete_request(ur,val);
-		}
-	    }
+    usb_complete_request(ur,val);
+    }
+      }
 
-	/*
-	 * Free up the request
-	 */
-	_ohci_freexfer(softc,transfer);
+  /*
+   * Free up the request
+   */
+  _ohci_freexfer(softc,transfer);
 
-	/*
-	 * Advance to the next request.
-	 */
+  /*
+   * Advance to the next request.
+   */
 
-	td = (ohci_td_t *) OHCI_PTOV(doneq);
-	transfer = ohci_transfer_from_td(softc,td);
-	}
+  td = (ohci_td_t *) OHCI_PTOV(doneq);
+  transfer = ohci_transfer_from_td(softc,td);
+  }
 }
 
 
@@ -1056,11 +1056,11 @@ static void ohci_intr_procdoneq(ohci_softc_t *softc, uint32_t donehead)
     *  Process pending interrupts for the OHCI controller.
     *  
     *  Input parameters: 
-    *  	   bus - our bus structure
-    *  	   
+    *       bus - our bus structure
+    *       
     *  Return value:
-    *  	   0 if we did nothing
-    *  	   nonzero if we did something.
+    *       0 if we did nothing
+    *       nonzero if we did something.
     ********************************************************************* */
 
 static int ohci_intr(usbbus_t *bus)
@@ -1079,8 +1079,8 @@ static int ohci_intr(usbbus_t *bus)
      * Don't bother doing anything if nothing happened.
      */
     if (reg == 0) {
-	return 0;
-	}
+  return 0;
+  }
 
     /*
      * Get the head of the queue so that we can clear the pending
@@ -1089,7 +1089,7 @@ static int ohci_intr(usbbus_t *bus)
 
     donehead = softc->ohci_hcca->hcca_donehead;
 
-    /*	
+    /*  
      * Write the value back to the interrupt
      * register to clear the bits that were set.
      */
@@ -1098,55 +1098,55 @@ static int ohci_intr(usbbus_t *bus)
 
     /* Scheduling Overruns */
     if (reg & M_OHCI_INT_SO) {
-	OHCIDEBUG(printf("SchedOverrun\n"));
-	}
+  OHCIDEBUG(printf("SchedOverrun\n"));
+  }
 
     /* Done Queue */
     if (reg & M_OHCI_INT_WDH) {
-	ohci_intr_procdoneq(softc, donehead);
-	}
+  ohci_intr_procdoneq(softc, donehead);
+  }
 
     /* Start of Frame */
     if (reg & M_OHCI_INT_SF) {
-	/* don't be noisy about this */
-	}
+  /* don't be noisy about this */
+  }
 
     /* Resume Detect */
     if (reg & M_OHCI_INT_RD) {
-	OHCIDEBUG(printf("ResumeDetect\n"));
-	}
+  OHCIDEBUG(printf("ResumeDetect\n"));
+  }
 
     /* Unrecoverable errors */
     if (reg & M_OHCI_INT_UE) {
-	OHCIDEBUG(printf("UnrecoverableError\n"));
-	}
+  OHCIDEBUG(printf("UnrecoverableError\n"));
+  }
 
     /* Frame number overflow */
     if (reg & M_OHCI_INT_FNO) {
-	/* Don't be noisy about this */
-	}
+  /* Don't be noisy about this */
+  }
 
     /* Root Hub Status Change */
     if ((reg & ~softc->ohci_intdisable) & M_OHCI_INT_RHSC) {
 #ifdef _OHCI_DEBUG_
-	uint32_t reg;
-	if (ohcidebug > 0) {
-	    printf("RootHubStatusChange: ");
-	    reg = OHCI_READCSR(softc,R_OHCI_RHSTATUS);
-	    ohci_dumprhstat(reg);
-	    reg = OHCI_READCSR(softc,R_OHCI_RHPORTSTATUS(1));
-	    ohci_dumpportstat(1,reg);
-	    reg = OHCI_READCSR(softc,R_OHCI_RHPORTSTATUS(2));
-	    ohci_dumpportstat(2,reg);
-	    }
+  uint32_t reg;
+  if (ohcidebug > 0) {
+      printf("RootHubStatusChange: ");
+      reg = OHCI_READCSR(softc,R_OHCI_RHSTATUS);
+      ohci_dumprhstat(reg);
+      reg = OHCI_READCSR(softc,R_OHCI_RHPORTSTATUS(1));
+      ohci_dumpportstat(1,reg);
+      reg = OHCI_READCSR(softc,R_OHCI_RHPORTSTATUS(2));
+      ohci_dumpportstat(2,reg);
+      }
 #endif
-	ohci_roothub_statchg(softc);
-	}
+  ohci_roothub_statchg(softc);
+  }
 
     /* Ownership Change */
     if (reg & M_OHCI_INT_OC) {
-	OHCIDEBUG(printf("OwnershipChange\n"));
-	}
+  OHCIDEBUG(printf("OwnershipChange\n"));
+  }
 
     return 1;
 }
@@ -1159,10 +1159,10 @@ static int ohci_intr(usbbus_t *bus)
     *  it (used when shutting down USB)
     *  
     *  Input parameters: 
-    *  	   bus - our USB bus structure
-    *  	   
+    *       bus - our USB bus structure
+    *       
     *  Return value:
-    *  	   nothing
+    *       nothing
     ********************************************************************* */
 
 static void ohci_delete(usbbus_t *bus)
@@ -1178,10 +1178,10 @@ static void ohci_delete(usbbus_t *bus)
     *  controller device.
     *  
     *  Input parameters: 
-    *  	   addr - physical address of controller
-    *  	   
+    *       addr - physical address of controller
+    *       
     *  Return value:
-    *  	   usbbus structure pointer
+    *       usbbus structure pointer
     ********************************************************************* */
 
 static usbbus_t *ohci_create(physaddr_t addr)
@@ -1211,7 +1211,7 @@ static usbbus_t *ohci_create(physaddr_t addr)
 
     softc->ohci_rh_newaddr = -1;
     softc->ohci_bus = bus;
-	
+  
     if ((res = _ohci_initpools(softc)) != 0) goto error;
     if ((res = _ohci_setupepts(softc)) != 0) goto error;
 
@@ -1235,21 +1235,21 @@ error:
     *  corresponds to the information in the OHCI specification.
     *  
     *  Input parameters: 
-    *  	   bus - the USB bus we're dealing with
-    *  	   usbaddr - USB address (0 means default address)
-    *  	   eptnum - the endpoint number
-    *  	   mps - the packet size for this endpoint
-    *  	   flags - various flags to control endpoint creation
-    *  	   
+    *       bus - the USB bus we're dealing with
+    *       usbaddr - USB address (0 means default address)
+    *       eptnum - the endpoint number
+    *       mps - the packet size for this endpoint
+    *       flags - various flags to control endpoint creation
+    *       
     *  Return value:
-    *  	   endpoint structure poihter, or NULL
+    *       endpoint structure poihter, or NULL
     ********************************************************************* */
 
 static usb_ept_t *ohci_ept_create(usbbus_t *bus,
-				  int usbaddr,
-				  int eptnum,
-				  int mps,
-				  int flags)
+          int usbaddr,
+          int eptnum,
+          int mps,
+          int flags)
 {
     uint32_t eptflags;
     ohci_endpoint_t *ept;
@@ -1269,9 +1269,9 @@ static usb_ept_t *ohci_ept_create(usbbus_t *bus,
      */
 
     eptflags = V_OHCI_ED_FA(usbaddr) |
-	V_OHCI_ED_EN(eptnum) |
-	V_OHCI_ED_MPS(mps) |
-	0;
+  V_OHCI_ED_EN(eptnum) |
+  V_OHCI_ED_MPS(mps) |
+  0;
 
     /*
      * Set up the endpoint type based on the flags
@@ -1279,28 +1279,28 @@ static usb_ept_t *ohci_ept_create(usbbus_t *bus,
      */
 
     if (flags & UP_TYPE_IN) {
-	eptflags |= V_OHCI_ED_DIR(K_OHCI_ED_DIR_IN);
-	}
+  eptflags |= V_OHCI_ED_DIR(K_OHCI_ED_DIR_IN);
+  }
     else if (flags & UP_TYPE_OUT) {
-	eptflags |= V_OHCI_ED_DIR(K_OHCI_ED_DIR_OUT);
-	}
+  eptflags |= V_OHCI_ED_DIR(K_OHCI_ED_DIR_OUT);
+  }
     else {
-	eptflags |= V_OHCI_ED_DIR(K_OHCI_ED_DIR_FROMTD);
-	}
+  eptflags |= V_OHCI_ED_DIR(K_OHCI_ED_DIR_FROMTD);
+  }
 
     /*
      * Don't forget about lowspeed devices.
      */
 
     if (flags & UP_TYPE_LOWSPEED) {
-	eptflags |= M_OHCI_ED_LOWSPEED;
-	}
+  eptflags |= M_OHCI_ED_LOWSPEED;
+  }
 
 #ifdef _OHCI_DEBUG_    
     if (ohcidebug > 0) {
-	printf("Create endpoint %d addr %d flags %08X mps %d\n",
-	   eptnum,usbaddr,eptflags,mps);
-	}
+  printf("Create endpoint %d addr %d flags %08X mps %d\n",
+     eptnum,usbaddr,eptflags,mps);
+  }
 #endif
 
     /*
@@ -1321,15 +1321,15 @@ static usb_ept_t *ohci_ept_create(usbbus_t *bus,
      */
 
     if (flags & UP_TYPE_CONTROL) {
-	_ohci_queueept(softc,softc->ohci_ctl_list,ept);
-	}
+  _ohci_queueept(softc,softc->ohci_ctl_list,ept);
+  }
     else if (flags & UP_TYPE_BULK) {
-	_ohci_queueept(softc,softc->ohci_bulk_list,ept);
-	}
+  _ohci_queueept(softc,softc->ohci_bulk_list,ept);
+  }
     else if (flags & UP_TYPE_INTR) {
-	/* XXX Choose place in inttable properly. */
-	_ohci_queueept(softc,softc->ohci_inttable[0],ept);
-	}
+  /* XXX Choose place in inttable properly. */
+  _ohci_queueept(softc,softc->ohci_inttable[0],ept);
+  }
 
     return (usb_ept_t *) ept;
 }
@@ -1345,12 +1345,12 @@ static usb_ept_t *ohci_ept_create(usbbus_t *bus,
     *  bits.
     *  
     *  Input parameters: 
-    *  	   bus - usb bus structure
-    *  	   ept - an open endpoint descriptor
-    *  	   usbaddr - new address for this endpoint
-    *  	   
+    *       bus - usb bus structure
+    *       ept - an open endpoint descriptor
+    *       usbaddr - new address for this endpoint
+    *       
     *  Return value:
-    *  	   nothing
+    *       nothing
     ********************************************************************* */
 
 static void ohci_ept_setaddr(usbbus_t *bus,usb_ept_t *uept,int usbaddr)
@@ -1375,12 +1375,12 @@ static void ohci_ept_setaddr(usbbus_t *bus,usb_ept_t *uept,int usbaddr)
     *  pipe) after we find out how big ep0's packets can be.
     *  
     *  Input parameters: 
-    *  	   bus - our USB bus structure
-    *  	   ept - endpoint structure
-    *  	   mps - new packet size
-    *  	   
+    *       bus - our USB bus structure
+    *       ept - endpoint structure
+    *       mps - new packet size
+    *       
     *  Return value:
-    *  	   nothing
+    *       nothing
     ********************************************************************* */
 
 static void ohci_ept_setmps(usbbus_t *bus,usb_ept_t *uept,int mps)
@@ -1405,11 +1405,11 @@ static void ohci_ept_setmps(usbbus_t *bus,usb_ept_t *uept,int mps)
     *  Clear the data toggle for the specified endpoint.
     *  
     *  Input parameters: 
-    *  	   bus - our USB bus structure
-    *  	   ept - endpoint structure
-    *  	   
+    *       bus - our USB bus structure
+    *       ept - endpoint structure
+    *       
     *  Return value:
-    *  	   nothing
+    *       nothing
     ********************************************************************* */
 
 static void ohci_ept_cleartoggle(usbbus_t *bus,usb_ept_t *uept)
@@ -1435,11 +1435,11 @@ static void ohci_ept_cleartoggle(usbbus_t *bus,usb_ept_t *uept)
     *  endpoint and gets rid of the hardware ept (queue base).
     *  
     *  Input parameters: 
-    *  	   bus - ohci bus structure
-    *  	   ept - endpoint to remove
-    *  	   
+    *       bus - ohci bus structure
+    *       ept - endpoint to remove
+    *       
     *  Return value:
-    *  	   nothing
+    *       nothing
     ********************************************************************* */
 
 static void ohci_ept_delete(usbbus_t *bus,usb_ept_t *uept)
@@ -1455,18 +1455,18 @@ static void ohci_ept_delete(usbbus_t *bus,usb_ept_t *uept)
     ohci_transfer_t *transfer;
 
     if (ept->ep_flags & UP_TYPE_CONTROL) {
-	queue = softc->ohci_ctl_list;
-	}
+  queue = softc->ohci_ctl_list;
+  }
     else if (ept->ep_flags & UP_TYPE_BULK) {
-	queue = softc->ohci_bulk_list;
-	}
+  queue = softc->ohci_bulk_list;
+  }
     else if (ept->ep_flags & UP_TYPE_INTR) {
-	queue = softc->ohci_inttable[0];
-	}
+  queue = softc->ohci_inttable[0];
+  }
     else {
-	OHCIDEBUG(printf("Invalid endpoint\n"));
-	return;
-	}
+  OHCIDEBUG(printf("Invalid endpoint\n"));
+  return;
+  }
 
     /*
      * Set the SKIP bit on the endpoint and
@@ -1495,29 +1495,29 @@ static void ohci_ept_delete(usbbus_t *bus,usb_ept_t *uept)
     tdphys = BSWAP32(ed->ed_headp) & M_OHCI_ED_PTRMASK;
 
     while (tdphys != BSWAP32(ed->ed_tailp)) {
-	td = (ohci_td_t *) OHCI_PTOV(tdphys);
-	tdphys = BSWAP32(td->td_next_td);
-	transfer = ohci_transfer_from_td(softc,td);
-	ur = transfer->t_ref;
-	if (ur) {	
-	    ur->ur_status = K_OHCI_CC_CANCELLED;
-	    ur->ur_tdcount--;
-	    if (ur->ur_tdcount == 0) {
+  td = (ohci_td_t *) OHCI_PTOV(tdphys);
+  tdphys = BSWAP32(td->td_next_td);
+  transfer = ohci_transfer_from_td(softc,td);
+  ur = transfer->t_ref;
+  if (ur) {  
+      ur->ur_status = K_OHCI_CC_CANCELLED;
+      ur->ur_tdcount--;
+      if (ur->ur_tdcount == 0) {
 #ifdef _OHCI_DEBUG_
-		if (ohcidebug > 0) printf("dev %p Completing request due to closed pipe: %p (%s,%04X/%02X,%s)\n",
-					       ur->ur_dev,
-					       ur,
-					       (ur->ur_flags & UR_FLAG_IN) ? "IN":"OUT",
-					       ept->ep_flags,ept->ep_num,
-					       ur->ur_dev->ud_drv->udrv_name);
+    if (ohcidebug > 0) printf("dev %p Completing request due to closed pipe: %p (%s,%04X/%02X,%s)\n",
+                 ur->ur_dev,
+                 ur,
+                 (ur->ur_flags & UR_FLAG_IN) ? "IN":"OUT",
+                 ept->ep_flags,ept->ep_num,
+                 ur->ur_dev->ud_drv->udrv_name);
 #endif
-		usb_complete_request(ur,K_OHCI_CC_CANCELLED);
-		/* it is expected that the callee will free the usbreq. */
-		}
-	    }
+    usb_complete_request(ur,K_OHCI_CC_CANCELLED);
+    /* it is expected that the callee will free the usbreq. */
+    }
+      }
 
-	_ohci_freexfer(softc,transfer);
-	}
+  _ohci_freexfer(softc,transfer);
+  }
 
     /*
      * tdphys now points at the tail TD.  Just free it.
@@ -1542,13 +1542,13 @@ static void ohci_ept_delete(usbbus_t *bus,usb_ept_t *uept)
     *  When the transfer completes, a callback will be called.
     *  
     *  Input parameters: 
-    *  	   bus - bus structure
-    *  	   ept - endpoint descriptor
-    *  	   ur - request (includes pointer to user buffer)
-    *  	   
+    *       bus - bus structure
+    *       ept - endpoint descriptor
+    *       ur - request (includes pointer to user buffer)
+    *       
     *  Return value:
-    *  	   0 if ok
-    *  	   else error
+    *       0 if ok
+    *       else error
     ********************************************************************* */
 
 static int ohci_xfer(usbbus_t *bus,usb_ept_t *uept,usbreq_t *ur)
@@ -1573,8 +1573,8 @@ static int ohci_xfer(usbbus_t *bus,usb_ept_t *uept,usbreq_t *ur)
      */
     
     if (ur->ur_dev->ud_address == softc->ohci_rh_addr) {
-	return ohci_roothub_xfer(bus,uept,ur);
-	}
+  return ohci_roothub_xfer(bus,uept,ur);
+  }
 
     /*
      * Set up the TD flags based on the 
@@ -1586,42 +1586,42 @@ static int ohci_xfer(usbbus_t *bus,usb_ept_t *uept,usbreq_t *ur)
     pktlen = OHCI_TD_MAX_DATA - 16;
 
     if (ur->ur_flags & UR_FLAG_SETUP) {
-	tdcontrol = V_OHCI_TD_PID(K_OHCI_TD_SETUP) |
-	    V_OHCI_TD_DT(K_OHCI_TD_DT_DATA0) |
-	    V_OHCI_TD_CC(K_OHCI_CC_NOTACCESSED) |
-	    V_OHCI_TD_DI(1);
-	}
+  tdcontrol = V_OHCI_TD_PID(K_OHCI_TD_SETUP) |
+      V_OHCI_TD_DT(K_OHCI_TD_DT_DATA0) |
+      V_OHCI_TD_CC(K_OHCI_CC_NOTACCESSED) |
+      V_OHCI_TD_DI(1);
+  }
     else if (ur->ur_flags & UR_FLAG_IN) {
-	tdcontrol = V_OHCI_TD_PID(K_OHCI_TD_IN) |
-	    V_OHCI_TD_DT(K_OHCI_TD_DT_TCARRY) |
-	    V_OHCI_TD_CC(K_OHCI_CC_NOTACCESSED) |
-	    V_OHCI_TD_DI(1);
-	}
+  tdcontrol = V_OHCI_TD_PID(K_OHCI_TD_IN) |
+      V_OHCI_TD_DT(K_OHCI_TD_DT_TCARRY) |
+      V_OHCI_TD_CC(K_OHCI_CC_NOTACCESSED) |
+      V_OHCI_TD_DI(1);
+  }
     else if (ur->ur_flags & UR_FLAG_OUT) {
-	tdcontrol = V_OHCI_TD_PID(K_OHCI_TD_OUT) |
-	    V_OHCI_TD_DT(K_OHCI_TD_DT_TCARRY) |
-	    V_OHCI_TD_CC(K_OHCI_CC_NOTACCESSED) |
-	    V_OHCI_TD_DI(1);
-	}
+  tdcontrol = V_OHCI_TD_PID(K_OHCI_TD_OUT) |
+      V_OHCI_TD_DT(K_OHCI_TD_DT_TCARRY) |
+      V_OHCI_TD_CC(K_OHCI_CC_NOTACCESSED) |
+      V_OHCI_TD_DI(1);
+  }
     else if (ur->ur_flags & UR_FLAG_STATUS_OUT) {
-	tdcontrol = V_OHCI_TD_PID(K_OHCI_TD_OUT) |
-	    V_OHCI_TD_DT(K_OHCI_TD_DT_DATA1) |
-	    V_OHCI_TD_CC(K_OHCI_CC_NOTACCESSED) |
-	    V_OHCI_TD_DI(1);
-	}
+  tdcontrol = V_OHCI_TD_PID(K_OHCI_TD_OUT) |
+      V_OHCI_TD_DT(K_OHCI_TD_DT_DATA1) |
+      V_OHCI_TD_CC(K_OHCI_CC_NOTACCESSED) |
+      V_OHCI_TD_DI(1);
+  }
     else if (ur->ur_flags & UR_FLAG_STATUS_IN) {
-	tdcontrol = V_OHCI_TD_PID(K_OHCI_TD_IN) |
-	    V_OHCI_TD_DT(K_OHCI_TD_DT_DATA1) |
-	    V_OHCI_TD_CC(K_OHCI_CC_NOTACCESSED) |
-	    V_OHCI_TD_DI(1);
-	}
+  tdcontrol = V_OHCI_TD_PID(K_OHCI_TD_IN) |
+      V_OHCI_TD_DT(K_OHCI_TD_DT_DATA1) |
+      V_OHCI_TD_CC(K_OHCI_CC_NOTACCESSED) |
+      V_OHCI_TD_DI(1);
+  }
     else {
-	OHCIDEBUG(printf("Shouldn't happen!\n"));
-	}
+  OHCIDEBUG(printf("Shouldn't happen!\n"));
+  }
 
     if (ur->ur_flags & UR_FLAG_SHORTOK) {
-	tdcontrol |= M_OHCI_TD_SHORTOK;
-	}
+  tdcontrol |= M_OHCI_TD_SHORTOK;
+  }
 
 
     ptr = ur->ur_buffer;
@@ -1630,59 +1630,59 @@ static int ohci_xfer(usbbus_t *bus,usb_ept_t *uept,usbreq_t *ur)
 
 #ifdef _OHCI_DEBUG_
     if (ohcidebug > 1) {
-	printf(">> Queueing xfer addr %d pipe %d ED %08X ptr %016X length %d\n",
-	       ur->ur_dev->ud_address,
-	       ur->ur_pipe->up_num,
-	       ept->ep_phys,
-	       ptr,
-	       len);
-//	ohci_dumped(softc,ed);
-	}
+  printf(">> Queueing xfer addr %d pipe %d ED %08X ptr %016X length %d\n",
+         ur->ur_dev->ud_address,
+         ur->ur_pipe->up_num,
+         ept->ep_phys,
+         ptr,
+         len);
+//  ohci_dumped(softc,ed);
+  }
 #endif
 
     curtd = OHCI_PTOV(BSWAP32(ed->ed_tailp));
     curtransfer = ohci_transfer_from_td(softc,curtd);
 
     if (len == 0) {
-	newtailtransfer = _ohci_allocxfer(softc);
-	newtailtd = ohci_td_from_transfer(softc,newtailtransfer);
-	curtd->td_cbp = 0;
-	curtd->td_be = 0;
-	curtd->td_next_td = BSWAP32(OHCI_VTOP(newtailtd));
-	curtd->td_control = BSWAP32(tdcontrol);
-	curtransfer->t_next = newtailtransfer;
-	curtransfer->t_ref = ur;
-	curtransfer->t_length = 0;
+  newtailtransfer = _ohci_allocxfer(softc);
+  newtailtd = ohci_td_from_transfer(softc,newtailtransfer);
+  curtd->td_cbp = 0;
+  curtd->td_be = 0;
+  curtd->td_next_td = BSWAP32(OHCI_VTOP(newtailtd));
+  curtd->td_control = BSWAP32(tdcontrol);
+  curtransfer->t_next = newtailtransfer;
+  curtransfer->t_ref = ur;
+  curtransfer->t_length = 0;
 #ifdef _OHCI_DEBUG_
-	if (ohcidebug > 1) { printf("QueueTD: "); ohci_dumptd(softc,curtd); }
+  if (ohcidebug > 1) { printf("QueueTD: "); ohci_dumptd(softc,curtd); }
 #endif
-	ur->ur_tdcount++;
-	}
+  ur->ur_tdcount++;
+  }
     else {
-	/* Noncoherent DMA: need to flush user buffer to real memory first */
-	OHCI_FLUSH_RANGE(ptr,len);
-	while (len > 0) {
-	    amtcopy = len;
-	    if (amtcopy > pktlen) amtcopy =  pktlen;
-	    newtailtransfer = _ohci_allocxfer(softc);
-	    newtailtd = ohci_td_from_transfer(softc,newtailtransfer);
-	    curtd->td_cbp = BSWAP32(OHCI_VTOD(ptr));
-	    curtd->td_be = BSWAP32(OHCI_VTOD(ptr+amtcopy)-1);
-	    curtd->td_next_td = BSWAP32(OHCI_VTOP(newtailtd));
-	    curtd->td_control = BSWAP32(tdcontrol);
-	    curtransfer->t_next = newtailtransfer;
-	    curtransfer->t_ref = ur;
-	    curtransfer->t_length = amtcopy;
+  /* Noncoherent DMA: need to flush user buffer to real memory first */
+  OHCI_FLUSH_RANGE(ptr,len);
+  while (len > 0) {
+      amtcopy = len;
+      if (amtcopy > pktlen) amtcopy =  pktlen;
+      newtailtransfer = _ohci_allocxfer(softc);
+      newtailtd = ohci_td_from_transfer(softc,newtailtransfer);
+      curtd->td_cbp = BSWAP32(OHCI_VTOD(ptr));
+      curtd->td_be = BSWAP32(OHCI_VTOD(ptr+amtcopy)-1);
+      curtd->td_next_td = BSWAP32(OHCI_VTOP(newtailtd));
+      curtd->td_control = BSWAP32(tdcontrol);
+      curtransfer->t_next = newtailtransfer;
+      curtransfer->t_ref = ur;
+      curtransfer->t_length = amtcopy;
 #ifdef _OHCI_DEBUG_
-	    if (ohcidebug > 1) { printf("QueueTD: "); ohci_dumptd(softc,curtd); }
+      if (ohcidebug > 1) { printf("QueueTD: "); ohci_dumptd(softc,curtd); }
 #endif
-	    curtd = newtailtd;
-	    curtransfer = ohci_transfer_from_td(softc,curtd);
-	    ptr += amtcopy;
-	    len -= amtcopy;
-	    ur->ur_tdcount++;
-	    }
-	}
+      curtd = newtailtd;
+      curtransfer = ohci_transfer_from_td(softc,curtd);
+      ptr += amtcopy;
+      len -= amtcopy;
+      ur->ur_tdcount++;
+      }
+  }
 
     curtd = OHCI_PTOV(BSWAP32(ed->ed_headp & M_OHCI_ED_PTRMASK));
     ed->ed_tailp = BSWAP32(OHCI_VTOP(newtailtd));
@@ -1699,12 +1699,12 @@ static int ohci_xfer(usbbus_t *bus,usb_ept_t *uept,usbreq_t *ur)
      */
 
     if (ept->ep_flags & UP_TYPE_BULK) {
-	OHCI_WRITECSR(softc,R_OHCI_CMDSTATUS,M_OHCI_CMDSTATUS_BLF);
-	}
+  OHCI_WRITECSR(softc,R_OHCI_CMDSTATUS,M_OHCI_CMDSTATUS_BLF);
+  }
     else {
-	/* XXX should probably make sure we're UP_TYPE_CONTROL here */
-	OHCI_WRITECSR(softc,R_OHCI_CMDSTATUS,M_OHCI_CMDSTATUS_CLF);
-	}
+  /* XXX should probably make sure we're UP_TYPE_CONTROL here */
+  OHCI_WRITECSR(softc,R_OHCI_CMDSTATUS,M_OHCI_CMDSTATUS_CLF);
+  }
 
     return 0;
 }
@@ -1739,65 +1739,65 @@ usb_hcdrv_t ohci_driver = {
  * Data structures and routines to emulate the root hub.
  */
 static usb_device_descr_t ohci_root_devdsc = {
-    sizeof(usb_device_descr_t),		/* bLength */
-    USB_DEVICE_DESCRIPTOR_TYPE,		/* bDescriptorType */
-    USBWORD(0x0100),			/* bcdUSB */
-    USB_DEVICE_CLASS_HUB,		/* bDeviceClass */
-    0,					/* bDeviceSubClass */
-    0,					/* bDeviceProtocol */
-    64,					/* bMaxPacketSize0 */
-    USBWORD(0),				/* idVendor */
-    USBWORD(0),				/* idProduct */
-    USBWORD(0x0100),			/* bcdDevice */
-    1,					/* iManufacturer */
-    2,					/* iProduct */
-    0,					/* iSerialNumber */
-    1					/* bNumConfigurations */
+    sizeof(usb_device_descr_t),    /* bLength */
+    USB_DEVICE_DESCRIPTOR_TYPE,    /* bDescriptorType */
+    USBWORD(0x0100),      /* bcdUSB */
+    USB_DEVICE_CLASS_HUB,    /* bDeviceClass */
+    0,          /* bDeviceSubClass */
+    0,          /* bDeviceProtocol */
+    64,          /* bMaxPacketSize0 */
+    USBWORD(0),        /* idVendor */
+    USBWORD(0),        /* idProduct */
+    USBWORD(0x0100),      /* bcdDevice */
+    1,          /* iManufacturer */
+    2,          /* iProduct */
+    0,          /* iSerialNumber */
+    1          /* bNumConfigurations */
 };
 
 static usb_config_descr_t ohci_root_cfgdsc = {
-    sizeof(usb_config_descr_t),		/* bLength */
-    USB_CONFIGURATION_DESCRIPTOR_TYPE,	/* bDescriptorType */
+    sizeof(usb_config_descr_t),    /* bLength */
+    USB_CONFIGURATION_DESCRIPTOR_TYPE,  /* bDescriptorType */
     USBWORD(
-	sizeof(usb_config_descr_t) +
-	sizeof(usb_interface_descr_t) +
-	sizeof(usb_endpoint_descr_t)),	/* wTotalLength */
-    1,					/* bNumInterfaces */
-    1,					/* bConfigurationValue */
-    0,					/* iConfiguration */
-    USB_CONFIG_SELF_POWERED,		/* bmAttributes */
-    0					/* MaxPower */
+  sizeof(usb_config_descr_t) +
+  sizeof(usb_interface_descr_t) +
+  sizeof(usb_endpoint_descr_t)),  /* wTotalLength */
+    1,          /* bNumInterfaces */
+    1,          /* bConfigurationValue */
+    0,          /* iConfiguration */
+    USB_CONFIG_SELF_POWERED,    /* bmAttributes */
+    0          /* MaxPower */
 };
 
 static usb_interface_descr_t ohci_root_ifdsc = {
-    sizeof(usb_interface_descr_t),	/* bLength */
-    USB_INTERFACE_DESCRIPTOR_TYPE,	/* bDescriptorType */
-    0,					/* bInterfaceNumber */
-    0,					/* bAlternateSetting */
-    1,					/* bNumEndpoints */
-    USB_INTERFACE_CLASS_HUB,		/* bInterfaceClass */
-    0,					/* bInterfaceSubClass */
-    0,					/* bInterfaceProtocol */
-    0					/* iInterface */
+    sizeof(usb_interface_descr_t),  /* bLength */
+    USB_INTERFACE_DESCRIPTOR_TYPE,  /* bDescriptorType */
+    0,          /* bInterfaceNumber */
+    0,          /* bAlternateSetting */
+    1,          /* bNumEndpoints */
+    USB_INTERFACE_CLASS_HUB,    /* bInterfaceClass */
+    0,          /* bInterfaceSubClass */
+    0,          /* bInterfaceProtocol */
+    0          /* iInterface */
 };
 
 static usb_endpoint_descr_t ohci_root_epdsc = {
-    sizeof(usb_endpoint_descr_t),	/* bLength */
-    USB_ENDPOINT_DESCRIPTOR_TYPE,	/* bDescriptorType */
-    (USB_ENDPOINT_DIRECTION_IN | 1),	/* bEndpointAddress */
-    USB_ENDPOINT_TYPE_INTERRUPT,	/* bmAttributes */
-    USBWORD(8),				/* wMaxPacketSize */
-    255					/* bInterval */
+    sizeof(usb_endpoint_descr_t),  /* bLength */
+    USB_ENDPOINT_DESCRIPTOR_TYPE,  /* bDescriptorType */
+    (USB_ENDPOINT_DIRECTION_IN | 1),  /* bEndpointAddress */
+    USB_ENDPOINT_TYPE_INTERRUPT,  /* bmAttributes */
+    USBWORD(8),        /* wMaxPacketSize */
+    255          /* bInterval */
 };
 
 static usb_hub_descr_t ohci_root_hubdsc = {
-    USB_HUB_DESCR_SIZE,			/* bLength */
-    USB_HUB_DESCRIPTOR_TYPE,		/* bDescriptorType */
-    0,					/* bNumberOfPorts */
-    USBWORD(0),				/* wHubCharacteristics */
-    0,					/* bPowreOnToPowerGood */
-    0,					/* bHubControl Current */
-    {0}					/* bRemoveAndPowerMask */
+    USB_HUB_DESCR_SIZE,      /* bLength */
+    USB_HUB_DESCRIPTOR_TYPE,    /* bDescriptorType */
+    0,          /* bNumberOfPorts */
+    USBWORD(0),        /* wHubCharacteristics */
+    0,          /* bPowreOnToPowerGood */
+    0,          /* bHubControl Current */
+    {0}          /* bRemoveAndPowerMask */
 };
 
 /*  *********************************************************************
@@ -1806,23 +1806,23 @@ static usb_hub_descr_t ohci_root_hubdsc = {
     *  Construct a string descriptor for root hub requests
     *  
     *  Input parameters: 
-    *  	   ptr - pointer to where to put descriptor
-    *  	   str - regular string to put into descriptor
-    *  	   
+    *       ptr - pointer to where to put descriptor
+    *       str - regular string to put into descriptor
+    *       
     *  Return value:
-    *  	   number of bytes written to descriptor
+    *       number of bytes written to descriptor
     ********************************************************************* */
 
 static int ohci_roothub_strdscr(uint8_t *ptr,char *str)
 {
     uint8_t *p = ptr;
 
-    *p++ = strlen(str)*2 + 2;	/* Unicode strings */
+    *p++ = strlen(str)*2 + 2;  /* Unicode strings */
     *p++ = USB_STRING_DESCRIPTOR_TYPE;
     while (*str) {
-	*p++ = *str++;
-	*p++ = 0;
-	}
+  *p++ = *str++;
+  *p++ = 0;
+  }
     return (p - ptr);
 }
 
@@ -1834,12 +1834,12 @@ static int ohci_roothub_strdscr(uint8_t *ptr,char *str)
     *  return all the standard descriptors.
     *  
     *  Input parameters: 
-    *  	   softc - our OHCI controller
-    *  	   req - a usb request (completed immediately)
-    *  	   
+    *       softc - our OHCI controller
+    *       req - a usb request (completed immediately)
+    *       
     *  Return value:
-    *  	   0 if ok
-    *  	   else error code
+    *       0 if ok
+    *       else error code
     ********************************************************************* */
 
 static int ohci_roothub_req(ohci_softc_t *softc,usb_device_request_t *req)
@@ -1863,228 +1863,228 @@ static int ohci_roothub_req(ohci_softc_t *softc,usb_device_request_t *req)
 
     switch (REQSW(req->bRequest,req->bmRequestType)) {
 
-	case REQCODE(USB_REQUEST_GET_STATUS,USBREQ_DIR_IN,USBREQ_TYPE_STD,USBREQ_REC_DEVICE):
-	    *ptr++ = (USB_GETSTATUS_SELF_POWERED & 0xFF);
-	    *ptr++ = (USB_GETSTATUS_SELF_POWERED >> 8);
-	    break;
+  case REQCODE(USB_REQUEST_GET_STATUS,USBREQ_DIR_IN,USBREQ_TYPE_STD,USBREQ_REC_DEVICE):
+      *ptr++ = (USB_GETSTATUS_SELF_POWERED & 0xFF);
+      *ptr++ = (USB_GETSTATUS_SELF_POWERED >> 8);
+      break;
 
-	case REQCODE(USB_REQUEST_GET_STATUS,USBREQ_DIR_IN,USBREQ_TYPE_STD,USBREQ_REC_ENDPOINT):
-	case REQCODE(USB_REQUEST_GET_STATUS,USBREQ_DIR_IN,USBREQ_TYPE_STD,USBREQ_REC_INTERFACE):
-	    *ptr++ = 0;
-	    *ptr++ = 0;
-	    break;
+  case REQCODE(USB_REQUEST_GET_STATUS,USBREQ_DIR_IN,USBREQ_TYPE_STD,USBREQ_REC_ENDPOINT):
+  case REQCODE(USB_REQUEST_GET_STATUS,USBREQ_DIR_IN,USBREQ_TYPE_STD,USBREQ_REC_INTERFACE):
+      *ptr++ = 0;
+      *ptr++ = 0;
+      break;
 
-	case REQCODE(USB_REQUEST_GET_STATUS,USBREQ_DIR_IN,USBREQ_TYPE_CLASS,USBREQ_REC_OTHER):
-	    status = OHCI_READCSR(softc,(R_OHCI_RHPORTSTATUS(wIndex)));
+  case REQCODE(USB_REQUEST_GET_STATUS,USBREQ_DIR_IN,USBREQ_TYPE_CLASS,USBREQ_REC_OTHER):
+      status = OHCI_READCSR(softc,(R_OHCI_RHPORTSTATUS(wIndex)));
 #ifdef _OHCI_DEBUG_
-	    if (ohcidebug > 0) { printf("RHGetStatus: "); ohci_dumpportstat(wIndex,status);}
+      if (ohcidebug > 0) { printf("RHGetStatus: "); ohci_dumpportstat(wIndex,status);}
 #endif
-	    PUTUSBFIELD((&ups),wPortStatus,(status & 0xFFFF));
-	    PUTUSBFIELD((&ups),wPortChange,(status >> 16));
-	    memcpy(ptr,&ups,sizeof(ups));
-	    ptr += sizeof(ups);
-	    break;
+      PUTUSBFIELD((&ups),wPortStatus,(status & 0xFFFF));
+      PUTUSBFIELD((&ups),wPortChange,(status >> 16));
+      memcpy(ptr,&ups,sizeof(ups));
+      ptr += sizeof(ups);
+      break;
 
-	case REQCODE(USB_REQUEST_GET_STATUS,USBREQ_DIR_IN,USBREQ_TYPE_CLASS,USBREQ_REC_DEVICE):
-	    *ptr++ = 0;
-	    *ptr++ = 0;
-	    *ptr++ = 0;
-	    *ptr++ = 0;
-	    break;
+  case REQCODE(USB_REQUEST_GET_STATUS,USBREQ_DIR_IN,USBREQ_TYPE_CLASS,USBREQ_REC_DEVICE):
+      *ptr++ = 0;
+      *ptr++ = 0;
+      *ptr++ = 0;
+      *ptr++ = 0;
+      break;
 
-	case REQCODE(USB_REQUEST_CLEAR_FEATURE,USBREQ_DIR_OUT,USBREQ_TYPE_STD,USBREQ_REC_DEVICE):
-	case REQCODE(USB_REQUEST_CLEAR_FEATURE,USBREQ_DIR_OUT,USBREQ_TYPE_STD,USBREQ_REC_INTERFACE):
-	case REQCODE(USB_REQUEST_CLEAR_FEATURE,USBREQ_DIR_OUT,USBREQ_TYPE_STD,USBREQ_REC_ENDPOINT):
-	    /* do nothing, not supported */
-	    break;
+  case REQCODE(USB_REQUEST_CLEAR_FEATURE,USBREQ_DIR_OUT,USBREQ_TYPE_STD,USBREQ_REC_DEVICE):
+  case REQCODE(USB_REQUEST_CLEAR_FEATURE,USBREQ_DIR_OUT,USBREQ_TYPE_STD,USBREQ_REC_INTERFACE):
+  case REQCODE(USB_REQUEST_CLEAR_FEATURE,USBREQ_DIR_OUT,USBREQ_TYPE_STD,USBREQ_REC_ENDPOINT):
+      /* do nothing, not supported */
+      break;
 
-	case REQCODE(USB_REQUEST_CLEAR_FEATURE,USBREQ_DIR_OUT,USBREQ_TYPE_CLASS,USBREQ_REC_OTHER):
-	    statport = R_OHCI_RHPORTSTATUS(wIndex);
+  case REQCODE(USB_REQUEST_CLEAR_FEATURE,USBREQ_DIR_OUT,USBREQ_TYPE_CLASS,USBREQ_REC_OTHER):
+      statport = R_OHCI_RHPORTSTATUS(wIndex);
 #ifdef _OHCI_DEBUG_
-	    if (ohcidebug> 0) {
-		printf("RHClearFeature(%d): ",wValue); ohci_dumpportstat(wIndex,OHCI_READCSR(softc,statport));
-		}
+      if (ohcidebug> 0) {
+    printf("RHClearFeature(%d): ",wValue); ohci_dumpportstat(wIndex,OHCI_READCSR(softc,statport));
+    }
 #endif
-	    switch (wValue) {
-		case USB_PORT_FEATURE_CONNECTION:
-		    break;
-		case USB_PORT_FEATURE_ENABLE:
-		    OHCI_WRITECSR(softc,statport,M_OHCI_RHPORTSTAT_CCS);
-		    break;
-		case USB_PORT_FEATURE_SUSPEND:
-		    OHCI_WRITECSR(softc,statport,M_OHCI_RHPORTSTAT_POCI);
-		    break;
-		case USB_PORT_FEATURE_OVER_CURRENT:
-		    break;
-		case USB_PORT_FEATURE_RESET:
-		    break;
-		case USB_PORT_FEATURE_POWER:
-		    OHCI_WRITECSR(softc,statport,M_OHCI_RHPORTSTAT_LSDA);
-		    break;
-		case USB_PORT_FEATURE_LOW_SPEED:
-		    break;
-		case USB_PORT_FEATURE_C_PORT_CONNECTION:
-		    OHCI_WRITECSR(softc,statport,M_OHCI_RHPORTSTAT_CSC);
-		    break;
-		case USB_PORT_FEATURE_C_PORT_ENABLE:
-		    OHCI_WRITECSR(softc,statport,M_OHCI_RHPORTSTAT_PESC);
-		    break;
-		case USB_PORT_FEATURE_C_PORT_SUSPEND:
-		    OHCI_WRITECSR(softc,statport,M_OHCI_RHPORTSTAT_PSSC);
-		    break;
-		case USB_PORT_FEATURE_C_PORT_OVER_CURRENT:
-		    OHCI_WRITECSR(softc,statport,M_OHCI_RHPORTSTAT_OCIC);
-		    break;
-		case USB_PORT_FEATURE_C_PORT_RESET:
-		    OHCI_WRITECSR(softc,statport,M_OHCI_RHPORTSTAT_PRSC);
-		    break;
+      switch (wValue) {
+    case USB_PORT_FEATURE_CONNECTION:
+        break;
+    case USB_PORT_FEATURE_ENABLE:
+        OHCI_WRITECSR(softc,statport,M_OHCI_RHPORTSTAT_CCS);
+        break;
+    case USB_PORT_FEATURE_SUSPEND:
+        OHCI_WRITECSR(softc,statport,M_OHCI_RHPORTSTAT_POCI);
+        break;
+    case USB_PORT_FEATURE_OVER_CURRENT:
+        break;
+    case USB_PORT_FEATURE_RESET:
+        break;
+    case USB_PORT_FEATURE_POWER:
+        OHCI_WRITECSR(softc,statport,M_OHCI_RHPORTSTAT_LSDA);
+        break;
+    case USB_PORT_FEATURE_LOW_SPEED:
+        break;
+    case USB_PORT_FEATURE_C_PORT_CONNECTION:
+        OHCI_WRITECSR(softc,statport,M_OHCI_RHPORTSTAT_CSC);
+        break;
+    case USB_PORT_FEATURE_C_PORT_ENABLE:
+        OHCI_WRITECSR(softc,statport,M_OHCI_RHPORTSTAT_PESC);
+        break;
+    case USB_PORT_FEATURE_C_PORT_SUSPEND:
+        OHCI_WRITECSR(softc,statport,M_OHCI_RHPORTSTAT_PSSC);
+        break;
+    case USB_PORT_FEATURE_C_PORT_OVER_CURRENT:
+        OHCI_WRITECSR(softc,statport,M_OHCI_RHPORTSTAT_OCIC);
+        break;
+    case USB_PORT_FEATURE_C_PORT_RESET:
+        OHCI_WRITECSR(softc,statport,M_OHCI_RHPORTSTAT_PRSC);
+        break;
 
-		}
+    }
 
-	    /*
-	     * If we've cleared all of the conditions that
-	     * want our attention on the port status,
-	     * then we can accept port status interrupts again.
-	     */
+      /*
+       * If we've cleared all of the conditions that
+       * want our attention on the port status,
+       * then we can accept port status interrupts again.
+       */
 
-	    if ((wValue >= USB_PORT_FEATURE_C_PORT_CONNECTION) &&
-		(wValue <= USB_PORT_FEATURE_C_PORT_RESET)) {
-		status = OHCI_READCSR(softc,statport);
-		if ((status & M_OHCI_RHPORTSTAT_ALLC) == 0) {
-		    softc->ohci_intdisable &= ~M_OHCI_INT_RHSC;
-		    }
-		}
-	    break;
+      if ((wValue >= USB_PORT_FEATURE_C_PORT_CONNECTION) &&
+    (wValue <= USB_PORT_FEATURE_C_PORT_RESET)) {
+    status = OHCI_READCSR(softc,statport);
+    if ((status & M_OHCI_RHPORTSTAT_ALLC) == 0) {
+        softc->ohci_intdisable &= ~M_OHCI_INT_RHSC;
+        }
+    }
+      break;
 
-	case REQCODE(USB_REQUEST_SET_FEATURE,USBREQ_DIR_OUT,USBREQ_TYPE_STD,USBREQ_REC_DEVICE):
-	case REQCODE(USB_REQUEST_SET_FEATURE,USBREQ_DIR_OUT,USBREQ_TYPE_STD,USBREQ_REC_INTERFACE):
-	case REQCODE(USB_REQUEST_SET_FEATURE,USBREQ_DIR_OUT,USBREQ_TYPE_STD,USBREQ_REC_ENDPOINT):
-	    res = -1;
-	    break;
+  case REQCODE(USB_REQUEST_SET_FEATURE,USBREQ_DIR_OUT,USBREQ_TYPE_STD,USBREQ_REC_DEVICE):
+  case REQCODE(USB_REQUEST_SET_FEATURE,USBREQ_DIR_OUT,USBREQ_TYPE_STD,USBREQ_REC_INTERFACE):
+  case REQCODE(USB_REQUEST_SET_FEATURE,USBREQ_DIR_OUT,USBREQ_TYPE_STD,USBREQ_REC_ENDPOINT):
+      res = -1;
+      break;
 
-	case REQCODE(USB_REQUEST_SET_FEATURE,USBREQ_DIR_OUT,USBREQ_TYPE_CLASS,USBREQ_REC_DEVICE):
-	    /* nothing */
-	    break;
+  case REQCODE(USB_REQUEST_SET_FEATURE,USBREQ_DIR_OUT,USBREQ_TYPE_CLASS,USBREQ_REC_DEVICE):
+      /* nothing */
+      break;
 
-	case REQCODE(USB_REQUEST_SET_FEATURE,USBREQ_DIR_OUT,USBREQ_TYPE_CLASS,USBREQ_REC_OTHER):
-	    statport = R_OHCI_RHPORTSTATUS(wIndex);
-	    switch (wValue) {
-		case USB_PORT_FEATURE_CONNECTION:
-		    break;
-		case USB_PORT_FEATURE_ENABLE:
-		    OHCI_WRITECSR(softc,statport,M_OHCI_RHPORTSTAT_PES);
-		    break;
-		case USB_PORT_FEATURE_SUSPEND:
-		    OHCI_WRITECSR(softc,statport,M_OHCI_RHPORTSTAT_PSS);
-		    break;
-		case USB_PORT_FEATURE_OVER_CURRENT:
-		    break;
-		case USB_PORT_FEATURE_RESET:
-		    OHCI_WRITECSR(softc,statport,M_OHCI_RHPORTSTAT_PRS);
-		    for (;;) {	/* XXX timer */
-			usb_delay_ms(softc->ohci_bus,100);
-			if (!(OHCI_READCSR(softc,statport) & M_OHCI_RHPORTSTAT_PRS)) break;
-			}
-		    break;
-		case USB_PORT_FEATURE_POWER:
-		    OHCI_WRITECSR(softc,statport,M_OHCI_RHPORTSTAT_PPS);
-		    break;
-		case USB_PORT_FEATURE_LOW_SPEED:
-		    break;
-		case USB_PORT_FEATURE_C_PORT_CONNECTION:
-		    break;
-		case USB_PORT_FEATURE_C_PORT_ENABLE:
-		    break;
-		case USB_PORT_FEATURE_C_PORT_SUSPEND:
-		    break;
-		case USB_PORT_FEATURE_C_PORT_OVER_CURRENT:
-		    break;
-		case USB_PORT_FEATURE_C_PORT_RESET:
-		    break;
+  case REQCODE(USB_REQUEST_SET_FEATURE,USBREQ_DIR_OUT,USBREQ_TYPE_CLASS,USBREQ_REC_OTHER):
+      statport = R_OHCI_RHPORTSTATUS(wIndex);
+      switch (wValue) {
+    case USB_PORT_FEATURE_CONNECTION:
+        break;
+    case USB_PORT_FEATURE_ENABLE:
+        OHCI_WRITECSR(softc,statport,M_OHCI_RHPORTSTAT_PES);
+        break;
+    case USB_PORT_FEATURE_SUSPEND:
+        OHCI_WRITECSR(softc,statport,M_OHCI_RHPORTSTAT_PSS);
+        break;
+    case USB_PORT_FEATURE_OVER_CURRENT:
+        break;
+    case USB_PORT_FEATURE_RESET:
+        OHCI_WRITECSR(softc,statport,M_OHCI_RHPORTSTAT_PRS);
+        for (;;) {  /* XXX timer */
+      usb_delay_ms(softc->ohci_bus,100);
+      if (!(OHCI_READCSR(softc,statport) & M_OHCI_RHPORTSTAT_PRS)) break;
+      }
+        break;
+    case USB_PORT_FEATURE_POWER:
+        OHCI_WRITECSR(softc,statport,M_OHCI_RHPORTSTAT_PPS);
+        break;
+    case USB_PORT_FEATURE_LOW_SPEED:
+        break;
+    case USB_PORT_FEATURE_C_PORT_CONNECTION:
+        break;
+    case USB_PORT_FEATURE_C_PORT_ENABLE:
+        break;
+    case USB_PORT_FEATURE_C_PORT_SUSPEND:
+        break;
+    case USB_PORT_FEATURE_C_PORT_OVER_CURRENT:
+        break;
+    case USB_PORT_FEATURE_C_PORT_RESET:
+        break;
 
-		}
+    }
     
-	    break;
+      break;
 
-	case REQCODE(USB_REQUEST_SET_ADDRESS,USBREQ_DIR_OUT,USBREQ_TYPE_STD,USBREQ_REC_DEVICE):
-	    softc->ohci_rh_newaddr = wValue;
-	    break;
+  case REQCODE(USB_REQUEST_SET_ADDRESS,USBREQ_DIR_OUT,USBREQ_TYPE_STD,USBREQ_REC_DEVICE):
+      softc->ohci_rh_newaddr = wValue;
+      break;
 
-	case REQCODE(USB_REQUEST_GET_DESCRIPTOR,USBREQ_DIR_IN,USBREQ_TYPE_STD,USBREQ_REC_DEVICE):
-	    switch (wValue >> 8) {
-		case USB_DEVICE_DESCRIPTOR_TYPE:
-		    memcpy(ptr,&ohci_root_devdsc,sizeof(ohci_root_devdsc));
-		    ptr += sizeof(ohci_root_devdsc);
-		    break;
-		case USB_CONFIGURATION_DESCRIPTOR_TYPE:
-		    memcpy(ptr,&ohci_root_cfgdsc,sizeof(ohci_root_cfgdsc));
-		    ptr += sizeof(ohci_root_cfgdsc);
-		    memcpy(ptr,&ohci_root_ifdsc,sizeof(ohci_root_ifdsc));
-		    ptr += sizeof(ohci_root_ifdsc);
-		    memcpy(ptr,&ohci_root_epdsc,sizeof(ohci_root_epdsc));
-		    ptr += sizeof(ohci_root_epdsc);
-		    break;
-		case USB_STRING_DESCRIPTOR_TYPE:
-		    switch (wValue & 0xFF) {
-			case 1:	 
-			    ptr += ohci_roothub_strdscr(ptr,"Generic");
-			    break;
-			case 2:
-			    ptr += ohci_roothub_strdscr(ptr,"Root Hub");
-			    break;
-			default:
-			    *ptr++ = 0;
-			    break;
-			}
-		    break;
-		default:
-		    res = -1;
-		    break;
-		}
-	    break;
+  case REQCODE(USB_REQUEST_GET_DESCRIPTOR,USBREQ_DIR_IN,USBREQ_TYPE_STD,USBREQ_REC_DEVICE):
+      switch (wValue >> 8) {
+    case USB_DEVICE_DESCRIPTOR_TYPE:
+        memcpy(ptr,&ohci_root_devdsc,sizeof(ohci_root_devdsc));
+        ptr += sizeof(ohci_root_devdsc);
+        break;
+    case USB_CONFIGURATION_DESCRIPTOR_TYPE:
+        memcpy(ptr,&ohci_root_cfgdsc,sizeof(ohci_root_cfgdsc));
+        ptr += sizeof(ohci_root_cfgdsc);
+        memcpy(ptr,&ohci_root_ifdsc,sizeof(ohci_root_ifdsc));
+        ptr += sizeof(ohci_root_ifdsc);
+        memcpy(ptr,&ohci_root_epdsc,sizeof(ohci_root_epdsc));
+        ptr += sizeof(ohci_root_epdsc);
+        break;
+    case USB_STRING_DESCRIPTOR_TYPE:
+        switch (wValue & 0xFF) {
+      case 1:   
+          ptr += ohci_roothub_strdscr(ptr,"Generic");
+          break;
+      case 2:
+          ptr += ohci_roothub_strdscr(ptr,"Root Hub");
+          break;
+      default:
+          *ptr++ = 0;
+          break;
+      }
+        break;
+    default:
+        res = -1;
+        break;
+    }
+      break;
 
-	case REQCODE(USB_REQUEST_GET_DESCRIPTOR,USBREQ_DIR_IN,USBREQ_TYPE_CLASS,USBREQ_REC_DEVICE):
-	    memcpy(&hdsc,&ohci_root_hubdsc,sizeof(hdsc));
-	    hdsc.bNumberOfPorts = softc->ohci_ndp;
-	    status = OHCI_READCSR(softc,R_OHCI_RHDSCRA);
-	    tmpval = 0;
-	    if (status & M_OHCI_RHDSCRA_NPS) tmpval |= USB_HUBCHAR_PWR_NONE;
-	    if (status & M_OHCI_RHDSCRA_PSM) tmpval |= USB_HUBCHAR_PWR_GANGED;
-	    else tmpval |= USB_HUBCHAR_PWR_IND;
-	    PUTUSBFIELD((&hdsc),wHubCharacteristics,tmpval);
-	    tmpval = G_OHCI_RHDSCRA_POTPGT(status);
-	    hdsc.bPowerOnToPowerGood = tmpval;
-	    hdsc.bDescriptorLength = USB_HUB_DESCR_SIZE + 1;
-	    status = OHCI_READCSR(softc,R_OHCI_RHDSCRB);
-	    hdsc.bRemoveAndPowerMask[0] = (uint8_t) status;
-	    memcpy(ptr,&hdsc,sizeof(hdsc));
-	    ptr += sizeof(hdsc);
-	    break;
+  case REQCODE(USB_REQUEST_GET_DESCRIPTOR,USBREQ_DIR_IN,USBREQ_TYPE_CLASS,USBREQ_REC_DEVICE):
+      memcpy(&hdsc,&ohci_root_hubdsc,sizeof(hdsc));
+      hdsc.bNumberOfPorts = softc->ohci_ndp;
+      status = OHCI_READCSR(softc,R_OHCI_RHDSCRA);
+      tmpval = 0;
+      if (status & M_OHCI_RHDSCRA_NPS) tmpval |= USB_HUBCHAR_PWR_NONE;
+      if (status & M_OHCI_RHDSCRA_PSM) tmpval |= USB_HUBCHAR_PWR_GANGED;
+      else tmpval |= USB_HUBCHAR_PWR_IND;
+      PUTUSBFIELD((&hdsc),wHubCharacteristics,tmpval);
+      tmpval = G_OHCI_RHDSCRA_POTPGT(status);
+      hdsc.bPowerOnToPowerGood = tmpval;
+      hdsc.bDescriptorLength = USB_HUB_DESCR_SIZE + 1;
+      status = OHCI_READCSR(softc,R_OHCI_RHDSCRB);
+      hdsc.bRemoveAndPowerMask[0] = (uint8_t) status;
+      memcpy(ptr,&hdsc,sizeof(hdsc));
+      ptr += sizeof(hdsc);
+      break;
 
-	case REQCODE(USB_REQUEST_SET_DESCRIPTOR,USBREQ_DIR_OUT,USBREQ_TYPE_CLASS,USBREQ_REC_DEVICE):
-	    /* nothing */
-	    break;
+  case REQCODE(USB_REQUEST_SET_DESCRIPTOR,USBREQ_DIR_OUT,USBREQ_TYPE_CLASS,USBREQ_REC_DEVICE):
+      /* nothing */
+      break;
 
-	case REQCODE(USB_REQUEST_GET_CONFIGURATION,USBREQ_DIR_IN,USBREQ_TYPE_STD,USBREQ_REC_DEVICE):
-	    *ptr++ = softc->ohci_rh_conf;
-	    break;
+  case REQCODE(USB_REQUEST_GET_CONFIGURATION,USBREQ_DIR_IN,USBREQ_TYPE_STD,USBREQ_REC_DEVICE):
+      *ptr++ = softc->ohci_rh_conf;
+      break;
 
-	case REQCODE(USB_REQUEST_SET_CONFIGURATION,USBREQ_DIR_OUT,USBREQ_TYPE_STD,USBREQ_REC_DEVICE):
-	    softc->ohci_rh_conf = wValue;
-	    break;
+  case REQCODE(USB_REQUEST_SET_CONFIGURATION,USBREQ_DIR_OUT,USBREQ_TYPE_STD,USBREQ_REC_DEVICE):
+      softc->ohci_rh_conf = wValue;
+      break;
 
-	case REQCODE(USB_REQUEST_GET_INTERFACE,USBREQ_DIR_IN,USBREQ_TYPE_STD,USBREQ_REC_INTERFACE):
-	    *ptr++ = 0;
-	    break;
+  case REQCODE(USB_REQUEST_GET_INTERFACE,USBREQ_DIR_IN,USBREQ_TYPE_STD,USBREQ_REC_INTERFACE):
+      *ptr++ = 0;
+      break;
 
-	case REQCODE(USB_REQUEST_SET_INTERFACE,USBREQ_DIR_OUT,USBREQ_TYPE_STD,USBREQ_REC_INTERFACE):
-	    /* nothing */
-	    break;
+  case REQCODE(USB_REQUEST_SET_INTERFACE,USBREQ_DIR_OUT,USBREQ_TYPE_STD,USBREQ_REC_INTERFACE):
+      /* nothing */
+      break;
 
-	case REQCODE(USB_REQUEST_SYNC_FRAME,USBREQ_DIR_OUT,USBREQ_TYPE_STD,USBREQ_REC_ENDPOINT):
-	    /* nothing */
-	    break;
-	}
+  case REQCODE(USB_REQUEST_SYNC_FRAME,USBREQ_DIR_OUT,USBREQ_TYPE_STD,USBREQ_REC_ENDPOINT):
+      /* nothing */
+      break;
+  }
 
     softc->ohci_rh_ptr = softc->ohci_rh_buf;
     softc->ohci_rh_len = ptr - softc->ohci_rh_buf;
@@ -2102,10 +2102,10 @@ static int ohci_roothub_req(ohci_softc_t *softc,usb_device_request_t *req)
     *  it here.
     *  
     *  Input parameters: 
-    *  	   softc - our OHCI controller
-    *  	   
+    *       softc - our OHCI controller
+    *       
     *  Return value:
-    *  	   nothing
+    *       nothing
     ********************************************************************* */
 
 static void ohci_roothub_statchg(ohci_softc_t *softc)
@@ -2117,25 +2117,25 @@ static void ohci_roothub_statchg(ohci_softc_t *softc)
 
     /* Note: this only works up to 8 ports */
     for (idx = 1; idx <= softc->ohci_ndp; idx++) {
-	status = OHCI_READCSR(softc,R_OHCI_RHPORTSTATUS(idx));
-	if (status & M_OHCI_RHPORTSTAT_ALLC) {
-	    portstat = (1<<idx);
-	    }
-	}
+  status = OHCI_READCSR(softc,R_OHCI_RHPORTSTATUS(idx));
+  if (status & M_OHCI_RHPORTSTAT_ALLC) {
+      portstat = (1<<idx);
+      }
+  }
 
     /* Complete the root hub's interrupt usbreq if there's a change */
     if (portstat != 0) {
-	softc->ohci_intdisable |= M_OHCI_INT_RHSC;
+  softc->ohci_intdisable |= M_OHCI_INT_RHSC;
 
-	ur = (usbreq_t *) q_deqnext(&(softc->ohci_rh_intrq));
-	if (!ur) return;		/* no requests pending, ignore it */
+  ur = (usbreq_t *) q_deqnext(&(softc->ohci_rh_intrq));
+  if (!ur) return;    /* no requests pending, ignore it */
 
-	memset(ur->ur_buffer,0,ur->ur_length);
-	ur->ur_buffer[0] = portstat;
-	ur->ur_xferred = ur->ur_length;
+  memset(ur->ur_buffer,0,ur->ur_length);
+  ur->ur_buffer[0] = portstat;
+  ur->ur_xferred = ur->ur_length;
 
-	usb_complete_request(ur,0);
-	}
+  usb_complete_request(ur,0);
+  }
 }
 
 /*  *********************************************************************
@@ -2150,12 +2150,12 @@ static void ohci_roothub_statchg(ohci_softc_t *softc)
     *  it here too.
     *  
     *  Input parameters: 
-    *  	   softc - our OHCI controller structure
-    *  	   req - usb request destined for host controller
-    *  	   
+    *       softc - our OHCI controller structure
+    *       req - usb request destined for host controller
+    *       
     *  Return value:
-    *  	   0 if ok
-    *  	   else error
+    *       0 if ok
+    *       else error
     ********************************************************************* */
 
 static int ohci_roothub_xfer(usbbus_t *bus,usb_ept_t *uept,usbreq_t *ur)
@@ -2166,97 +2166,97 @@ static int ohci_roothub_xfer(usbbus_t *bus,usb_ept_t *uept,usbreq_t *ur)
 
     switch (ept->ep_num) {
 
-	/*
-	 * CONTROL ENDPOINT
-	 */
-	case 0:
+  /*
+   * CONTROL ENDPOINT
+   */
+  case 0:
 
-	    /*
-	     * Three types of transfers:  OUT (SETUP), IN (data), or STATUS.
-	     * figure out which is which.
-	     */
+      /*
+       * Three types of transfers:  OUT (SETUP), IN (data), or STATUS.
+       * figure out which is which.
+       */
 
-	    if (ur->ur_flags & UR_FLAG_SETUP) {
-		/*
-		 * SETUP packet - this is an OUT request to the control
-		 * pipe.  We emulate the hub request here.
-		 */
-		usb_device_request_t *req;
+      if (ur->ur_flags & UR_FLAG_SETUP) {
+    /*
+     * SETUP packet - this is an OUT request to the control
+     * pipe.  We emulate the hub request here.
+     */
+    usb_device_request_t *req;
 
-		req = (usb_device_request_t *) ur->ur_buffer;
+    req = (usb_device_request_t *) ur->ur_buffer;
 
-		/*res =*/ ohci_roothub_req(softc,req);
+    /*res =*/ ohci_roothub_req(softc,req);
 #ifdef _OHCI_DEBUG_
-		if (res != 0) printf("Root hub request returned an error\n");
+    if (res != 0) printf("Root hub request returned an error\n");
 #endif
 
-		ur->ur_xferred = ur->ur_length;
-		ur->ur_status = 0;
-		usb_complete_request(ur,0);
-		}
+    ur->ur_xferred = ur->ur_length;
+    ur->ur_status = 0;
+    usb_complete_request(ur,0);
+    }
 
-	    else if (ur->ur_flags & UR_FLAG_STATUS_IN) {
-		/*
-		 * STATUS IN : it's sort of like a dummy IN request
-		 * to acknowledge a SETUP packet that otherwise has no 
-		 * status.  Just complete the usbreq.
-		 */
+      else if (ur->ur_flags & UR_FLAG_STATUS_IN) {
+    /*
+     * STATUS IN : it's sort of like a dummy IN request
+     * to acknowledge a SETUP packet that otherwise has no 
+     * status.  Just complete the usbreq.
+     */
 
-		if (softc->ohci_rh_newaddr != -1) {
-		    softc->ohci_rh_addr = softc->ohci_rh_newaddr;
-		    softc->ohci_rh_newaddr = -1;
-		    }
+    if (softc->ohci_rh_newaddr != -1) {
+        softc->ohci_rh_addr = softc->ohci_rh_newaddr;
+        softc->ohci_rh_newaddr = -1;
+        }
 
-		ur->ur_status = 0;
-		ur->ur_xferred = 0;
-		usb_complete_request(ur,0);
-		}
+    ur->ur_status = 0;
+    ur->ur_xferred = 0;
+    usb_complete_request(ur,0);
+    }
 
-	    else if (ur->ur_flags & UR_FLAG_STATUS_OUT) {
-		/*
-		 * STATUS OUT : it's sort of like a dummy OUT request
-		 */
-		ur->ur_status = 0;
-		ur->ur_xferred = 0;
-		usb_complete_request(ur,0);
-		}
+      else if (ur->ur_flags & UR_FLAG_STATUS_OUT) {
+    /*
+     * STATUS OUT : it's sort of like a dummy OUT request
+     */
+    ur->ur_status = 0;
+    ur->ur_xferred = 0;
+    usb_complete_request(ur,0);
+    }
 
-	    else if (ur->ur_flags & UR_FLAG_IN) {
-		/*
-		 * IN : return data from the root hub
-		 */
-		int amtcopy;
+      else if (ur->ur_flags & UR_FLAG_IN) {
+    /*
+     * IN : return data from the root hub
+     */
+    int amtcopy;
 
-		amtcopy = softc->ohci_rh_len;
-		if (amtcopy > ur->ur_length) amtcopy = ur->ur_length;
+    amtcopy = softc->ohci_rh_len;
+    if (amtcopy > ur->ur_length) amtcopy = ur->ur_length;
 
-		memcpy(ur->ur_buffer,softc->ohci_rh_ptr,amtcopy);
+    memcpy(ur->ur_buffer,softc->ohci_rh_ptr,amtcopy);
 
-		softc->ohci_rh_ptr += amtcopy;
-		softc->ohci_rh_len -= amtcopy;
+    softc->ohci_rh_ptr += amtcopy;
+    softc->ohci_rh_len -= amtcopy;
 
-		ur->ur_status = 0;
-		ur->ur_xferred = amtcopy;
-		usb_complete_request(ur,0);
-		}
+    ur->ur_status = 0;
+    ur->ur_xferred = amtcopy;
+    usb_complete_request(ur,0);
+    }
 
-	    else {
-		OHCIDEBUG(printf("Unknown root hub transfer type\n"));
-		return -1;
-		}
-	    break;
+      else {
+    OHCIDEBUG(printf("Unknown root hub transfer type\n"));
+    return -1;
+    }
+      break;
 
-	/*
-	 * INTERRUPT ENDPOINT 
-	 */
+  /*
+   * INTERRUPT ENDPOINT 
+   */
 
-	case 1:			/* interrupt pipe */
-	    if (ur->ur_flags & UR_FLAG_IN) {
-		q_enqueue(&(softc->ohci_rh_intrq),(queue_t *) ur);
-		}
- 	    break;
+  case 1:      /* interrupt pipe */
+      if (ur->ur_flags & UR_FLAG_IN) {
+    q_enqueue(&(softc->ohci_rh_intrq),(queue_t *) ur);
+    }
+       break;
 
-	}
+  }
 
     return 0;
 }

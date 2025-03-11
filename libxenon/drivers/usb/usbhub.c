@@ -1,7 +1,7 @@
 /*  *********************************************************************
     *  Broadcom Common Firmware Environment (CFE)
     *  
-    *  USB Hub and device discovery code	File: usbhub.c
+    *  USB Hub and device discovery code  File: usbhub.c
     *  
     *  This module deals with hubs and device discovery.
     *  
@@ -96,9 +96,9 @@ static void usbhub_markdetached(usbdev_t *dev);
     *  Hub-specific data structures
     ********************************************************************* */
 
-#define UHUB_MAX_DEVICES	8
+#define UHUB_MAX_DEVICES  8
 
-#define UHUB_FLG_NEEDSCAN	1
+#define UHUB_FLG_NEEDSCAN  1
 
 typedef struct usbhub_softc_s {
     usb_hub_descr_t uhub_descr;
@@ -134,10 +134,10 @@ usb_driver_t usbroothub_driver = {
     *  we get this callback, we'll set a flag and re-probe the bus.
     *  
     *  Input parameters: 
-    *  	   ur - usbreq that completed
-    *  	   
+    *       ur - usbreq that completed
+    *       
     *  Return value:
-    *  	   0
+    *       0
     ********************************************************************* */
 
 static int usbhub_ireq_callback(usbreq_t *ur)
@@ -156,27 +156,27 @@ static int usbhub_ireq_callback(usbreq_t *ur)
      */
 
     if ((ur->ur_status == UR_ERR_CANCELLED) ||
-	(ur->ur_status == UR_ERR_DEVICENOTRESPONDING)) {
-	usb_free_request(ur);
-	return 0;
-	}
+  (ur->ur_status == UR_ERR_DEVICENOTRESPONDING)) {
+  usb_free_request(ur);
+  return 0;
+  }
 
     /*
      * Check to see if any of our ports need attention
      */
 
     for (idx = 1; idx <= uhub->uhub_nports; idx++) {
-	if (ur->ur_buffer[0] & (1<<idx)) {
+  if (ur->ur_buffer[0] & (1<<idx)) {
 
-	    /*
-	     * Mark the hub as needing a scan, and mark the bus as well
-	     * so the top-level polling will notice.
-	     */
+      /*
+       * Mark the hub as needing a scan, and mark the bus as well
+       * so the top-level polling will notice.
+       */
 
-	    uhub->uhub_flags |= UHUB_FLG_NEEDSCAN;
-	    ur->ur_dev->ud_bus->ub_flags |= UB_FLG_NEEDSCAN;
-	    }
-	}
+      uhub->uhub_flags |= UHUB_FLG_NEEDSCAN;
+      ur->ur_dev->ud_bus->ub_flags |= UB_FLG_NEEDSCAN;
+      }
+  }
 
 
     /*
@@ -197,13 +197,13 @@ static int usbhub_ireq_callback(usbreq_t *ur)
     *  device.
     *  
     *  Input parameters: 
-    *  	   dev - usb device
-    *  	   dscr - place to put hub descriptor
-    *  	   idx - which hub descriptor to get (usually zero)
-    *  	   maxlen - max # of bytes to return
-    *  	   
+    *       dev - usb device
+    *       dscr - place to put hub descriptor
+    *       idx - which hub descriptor to get (usually zero)
+    *       maxlen - max # of bytes to return
+    *       
     *  Return value:
-    *  	   result status
+    *       result status
     ********************************************************************* */
 
 static int usbhub_get_hub_descriptor(usbdev_t *dev,usb_hub_descr_t *dscr,int idx,int maxlen)
@@ -219,20 +219,20 @@ static int usbhub_get_hub_descriptor(usbdev_t *dev,usb_hub_descr_t *dscr,int idx
 
     respbuf = usb_dma_alloc(USB_HUB_DESCR_SIZE);
     res = usb_std_request(dev,0xA0,
-			  USB_HUBREQ_GET_DESCRIPTOR,
-			  0, 0,
-			  respbuf,
-			  USB_HUB_DESCR_SIZE);
+        USB_HUBREQ_GET_DESCRIPTOR,
+        0, 0,
+        respbuf,
+        USB_HUB_DESCR_SIZE);
     len = ((usb_hub_descr_t *)respbuf)->bDescriptorLength;
     if (len > USB_HUB_DESCR_SIZE) {
-	usb_dma_free(respbuf);
-	respbuf = usb_dma_alloc(USB_HUB_DESCR_SIZE);
-	res = usb_std_request(dev,0xA0,
-			      USB_HUBREQ_GET_DESCRIPTOR,
-			      0, 0,
-			      respbuf,
-			      len);
-	}
+  usb_dma_free(respbuf);
+  respbuf = usb_dma_alloc(USB_HUB_DESCR_SIZE);
+  res = usb_std_request(dev,0xA0,
+            USB_HUBREQ_GET_DESCRIPTOR,
+            0, 0,
+            respbuf,
+            len);
+  }
     memcpy(dscr, respbuf, (len <= maxlen ? len : maxlen));
     usb_dma_free(respbuf);
     return res;
@@ -246,23 +246,23 @@ static int usbhub_get_hub_descriptor(usbdev_t *dev,usb_hub_descr_t *dscr,int idx
     *  device.
     *  
     *  Input parameters: 
-    *  	   dev - usb device
-    *  	   status - where to put hub status structure
-    *  	   
+    *       dev - usb device
+    *       status - where to put hub status structure
+    *       
     *  Return value:
-    *  	   # of bytes returned
+    *       # of bytes returned
     ********************************************************************* */
 
 #if 0
 static int usbhub_get_hub_status(usbdev_t *dev,usb_hub_status_t *status)
 {
     return usb_std_request(dev,
-			   0xA0,
-			   0x00,
-			   0,
-			   0,
-			   (uint8_t *) status,
-			   sizeof(usbhub_status_t));
+         0xA0,
+         0x00,
+         0,
+         0,
+         (uint8_t *) status,
+         sizeof(usbhub_status_t));
 }
 #endif
 
@@ -274,23 +274,23 @@ static int usbhub_get_hub_status(usbdev_t *dev,usb_hub_status_t *status)
     *  device.
     *  
     *  Input parameters: 
-    *  	   dev - usb device
+    *       dev - usb device
     *      port - 1-based port number
-    *  	   status - where to put port status structure
-    *  	   
+    *       status - where to put port status structure
+    *       
     *  Return value:
-    *  	   # of bytes returned
+    *       # of bytes returned
     ********************************************************************* */
 
 static int usbhub_get_port_status(usbdev_t *dev,int port,usb_port_status_t *status)
 {
     return usb_std_request(dev,
-			   0xA3,
-			   0,
-			   0,
-			   port,
-			   (uint8_t *) status,
-			   sizeof(usb_port_status_t));
+         0xA3,
+         0,
+         0,
+         port,
+         (uint8_t *) status,
+         sizeof(usb_port_status_t));
 }
 
 
@@ -301,11 +301,11 @@ static int usbhub_get_port_status(usbdev_t *dev,int port,usb_port_status_t *stat
     *  the hub's port status changes
     *  
     *  Input parameters: 
-    *  	   dev - usb device
-    *  	   softc - hub-specific data
-    *  	   
+    *       dev - usb device
+    *       softc - hub-specific data
+    *       
     *  Return value:
-    *  	   nothing
+    *       nothing
     ********************************************************************* */
 
 static void usbhub_queue_intreq(usbdev_t *dev,usbhub_softc_t *softc)
@@ -313,9 +313,9 @@ static void usbhub_queue_intreq(usbdev_t *dev,usbhub_softc_t *softc)
     usbreq_t *ur;
 
     ur = usb_make_request(dev,
-			  softc->uhub_ipipe,
-			  softc->uhub_imsg,softc->uhub_ipipemps,
-			  UR_FLAG_IN | UR_FLAG_SHORTOK);
+        softc->uhub_ipipe,
+        softc->uhub_imsg,softc->uhub_ipipemps,
+        UR_FLAG_IN | UR_FLAG_SHORTOK);
 
     ur->ur_callback = usbhub_ireq_callback;
 
@@ -331,11 +331,11 @@ static void usbhub_queue_intreq(usbdev_t *dev,usbhub_softc_t *softc)
     *  that an explore will happen soon.
     *   
     *  Input parameters: 
-    *  	   dev - usb device
-    *  	   drv - driver structure
-    *  	   
+    *       dev - usb device
+    *       drv - driver structure
+    *       
     *  Return value:
-    *  	   0
+    *       0
     ********************************************************************* */
 
 static int usbhub_attach(usbdev_t *dev,usb_driver_t *drv)
@@ -384,7 +384,7 @@ static int usbhub_attach(usbdev_t *dev,usb_driver_t *drv)
 
     usbhub_get_hub_descriptor(dev,&softc->uhub_descr,0,sizeof(usb_hub_descr_t));
 
-    /*	
+    /*  
      * remember stuff from the hub descriptor
      */
 
@@ -423,10 +423,10 @@ static int usbhub_attach(usbdev_t *dev,usb_driver_t *drv)
     *  all subordinate devices.
     *  
     *  Input parameters: 
-    *  	   dev - device (hub) that was removed
-    *  	   
+    *       dev - device (hub) that was removed
+    *       
     *  Return value:
-    *  	   0
+    *       0
     ********************************************************************* */
 
 static int usbhub_detach(usbdev_t *dev)
@@ -435,45 +435,45 @@ static int usbhub_detach(usbdev_t *dev)
     usbdev_t *deldev;
     int idx;
 
-    if (!IS_HUB(dev)) return 0;		/* should not happen */
+    if (!IS_HUB(dev)) return 0;    /* should not happen */
 
     hub = dev->ud_private;
     for (idx = 0; idx < UHUB_MAX_DEVICES; idx++) {
-	deldev = hub->uhub_devices[idx];
-	if (deldev) {
-	    if (usb_noisy > 0)
-		console_log("USB: Removing device attached to bus %d hub %d port %d",
-			    dev->ud_bus->ub_num,
-			    dev->ud_address,idx+1);
-	    if (deldev->ud_drv) {
-		/* close open pipes, cancel reqs */
-		usb_destroy_all_pipes(deldev);
-		/* 
-		 * Try to process the done queue.  This will complete any
-		 * requests that made it out of the pipes while we were
-		 * doing the stuff above.
-		 */
-		usb_poll(deldev->ud_bus);
-		/* Call detach method, clean up device softc */
-		(*(deldev->ud_drv->udrv_detach))(deldev);
-		}
-	    else {
-		if (usb_noisy > 0) {
-		    console_log("USB: Detached device on bus %d hub %d port %d "
-			   "has no methods",
-			   dev->ud_bus->ub_num,
-			   dev->ud_address,idx+1);
-		    }
-		}
-	    if (deldev->ud_cfgdescr) usb_dma_free(deldev->ud_cfgdescr);
-	    usb_destroy_device(deldev);
-	    }
-	}
+  deldev = hub->uhub_devices[idx];
+  if (deldev) {
+      if (usb_noisy > 0)
+    console_log("USB: Removing device attached to bus %d hub %d port %d",
+          dev->ud_bus->ub_num,
+          dev->ud_address,idx+1);
+      if (deldev->ud_drv) {
+    /* close open pipes, cancel reqs */
+    usb_destroy_all_pipes(deldev);
+    /* 
+     * Try to process the done queue.  This will complete any
+     * requests that made it out of the pipes while we were
+     * doing the stuff above.
+     */
+    usb_poll(deldev->ud_bus);
+    /* Call detach method, clean up device softc */
+    (*(deldev->ud_drv->udrv_detach))(deldev);
+    }
+      else {
+    if (usb_noisy > 0) {
+        console_log("USB: Detached device on bus %d hub %d port %d "
+         "has no methods",
+         dev->ud_bus->ub_num,
+         dev->ud_address,idx+1);
+        }
+    }
+      if (deldev->ud_cfgdescr) usb_dma_free(deldev->ud_cfgdescr);
+      usb_destroy_device(deldev);
+      }
+  }
 
     if (hub->uhub_imsg != NULL) {
-	usb_dma_free(hub->uhub_imsg);
-	}
-    KFREE(hub);				/* remove softc */
+  usb_dma_free(hub->uhub_imsg);
+  }
+    KFREE(hub);        /* remove softc */
 
     return 0;
 }
@@ -488,17 +488,17 @@ static int usbhub_detach(usbdev_t *dev)
     *  when we run into hubs
     *  
     *  Input parameters: 
-    *  	   dev - current device pointer
-    *  	   level - current nesting level
-    *  	   func - function to call
-    *  	   arg - argument to pass to function
-    *  	   
+    *       dev - current device pointer
+    *       level - current nesting level
+    *       func - function to call
+    *       arg - argument to pass to function
+    *       
     *  Return value:
-    *  	   nothing
+    *       nothing
     ********************************************************************* */
 
 static void usbhub_map_tree1(usbdev_t *dev,int level,
-			     int (*func)(usbdev_t *dev,void *arg),void *arg)
+           int (*func)(usbdev_t *dev,void *arg),void *arg)
 {
     usbhub_softc_t *hub;
     int idx;
@@ -506,13 +506,13 @@ static void usbhub_map_tree1(usbdev_t *dev,int level,
     (*func)(dev,arg);
 
     if (IS_HUB(dev)) {
-	hub = dev->ud_private;
-	for (idx = 0; idx < UHUB_MAX_DEVICES; idx++) {
-	    if (hub->uhub_devices[idx]) {
-		usbhub_map_tree1(hub->uhub_devices[idx],level+1,func,arg);
-		}
-	    }
-	}
+  hub = dev->ud_private;
+  for (idx = 0; idx < UHUB_MAX_DEVICES; idx++) {
+      if (hub->uhub_devices[idx]) {
+    usbhub_map_tree1(hub->uhub_devices[idx],level+1,func,arg);
+    }
+      }
+  }
 }
 
 /*  *********************************************************************
@@ -521,12 +521,12 @@ static void usbhub_map_tree1(usbdev_t *dev,int level,
     *  Call a function for each device in the tree
     *  
     *  Input parameters: 
-    *  	   bus - bus to scan
-    *  	   func - function to call
-    *  	   arg - argument to pass to function
-    *  	   
+    *       bus - bus to scan
+    *       func - function to call
+    *       arg - argument to pass to function
+    *       
     *  Return value:
-    *  	   nothing
+    *       nothing
     ********************************************************************* */
 
 void usbhub_map_tree(usbbus_t *bus,int (*func)(usbdev_t *dev,void *arg),void *arg)
@@ -546,11 +546,11 @@ void usbhub_map_from_device(usbdev_t *dev,int (*func)(usbdev_t *dev,void *arg),v
     *  map function to dump devices in the device tree
     *  
     *  Input parameters: 
-    *  	   dev - device we're working on
-    *  	   arg - argument from map_tree call
-    *  	   
+    *       dev - device we're working on
+    *       arg - argument from map_tree call
+    *       
     *  Return value:
-    *  	   0
+    *       0
     ********************************************************************* */
 
 static int usbhub_dumpbus1(usbdev_t *dev,void *arg)
@@ -560,15 +560,15 @@ static int usbhub_dumpbus1(usbdev_t *dev,void *arg)
     if ((*verbose & 0x00FF) && (dev->ud_address != (*verbose & 0x00FF))) return 0;
 
     if (*verbose & 0x100) {
-	printf("============================================================================\n");
-	}
+  printf("============================================================================\n");
+  }
 
     usb_dbg_showdevice(dev);
 
     if (*verbose & 0x100) {
-	usb_dbg_dumpdescriptors(dev,(uint8_t *) &(dev->ud_devdescr),dev->ud_devdescr.bLength);
-	usb_dbg_dumpcfgdescr(dev,0);
-	}
+  usb_dbg_dumpdescriptors(dev,(uint8_t *) &(dev->ud_devdescr),dev->ud_devdescr.bLength);
+  usb_dbg_dumpcfgdescr(dev,0);
+  }
 
     return 0;
 }
@@ -580,11 +580,11 @@ static int usbhub_dumpbus1(usbdev_t *dev,void *arg)
     *  Dump information about devices on the USB bus.
     *  
     *  Input parameters: 
-    *  	   bus - bus to dump
-    *  	   verbose - nonzero to display more info, like descriptors
-    *  	   
+    *       bus - bus to dump
+    *       verbose - nonzero to display more info, like descriptors
+    *       
     *  Return value:
-    *  	   nothing
+    *       nothing
     ********************************************************************* */
 
 void usbhub_dumpbus(usbbus_t *bus,uint32_t verbose)
@@ -603,19 +603,19 @@ void usbhub_dumpbus(usbbus_t *bus,uint32_t verbose)
     *  DEFAULT state according to the spec.
     *  
     *  Input parameters: 
-    *  	   dev - hub device
-    *  	   port - port number(1-based)
-    *  	   status - place to return port_status structure after
-    *  	           reset completes
-    *  	   
+    *       dev - hub device
+    *       port - port number(1-based)
+    *       status - place to return port_status structure after
+    *               reset completes
+    *       
     *  Return value:
-    *  	   nothing
+    *       nothing
     ********************************************************************* */
 
 static void usbhub_reset_device(usbdev_t *dev,int port,usb_port_status_t *portstatus)
 {
     if (usb_noisy > 0)
-	console_log("USB: Resetting device on bus %d port %d",dev->ud_bus->ub_num,port);
+  console_log("USB: Resetting device on bus %d port %d",dev->ud_bus->ub_num,port);
 #ifndef _CFE_
     fflush(stdout);
 #endif
@@ -625,10 +625,10 @@ static void usbhub_reset_device(usbdev_t *dev,int port,usb_port_status_t *portst
     usbhub_get_port_status(dev,port,portstatus);
 
     for (;;) {
-	usbhub_get_port_status(dev,port,portstatus);
-	if ((GETUSBFIELD((portstatus),wPortStatus) & USB_PORT_STATUS_RESET) == 0) break;
-	usb_delay_ms(dev->ud_bus,250);
-	}
+  usbhub_get_port_status(dev,port,portstatus);
+  if ((GETUSBFIELD((portstatus),wPortStatus) & USB_PORT_STATUS_RESET) == 0) break;
+  usb_delay_ms(dev->ud_bus,250);
+  }
     usb_delay_ms(dev->ud_bus,250);
 
     usbhub_clear_port_feature(dev,port,USB_PORT_FEATURE_C_PORT_RESET);
@@ -642,11 +642,11 @@ static void usbhub_reset_device(usbdev_t *dev,int port,usb_port_status_t *portst
     *  Scan the ports on this hub for new or removed devices.
     *  
     *  Input parameters: 
-    *  	   dev - hub device
-    *  	   arg - passed from bus scan main routines
-    *  	   
+    *       dev - hub device
+    *       arg - passed from bus scan main routines
+    *       
     *  Return value:
-    *  	   nothing
+    *       nothing
     ********************************************************************* */
 
 static void usbhub_scan_ports(usbdev_t *dev,void *arg)
@@ -665,7 +665,7 @@ static void usbhub_scan_ports(usbdev_t *dev,void *arg)
     usb_config_descr_t cfgdescr;
     unsigned int powerondelay;
 
-    if (!IS_HUB(dev)) return;		/* should not happen.  */
+    if (!IS_HUB(dev)) return;    /* should not happen.  */
 
     portstatus = usb_dma_alloc(sizeof(usb_port_status_t));
     if (portstatus == NULL) return;
@@ -684,21 +684,21 @@ static void usbhub_scan_ports(usbdev_t *dev,void *arg)
 
     for (idx = 0; idx < softc->uhub_nports; idx++) {
 
-	usbhub_get_port_status(dev,idx+1,portstatus);
+  usbhub_get_port_status(dev,idx+1,portstatus);
 
-	current = GETUSBFIELD(portstatus,wPortStatus);
-	changed = GETUSBFIELD(portstatus,wPortChange);
-	if (usb_noisy > 1) {
-	    printf("BeforePowerup: port %d status %04X changed %04X\n",idx+1,current,changed);
-	    }
+  current = GETUSBFIELD(portstatus,wPortStatus);
+  changed = GETUSBFIELD(portstatus,wPortChange);
+  if (usb_noisy > 1) {
+      printf("BeforePowerup: port %d status %04X changed %04X\n",idx+1,current,changed);
+      }
 
-	if (!(current & USB_PORT_STATUS_POWER)) {
-	    if (usb_noisy > 1) console_log("USB: Powering up bus %d port %d",
-				      dev->ud_bus->ub_num,idx+1);
-	    usbhub_set_port_feature(dev,idx+1,USB_PORT_FEATURE_POWER);
-	    usb_delay_ms(dev->ud_bus,powerondelay);
-	    }
-	}
+  if (!(current & USB_PORT_STATUS_POWER)) {
+      if (usb_noisy > 1) console_log("USB: Powering up bus %d port %d",
+              dev->ud_bus->ub_num,idx+1);
+      usbhub_set_port_feature(dev,idx+1,USB_PORT_FEATURE_POWER);
+      usb_delay_ms(dev->ud_bus,powerondelay);
+      }
+  }
 
     /*
      * Begin exploration at this level.
@@ -706,190 +706,190 @@ static void usbhub_scan_ports(usbdev_t *dev,void *arg)
 
     for (idx = 0; idx < softc->uhub_nports; idx++) {
 
-	usbhub_get_port_status(dev,idx+1,portstatus);
+  usbhub_get_port_status(dev,idx+1,portstatus);
 
-	current = GETUSBFIELD(portstatus,wPortStatus);
-	changed = GETUSBFIELD(portstatus,wPortChange);
+  current = GETUSBFIELD(portstatus,wPortStatus);
+  changed = GETUSBFIELD(portstatus,wPortChange);
 
-	if (usb_noisy > 0) {
-	    printf("USB: Explore: Bus %d Hub %d port %d status %04X changed %04X\n",
-		   dev->ud_bus->ub_num,
-		   dev->ud_address,idx+1,current,changed);
-	    usb_dbg_dumpportstatus(idx+1,portstatus,1);
-	    }
+  if (usb_noisy > 0) {
+      printf("USB: Explore: Bus %d Hub %d port %d status %04X changed %04X\n",
+       dev->ud_bus->ub_num,
+       dev->ud_address,idx+1,current,changed);
+      usb_dbg_dumpportstatus(idx+1,portstatus,1);
+      }
 
 
-//	if (changed & USB_PORT_STATUS_RESET) {
-//	    usbhub_clear_port_feature(dev,idx+1,USB_PORT_FEATURE_C_PORT_RESET);
-//	    }
+//  if (changed & USB_PORT_STATUS_RESET) {
+//      usbhub_clear_port_feature(dev,idx+1,USB_PORT_FEATURE_C_PORT_RESET);
+//      }
 
-	if (changed & USB_PORT_STATUS_ENABLED) {
-	    usbhub_clear_port_feature(dev,idx+1,USB_PORT_FEATURE_C_PORT_ENABLE);
-	    }
+  if (changed & USB_PORT_STATUS_ENABLED) {
+      usbhub_clear_port_feature(dev,idx+1,USB_PORT_FEATURE_C_PORT_ENABLE);
+      }
 
-	if (changed & USB_PORT_STATUS_CONNECT) {
-	    /*
-	     * A device was either connected or disconnected.
-	     * Clear the status change first.
-	     */
+  if (changed & USB_PORT_STATUS_CONNECT) {
+      /*
+       * A device was either connected or disconnected.
+       * Clear the status change first.
+       */
 
-	    usbhub_clear_port_feature(dev,idx+1,USB_PORT_FEATURE_C_PORT_CONNECTION);
+      usbhub_clear_port_feature(dev,idx+1,USB_PORT_FEATURE_C_PORT_CONNECTION);
 
-	    if (current & USB_PORT_STATUS_CONNECT) {
+      if (current & USB_PORT_STATUS_CONNECT) {
 
-		/*
-		 * The device has been CONNECTED.
-		 */
+    /*
+     * The device has been CONNECTED.
+     */
 
-		console_log("USB: New device connected to bus %d hub %d port %d",
-			    dev->ud_bus->ub_num,
-			    dev->ud_address,idx+1);
+    console_log("USB: New device connected to bus %d hub %d port %d",
+          dev->ud_bus->ub_num,
+          dev->ud_address,idx+1);
 
-		/*
-		 * Reset the device.  Reuse our old port status structure
-		 * so we get the latest status.  Some devices do not report
-		 * lowspeed until they are reset.
-		 */
+    /*
+     * Reset the device.  Reuse our old port status structure
+     * so we get the latest status.  Some devices do not report
+     * lowspeed until they are reset.
+     */
 
-		usbhub_reset_device(dev,idx+1,portstatus);
-		current = GETUSBFIELD(portstatus,wPortStatus);
-		changed = GETUSBFIELD(portstatus,wPortChange);
+    usbhub_reset_device(dev,idx+1,portstatus);
+    current = GETUSBFIELD(portstatus,wPortStatus);
+    changed = GETUSBFIELD(portstatus,wPortChange);
 
-		/*
-		 * Create a device for this port.
-		 */
+    /*
+     * Create a device for this port.
+     */
 
-		newdev = usb_create_device(dev->ud_bus,(current & USB_PORT_STATUS_LOWSPD) ? 1 : 0);
+    newdev = usb_create_device(dev->ud_bus,(current & USB_PORT_STATUS_LOWSPD) ? 1 : 0);
 
-		/*
-		 * Get the device descriptor. 
-		 */
+    /*
+     * Get the device descriptor. 
+     */
 
-		res = usb_get_device_descriptor(newdev,&newdev->ud_devdescr,TRUE);
+    res = usb_get_device_descriptor(newdev,&newdev->ud_devdescr,TRUE);
 
-		if (usb_noisy > 1) usb_dbg_dumpdescriptors(newdev,(uint8_t *) &(newdev->ud_devdescr),8);
+    if (usb_noisy > 1) usb_dbg_dumpdescriptors(newdev,(uint8_t *) &(newdev->ud_devdescr),8);
 
-		/*
-		 * Set up the max packet size for the control endpoint,
-		 * then get the rest of the descriptor.
-		 */
+    /*
+     * Set up the max packet size for the control endpoint,
+     * then get the rest of the descriptor.
+     */
     
-		usb_set_ep0mps(newdev,newdev->ud_devdescr.bMaxPacketSize0);
-		res = usb_get_device_descriptor(newdev,&newdev->ud_devdescr,FALSE);
+    usb_set_ep0mps(newdev,newdev->ud_devdescr.bMaxPacketSize0);
+    res = usb_get_device_descriptor(newdev,&newdev->ud_devdescr,FALSE);
 
-		/*
-		 * Obtain a new address and set the address of the
-		 * root hub to this address.
-		 */
+    /*
+     * Obtain a new address and set the address of the
+     * root hub to this address.
+     */
 
-		addr = usb_new_address(newdev->ud_bus);
-		res = usb_set_address(newdev,addr);
+    addr = usb_new_address(newdev->ud_bus);
+    res = usb_set_address(newdev,addr);
 
-		/*
-		 * Get the configuration descriptor and all the
-		 * associated interface and endpoint descriptors.
-		 */
+    /*
+     * Get the configuration descriptor and all the
+     * associated interface and endpoint descriptors.
+     */
 
-		res = usb_get_config_descriptor(newdev,&cfgdescr,0,
-						sizeof(usb_config_descr_t));
-		if (res != sizeof(usb_config_descr_t)) {
-		    printf("[a] usb_get_config_descriptor returns %d\n",res);
-		    }
+    res = usb_get_config_descriptor(newdev,&cfgdescr,0,
+            sizeof(usb_config_descr_t));
+    if (res != sizeof(usb_config_descr_t)) {
+        printf("[a] usb_get_config_descriptor returns %d\n",res);
+        }
 
-		len = GETUSBFIELD(&cfgdescr,wTotalLength);
-		buf = usb_dma_alloc(len);
+    len = GETUSBFIELD(&cfgdescr,wTotalLength);
+    buf = usb_dma_alloc(len);
 
-		res = usb_get_config_descriptor(newdev,(usb_config_descr_t *)buf,0,len);
-		if (res != len) {
-		    printf("[b] usb_get_config_descriptor returns %d\n",res);
-		    }
+    res = usb_get_config_descriptor(newdev,(usb_config_descr_t *)buf,0,len);
+    if (res != len) {
+        printf("[b] usb_get_config_descriptor returns %d\n",res);
+        }
 
-		newdev->ud_cfgdescr = (usb_config_descr_t *) buf;
+    newdev->ud_cfgdescr = (usb_config_descr_t *) buf;
 
-		if (usb_noisy > 1) usb_dbg_dumpdescriptors(newdev,buf,len);
+    if (usb_noisy > 1) usb_dbg_dumpdescriptors(newdev,buf,len);
 
-		/*
-		 * Point the hub at the devices it owns
-		 */
+    /*
+     * Point the hub at the devices it owns
+     */
 
-		softc->uhub_devices[idx] = newdev;
+    softc->uhub_devices[idx] = newdev;
 
-		/*
-		 * Find the driver for this.  It had better be the hub
-		 * driver.
-		 */
+    /*
+     * Find the driver for this.  It had better be the hub
+     * driver.
+     */
 
-		newdrv = usb_find_driver(newdev);
+    newdrv = usb_find_driver(newdev);
 
-		/*
-		 * Call the attach method.
-		 */
+    /*
+     * Call the attach method.
+     */
 
-		if (newdrv) {
-		    newdev->ud_drv = newdrv;	/* remember driver dispatch in device */
-		    (*(newdrv->udrv_attach))(newdev,newdrv);
-		    }
-		}
+    if (newdrv) {
+        newdev->ud_drv = newdrv;  /* remember driver dispatch in device */
+        (*(newdrv->udrv_attach))(newdev,newdrv);
+        }
+    }
 
-	    else {
+      else {
 
-		/*
-		 * The device has been DISCONNECTED.
-		 */
+    /*
+     * The device has been DISCONNECTED.
+     */
 
-		console_log("USB: Device disconnected from bus %d hub %d port %d",
-			    dev->ud_bus->ub_num,
-			    dev->ud_address,idx+1);
+    console_log("USB: Device disconnected from bus %d hub %d port %d",
+          dev->ud_bus->ub_num,
+          dev->ud_address,idx+1);
 
-		/*
-		 * Recover pointer to device below hub and clear
-		 * this pointer.
-		 */
+    /*
+     * Recover pointer to device below hub and clear
+     * this pointer.
+     */
 
-		newdev = softc->uhub_devices[idx];	/* Get device pointer */
+    newdev = softc->uhub_devices[idx];  /* Get device pointer */
 
-		if (newdev) usbhub_markdetached(newdev);		/* mark device and all subordinate 
-							   devices as "removing" */
+    if (newdev) usbhub_markdetached(newdev);    /* mark device and all subordinate 
+                 devices as "removing" */
 
-		softc->uhub_devices[idx] = NULL;	/* remove device from hub */
+    softc->uhub_devices[idx] = NULL;  /* remove device from hub */
 
-		/*
-		 * Deassign the USB device's address and then 
-		 * call detach method to free resources.  Devices that
-		 * do not have drivers will not have any methods.
-		 */
+    /*
+     * Deassign the USB device's address and then 
+     * call detach method to free resources.  Devices that
+     * do not have drivers will not have any methods.
+     */
 
-		if (newdev) {
-		    if (newdev->ud_drv) {
-			/* close open pipes, cancel reqs */
-			usb_destroy_all_pipes(newdev);
-			/* 
-			 * Try to process the done queue.  This will complete any
-			 * requests that made it out of the pipes while we were
-			 * doing the stuff above.
-			 */
-			usb_poll(newdev->ud_bus);
-			/* Call detach method, clean up device softc */
-			(*(newdev->ud_drv->udrv_detach))(newdev);
-			}
-		    else {
-			if (usb_noisy > 0) {
-			    console_log("USB: Detached device on bus %d hub %d port %d "
-				   "has no methods",
-				   dev->ud_bus->ub_num,
-				   dev->ud_address,idx+1);
-			    }
-			}
+    if (newdev) {
+        if (newdev->ud_drv) {
+      /* close open pipes, cancel reqs */
+      usb_destroy_all_pipes(newdev);
+      /* 
+       * Try to process the done queue.  This will complete any
+       * requests that made it out of the pipes while we were
+       * doing the stuff above.
+       */
+      usb_poll(newdev->ud_bus);
+      /* Call detach method, clean up device softc */
+      (*(newdev->ud_drv->udrv_detach))(newdev);
+      }
+        else {
+      if (usb_noisy > 0) {
+          console_log("USB: Detached device on bus %d hub %d port %d "
+           "has no methods",
+           dev->ud_bus->ub_num,
+           dev->ud_address,idx+1);
+          }
+      }
 
-		    if (newdev->ud_cfgdescr) usb_dma_free(newdev->ud_cfgdescr);
+        if (newdev->ud_cfgdescr) usb_dma_free(newdev->ud_cfgdescr);
 
-		    usb_destroy_device(newdev);	
-		    }
+        usb_destroy_device(newdev);  
+        }
 
-		}
-	    }
+    }
+      }
 
-	}
+  }
 
     usb_dma_free(portstatus);
 
@@ -909,10 +909,10 @@ static void usbhub_scan_ports(usbdev_t *dev,void *arg)
     *  will change the status of pending requests to cancelled.
     *  
     *  Input parameters: 
-    *  	   dev - device in the tree to start at
-    *  	   
+    *       dev - device in the tree to start at
+    *       
     *  Return value:
-    *  	   nothing
+    *       nothing
     ********************************************************************* */
 
 static int usbhub_markdetached1(usbdev_t *dev,void *arg)
@@ -933,11 +933,11 @@ static void usbhub_markdetached(usbdev_t *dev)
     *  This is part of the device discovery code.
     *  
     *  Input parameters: 
-    *  	   dev - current device, maybe a hub
-    *  	   arg - passed from main scan routine
-    *  	   
+    *       dev - current device, maybe a hub
+    *       arg - passed from main scan routine
+    *       
     *  Return value:
-    *  	   0
+    *       0
     ********************************************************************* */
 
 
@@ -959,9 +959,9 @@ static int usbhub_scan1(usbdev_t *dev,void *arg)
     hub = dev->ud_private;
 
     if (hub->uhub_flags & UHUB_FLG_NEEDSCAN) {
-	hub->uhub_flags &= ~UHUB_FLG_NEEDSCAN;
-	usbhub_scan_ports(dev,arg);
-	}
+  hub->uhub_flags &= ~UHUB_FLG_NEEDSCAN;
+  usbhub_scan_ports(dev,arg);
+  }
 
     return 0;
 }
@@ -972,10 +972,10 @@ static int usbhub_scan1(usbdev_t *dev,void *arg)
     *  Scan the bus looking for new or removed devices
     *  
     *  Input parameters: 
-    *  	   bus - bus to scan
-    *  	   
+    *       bus - bus to scan
+    *       
     *  Return value:
-    *  	   nothing
+    *       nothing
     ********************************************************************* */
 
 void usb_scan(usbbus_t *bus)

@@ -369,7 +369,7 @@ ip_input(struct pbuf *p, struct netif *inp)
       if (netif == inp) {
         netif = netif->next;
       }
-    } while(netif != NULL);
+    } while (netif != NULL);
   }
 
 #if IP_ACCEPT_LINK_LAYER_ADDRESSING
@@ -401,7 +401,7 @@ ip_input(struct pbuf *p, struct netif *inp)
 #if IP_ACCEPT_LINK_LAYER_ADDRESSING
   /* DHCP servers need 0.0.0.0 to be allowed as source address (RFC 1.1.2.2: 3.2.1.3/a) */
   //if (check_ip_src && !ip_addr_isany(&current_iphdr_src))
-	if (!ip_addr_isany(&current_iphdr_src))
+  if (!ip_addr_isany(&current_iphdr_src))
 #endif /* IP_ACCEPT_LINK_LAYER_ADDRESSING */
   {  if ((ip_addr_isbroadcast(&current_iphdr_src, inp)) ||
          (ip_addr_ismulticast(&current_iphdr_src))) {
@@ -462,7 +462,7 @@ ip_input(struct pbuf *p, struct netif *inp)
 
 #if LWIP_IGMP
   /* there is an extra "router alert" option in IGMP messages which we allow for but do not police */
-  if((iphdr_hlen > IP_HLEN) &&  (IPH_PROTO(iphdr) != IP_PROTO_IGMP)) {
+  if ((iphdr_hlen > IP_HLEN) &&  (IPH_PROTO(iphdr) != IP_PROTO_IGMP)) {
 #else
   if (iphdr_hlen > IP_HLEN) {
 #endif /* LWIP_IGMP */
@@ -570,7 +570,7 @@ ip_input(struct pbuf *p, struct netif *inp)
  *  unique identifiers independent of destination"
  */
 err_t
-ip_output_if(struct pbuf *p, ip_addr_t *src, ip_addr_t *dest,
+ip_output_if (struct pbuf *p, ip_addr_t *src, ip_addr_t *dest,
              u8_t ttl, u8_t tos,
              u8_t proto, struct netif *netif)
 {
@@ -579,7 +579,7 @@ ip_output_if(struct pbuf *p, ip_addr_t *src, ip_addr_t *dest,
 }
 
 /**
- * Same as ip_output_if() but with the possibility to include IP options:
+ * Same as ip_output_if () but with the possibility to include IP options:
  *
  * @ param ip_options pointer to the IP options, copied into the IP header
  * @ param optlen length of ip_options
@@ -743,7 +743,7 @@ err_t ip_output_if_opt(struct pbuf *p, ip_addr_t *src, ip_addr_t *dest,
  * @param proto the PROTOCOL to be set in the IP header
  *
  * @return ERR_RTE if no route is found
- *         see ip_output_if() for more return values
+ *         see ip_output_if () for more return values
  */
 err_t
 ip_output(struct pbuf *p, ip_addr_t *src, ip_addr_t *dest,
@@ -762,7 +762,7 @@ ip_output(struct pbuf *p, ip_addr_t *src, ip_addr_t *dest,
     return ERR_RTE;
   }
 
-  return ip_output_if(p, src, dest, ttl, tos, proto, netif);
+  return ip_output_if (p, src, dest, ttl, tos, proto, netif);
 }
 
 #if LWIP_NETIF_HWADDRHINT
@@ -779,10 +779,10 @@ ip_output(struct pbuf *p, ip_addr_t *src, ip_addr_t *dest,
  * @param tos the TOS value to be set in the IP header
  * @param proto the PROTOCOL to be set in the IP header
  * @param addr_hint address hint pointer set to netif->addr_hint before
- *        calling ip_output_if()
+ *        calling ip_output_if ()
  *
  * @return ERR_RTE if no route is found
- *         see ip_output_if() for more return values
+ *         see ip_output_if () for more return values
  */
 err_t
 ip_output_hinted(struct pbuf *p, ip_addr_t *src, ip_addr_t *dest,
@@ -803,7 +803,7 @@ ip_output_hinted(struct pbuf *p, ip_addr_t *src, ip_addr_t *dest,
   }
 
   netif->addr_hint = addr_hint;
-  err = ip_output_if(p, src, dest, ttl, tos, proto, netif);
+  err = ip_output_if (p, src, dest, ttl, tos, proto, netif);
   netif->addr_hint = NULL;
 
   return err;

@@ -500,14 +500,14 @@ pppSetAuth(enum pppAuthType authType, const char *user, const char *passwd)
       break;
   }
 
-  if(user) {
+  if (user) {
     strncpy(ppp_settings.user, user, sizeof(ppp_settings.user)-1);
     ppp_settings.user[sizeof(ppp_settings.user)-1] = '\0';
   } else {
     ppp_settings.user[0] = '\0';
   }
 
-  if(passwd) {
+  if (passwd) {
     strncpy(ppp_settings.passwd, passwd, sizeof(ppp_settings.passwd)-1);
     ppp_settings.passwd[sizeof(ppp_settings.passwd)-1] = '\0';
   } else {
@@ -632,7 +632,7 @@ int pppOverEthernetOpen(struct netif *ethif, const char *service_name, const cha
     lcp_allowoptions[pd].neg_pcompression = 0;
     lcp_allowoptions[pd].neg_accompression = 0;
 
-    if(pppoe_create(ethif, pd, pppOverEthernetLinkStatusCB, &pc->pppoe_sc) != ERR_OK) {
+    if (pppoe_create(ethif, pd, pppOverEthernetLinkStatusCB, &pc->pppoe_sc) != ERR_OK) {
       pc->openFlag = 0;
       return PPPERR_OPEN;
     }
@@ -658,7 +658,7 @@ pppClose(int pd)
 
   /* Disconnect */
 #if PPPOE_SUPPORT
-  if(pc->ethif) {
+  if (pc->ethif) {
     PPPDEBUG(LOG_DEBUG, ("pppClose: unit %d kill_link -> pppStop\n", pd));
     pc->errCode = PPPERR_USER;
     /* This will leave us at PHASE_DEAD. */
@@ -694,7 +694,7 @@ nPut(PPPControl *pc, struct pbuf *nb)
   int c;
 
   for(b = nb; b != NULL; b = b->next) {
-    if((c = sio_write(pc->fd, b->payload, b->len)) != b->len) {
+    if ((c = sio_write(pc->fd, b->payload, b->len)) != b->len) {
       PPPDEBUG(LOG_WARNING,
                ("PPP nPut: incomplete sio_write(fd:%"SZT_F", len:%d, c: 0x%"X8_F") c = %d\n", (size_t)pc->fd, b->len, c, c));
       LINK_STATS_INC(link.err);
@@ -761,7 +761,7 @@ pppifOutputOverEthernet(int pd, struct pbuf *p)
 
   /* @todo: try to use pbuf_header() here! */
   pb = pbuf_alloc(PBUF_LINK, PPPOE_HDRLEN + sizeof(protocol), PBUF_RAM);
-  if(!pb) {
+  if (!pb) {
     LINK_STATS_INC(link.memerr);
     LINK_STATS_INC(link.proterr);
     snmp_inc_ifoutdiscards(&pc->netif);
@@ -780,7 +780,7 @@ pppifOutputOverEthernet(int pd, struct pbuf *p)
   pbuf_chain(pb, p);
   tot_len = pb->tot_len;
 
-  if(pppoe_xmit(pc->pppoe_sc, pb) != ERR_OK) {
+  if (pppoe_xmit(pc->pppoe_sc, pb) != ERR_OK) {
     LINK_STATS_INC(link.err);
     snmp_inc_ifoutdiscards(&pc->netif);
     return PPPERR_DEVICE;
@@ -830,7 +830,7 @@ pppifOutput(struct netif *netif, struct pbuf *pb, ip_addr_t *ipaddr)
   }
 
 #if PPPOE_SUPPORT
-  if(pc->ethif) {
+  if (pc->ethif) {
     return pppifOutputOverEthernet(pd, pb);
   }
 #endif /* PPPOE_SUPPORT */
@@ -1026,7 +1026,7 @@ pppWriteOverEthernet(int pd, const u_char *s, int n)
 
   LWIP_ASSERT("PPPOE_HDRLEN + n <= 0xffff", PPPOE_HDRLEN + n <= 0xffff);
   pb = pbuf_alloc(PBUF_LINK, (u16_t)(PPPOE_HDRLEN + n), PBUF_RAM);
-  if(!pb) {
+  if (!pb) {
     LINK_STATS_INC(link.memerr);
     LINK_STATS_INC(link.proterr);
     snmp_inc_ifoutdiscards(&pc->netif);
@@ -1039,7 +1039,7 @@ pppWriteOverEthernet(int pd, const u_char *s, int n)
 
   MEMCPY(pb->payload, s, n);
 
-  if(pppoe_xmit(pc->pppoe_sc, pb) != ERR_OK) {
+  if (pppoe_xmit(pc->pppoe_sc, pb) != ERR_OK) {
     LINK_STATS_INC(link.err);
     snmp_inc_ifoutdiscards(&pc->netif);
     return PPPERR_DEVICE;
@@ -1068,7 +1068,7 @@ pppWrite(int pd, const u_char *s, int n)
 #endif /* PPPOS_SUPPORT */
 
 #if PPPOE_SUPPORT
-  if(pc->ethif) {
+  if (pc->ethif) {
     return pppWriteOverEthernet(pd, s, n);
   }
 #endif /* PPPOE_SUPPORT */
@@ -1510,7 +1510,7 @@ pppInputThread(void *arg)
 
   while (lcp_phase[pcrx->pd] != PHASE_DEAD) {
     count = sio_read(pcrx->fd, pcrx->rxbuf, PPPOS_RX_BUFSIZE);
-    if(count > 0) {
+    if (count > 0) {
       pppInProc(pcrx, pcrx->rxbuf, count);
     } else {
       /* nothing received, give other tasks a chance to run */
@@ -1534,7 +1534,7 @@ pppOverEthernetInitFailed(int pd)
   pppoe_destroy(&pc->netif);
   pc->openFlag = 0;
 
-  if(pc->linkStatusCB) {
+  if (pc->linkStatusCB) {
     pc->linkStatusCB(pc->linkStatusCtx, pc->errCode ? pc->errCode : PPPERR_PROTOCOL, NULL);
   }
 }
@@ -1542,7 +1542,7 @@ pppOverEthernetInitFailed(int pd)
 static void
 pppOverEthernetLinkStatusCB(int pd, int up)
 {
-  if(up) {
+  if (up) {
     PPPDEBUG(LOG_INFO, ("pppOverEthernetLinkStatusCB: unit %d: Connecting\n", pd));
     pppStart(pd);
   } else {
@@ -1557,12 +1557,12 @@ pppSingleBuf(struct pbuf *p)
   struct pbuf *q, *b;
   u_char *pl;
 
-  if(p->tot_len == p->len) {
+  if (p->tot_len == p->len) {
     return p;
   }
 
   q = pbuf_alloc(PBUF_RAW, p->tot_len, PBUF_RAM);
-  if(!q) {
+  if (!q) {
     PPPDEBUG(LOG_ERR,
              ("pppSingleBuf: unable to alloc new buf (%d)\n", p->tot_len));
     return p; /* live dangerously */
@@ -1597,7 +1597,7 @@ pppInput(void *arg)
   pd = ((struct pppInputHeader *)nb->payload)->unit;
   protocol = ((struct pppInputHeader *)nb->payload)->proto;
     
-  if(pbuf_header(nb, -(int)sizeof(struct pppInputHeader))) {
+  if (pbuf_header(nb, -(int)sizeof(struct pppInputHeader))) {
     LWIP_ASSERT("pbuf_header failed\n", 0);
     goto drop;
   }
@@ -1611,8 +1611,8 @@ pppInput(void *arg)
    * Until we get past the authentication phase, toss all packets
    * except LCP, LQR and authentication packets.
    */
-  if((lcp_phase[pd] <= PHASE_AUTHENTICATE) && (protocol != PPP_LCP)) {
-    if(!((protocol == PPP_LQR) || (protocol == PPP_PAP) || (protocol == PPP_CHAP)) ||
+  if ((lcp_phase[pd] <= PHASE_AUTHENTICATE) && (protocol != PPP_LCP)) {
+    if (!((protocol == PPP_LQR) || (protocol == PPP_PAP) || (protocol == PPP_CHAP)) ||
         (lcp_phase[pd] != PHASE_AUTHENTICATE)) {
       PPPDEBUG(LOG_INFO, ("pppInput: discarding proto 0x%"X16_F" in phase %d\n", protocol, lcp_phase[pd]));
       goto drop;
@@ -1800,7 +1800,7 @@ pppInProc(PPPControlRx *pcrx, u_char *s, int l)
         } else {
           struct pbuf *inp;
           /* Trim off the checksum. */
-          if(pcrx->inTail->len >= 2) {
+          if (pcrx->inTail->len >= 2) {
             pcrx->inTail->len -= 2;
 
             pcrx->inTail->tot_len = pcrx->inTail->len;
@@ -1822,7 +1822,7 @@ pppInProc(PPPControlRx *pcrx, u_char *s, int l)
           pcrx->inHead = NULL;
           pcrx->inTail = NULL;
 #if PPP_INPROC_MULTITHREADED
-          if(tcpip_callback_with_block(pppInput, inp, 0) != ERR_OK) {
+          if (tcpip_callback_with_block(pppInput, inp, 0) != ERR_OK) {
             PPPDEBUG(LOG_ERR, ("pppInProc[%d]: tcpip_callback() failed, dropping packet\n", pcrx->pd));
             pbuf_free(inp);
             LINK_STATS_INC(link.drop);
@@ -1957,7 +1957,7 @@ pppInProcOverEthernet(int pd, struct pbuf *pb)
   struct pppInputHeader *pih;
   u16_t inProtocol;
 
-  if(pb->len < sizeof(inProtocol)) {
+  if (pb->len < sizeof(inProtocol)) {
     PPPDEBUG(LOG_ERR, ("pppInProcOverEthernet: too small for protocol field\n"));
     goto drop;
   }

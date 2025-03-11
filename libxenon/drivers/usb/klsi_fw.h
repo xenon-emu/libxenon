@@ -1,7 +1,7 @@
 /*  *********************************************************************
     *  Broadcom Common Firmware Environment (CFE)
     *  
-    *  USB Ethernet Support			File: klsi_fw.h
+    *  USB Ethernet Support      File: klsi_fw.h
     *  
     *  Firware for USB-Ethernet adapters based on the Kawasaki LSI
     *  KL5KUSB101B chip with embedded microengine (QT Engine).

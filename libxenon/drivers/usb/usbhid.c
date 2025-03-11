@@ -1,7 +1,7 @@
 /*  *********************************************************************
     *  Broadcom Common Firmware Environment (CFE)
     *  
-    *  USB Human Interface Driver		File: usbhid.c
+    *  USB Human Interface Driver    File: usbhid.c
     *  
     *  This module deals with keyboards, mice, etc.  It's very simple,
     *  and only the "boot protocol" is supported.
@@ -66,29 +66,29 @@
     *  Constants
     ********************************************************************* */
 
-#define HID_BOOT_PROTOCOL	0
-#define HID_REPORT_PROTOCOL	1
+#define HID_BOOT_PROTOCOL  0
+#define HID_REPORT_PROTOCOL  1
 
-#define HID_DEVTYPE_UNKNOWN	0
-#define HID_DEVTYPE_KBD		1
-#define HID_DEVTYPE_MOUSE	2
-#define HID_DEVTYPE_MAX		2
+#define HID_DEVTYPE_UNKNOWN  0
+#define HID_DEVTYPE_KBD    1
+#define HID_DEVTYPE_MOUSE  2
+#define HID_DEVTYPE_MAX    2
 
-#define UBR_KBD_MODS	0
-#define UBR_KBD_RSVD	1
-#define UBR_KBD_KEYS	2
-#define UBR_KBD_NUMKEYS	6
-#define UBR_KBD_MAX	8
+#define UBR_KBD_MODS  0
+#define UBR_KBD_RSVD  1
+#define UBR_KBD_KEYS  2
+#define UBR_KBD_NUMKEYS  6
+#define UBR_KBD_MAX  8
 
-#define KBD_MOD_LCTRL	0x01
-#define KBD_MOD_LSHIFT	0x02
-#define KBD_MOD_LALT	0x04
-#define KBD_MOD_LWIN	0x08
+#define KBD_MOD_LCTRL  0x01
+#define KBD_MOD_LSHIFT  0x02
+#define KBD_MOD_LALT  0x04
+#define KBD_MOD_LWIN  0x08
 
-#define KBD_MOD_RCTRL	0x10
-#define KBD_MOD_RSHIFT	0x20
-#define KBD_MOD_RALT	0x40
-#define KBD_MOD_RWIN	0x80
+#define KBD_MOD_RCTRL  0x10
+#define KBD_MOD_RSHIFT  0x20
+#define KBD_MOD_RALT  0x40
+#define KBD_MOD_RWIN  0x80
 
 /*  *********************************************************************
     *  Macros
@@ -296,10 +296,10 @@ static keycode_t usbhid_scantable[] = {
     *  we use in our keyboard table.
     *  
     *  Input parameters: 
-    *  	   uhid - the hid softc.
-    *  	   
+    *       uhid - the hid softc.
+    *       
     *  Return value:
-    *  	   nothing
+    *       nothing
     ********************************************************************* */
 
 static void usbhid_kbd_mod1(usbhid_softc_t *uhid)
@@ -336,12 +336,12 @@ static void usbhid_kbd_mod1(usbhid_softc_t *uhid)
     *  for the keyboard event queue.
     *  
     *  Input parameters: 
-    *  	   uhid - the hid softc
-    *  	   scan - scan code from keyboard report 
-    *  	   breakflg - true if key is being released, false if pressed
-    *  	   
+    *       uhid - the hid softc
+    *       scan - scan code from keyboard report 
+    *       breakflg - true if key is being released, false if pressed
+    *       
     *  Return value:
-    *  	   nothing
+    *       nothing
     ********************************************************************* */
 
 static void usbhid_kbd_scan1(usbhid_softc_t *uhid,uint8_t scan,int breakflg)
@@ -362,11 +362,11 @@ static void usbhid_kbd_scan1(usbhid_softc_t *uhid,uint8_t scan,int breakflg)
      */
 
     if (code->kc_type & (FLG_CAPS|FLG_SCROLL|FLG_NUM)) {
-	if (!breakflg) uhid->uhid_shiftflags ^= code->kc_type;
-//	if (ks->ks_setleds) {
-//	    (*(ks->ks_setleds))(ks,ks->ks_shiftflags & (FLG_CAPS|FLG_SCROLL|FLG_NUM));
-//	    }
-	}
+  if (!breakflg) uhid->uhid_shiftflags ^= code->kc_type;
+//  if (ks->ks_setleds) {
+//      (*(ks->ks_setleds))(ks,ks->ks_shiftflags & (FLG_CAPS|FLG_SCROLL|FLG_NUM));
+//      }
+  }
 
     /*
      * Regular keys - just look up in table and
@@ -374,22 +374,22 @@ static void usbhid_kbd_scan1(usbhid_softc_t *uhid,uint8_t scan,int breakflg)
      */
 
     if (code->kc_type & (FLG_ASCII | FLG_FKEY | FLG_NKPD)) {
-	if (uhid->uhid_shiftflags & (FLG_SHIFT|FLG_CAPS)) str = code->kc_shifted;
-	else if (uhid->uhid_shiftflags & FLG_CTRL) str = code->kc_ctrl;
-	else str = code->kc_normal;
-	if (!breakflg) {
+  if (uhid->uhid_shiftflags & (FLG_SHIFT|FLG_CAPS)) str = code->kc_shifted;
+  else if (uhid->uhid_shiftflags & FLG_CTRL) str = code->kc_ctrl;
+  else str = code->kc_normal;
+  if (!breakflg) {
 #if CFG_VGACONSOLE
-	    while (*str) {
-		pcconsole_enqueue(*str++);
-		}
+      while (*str) {
+    pcconsole_enqueue(*str++);
+    }
 #else
-	    printf("%s",str); 
+      printf("%s",str); 
 #endif
 #ifndef _CFE_
-	    fflush(stdout);
+      fflush(stdout);
 #endif
-	    }
-	}
+      }
+  }
 
 }
 
@@ -405,10 +405,10 @@ static void usbhid_kbd_scan1(usbhid_softc_t *uhid,uint8_t scan,int breakflg)
     *  report structure.
     *  
     *  Input parameters: 
-    *  	   uhid - the hid softc
-    *  	   
+    *       uhid - the hid softc
+    *       
     *  Return value:
-    *  	   nothing
+    *       nothing
     ********************************************************************* */
 
 static void usbhid_kbd_scan(usbhid_softc_t *uhid)
@@ -420,8 +420,8 @@ static void usbhid_kbd_scan(usbhid_softc_t *uhid)
      */
 
     if (uhid->uhid_imsg[UBR_KBD_MODS] ^ uhid->uhid_lastmsg[UBR_KBD_MODS]) {
-	usbhid_kbd_mod1(uhid);
-	}
+  usbhid_kbd_mod1(uhid);
+  }
 
     /*
      * "Make" codes (keys pressed down)
@@ -429,14 +429,14 @@ static void usbhid_kbd_scan(usbhid_softc_t *uhid)
      */
 
     for (n = UBR_KBD_KEYS; n < (UBR_KBD_KEYS + UBR_KBD_NUMKEYS); n++) {
-	if (uhid->uhid_imsg[n] == 0) break;	/* no more keys */
-	for (o = UBR_KBD_KEYS; o < (UBR_KBD_KEYS + UBR_KBD_NUMKEYS); o++) {
-	    if (uhid->uhid_imsg[n] == uhid->uhid_lastmsg[o]) break;
-	    }
-	if (o == (UBR_KBD_KEYS + UBR_KBD_NUMKEYS)) {	/* key not found, must be pressed */
-	    usbhid_kbd_scan1(uhid,uhid->uhid_imsg[n],0);
-	    }
-	}
+  if (uhid->uhid_imsg[n] == 0) break;  /* no more keys */
+  for (o = UBR_KBD_KEYS; o < (UBR_KBD_KEYS + UBR_KBD_NUMKEYS); o++) {
+      if (uhid->uhid_imsg[n] == uhid->uhid_lastmsg[o]) break;
+      }
+  if (o == (UBR_KBD_KEYS + UBR_KBD_NUMKEYS)) {  /* key not found, must be pressed */
+      usbhid_kbd_scan1(uhid,uhid->uhid_imsg[n],0);
+      }
+  }
 
     /*
      * "Break" codes (keys released)
@@ -445,14 +445,14 @@ static void usbhid_kbd_scan(usbhid_softc_t *uhid)
 
 
     for (n = UBR_KBD_KEYS; n < (UBR_KBD_KEYS + UBR_KBD_NUMKEYS); n++) {
-	if (uhid->uhid_lastmsg[n] == 0) break;	/* no more keys */
-	for (o = UBR_KBD_KEYS; o < (UBR_KBD_KEYS + UBR_KBD_NUMKEYS); o++) {
-	    if (uhid->uhid_lastmsg[n] == uhid->uhid_imsg[o]) break;
-	    }
-	if (o == (UBR_KBD_KEYS + UBR_KBD_NUMKEYS)) {	/* key not found, must be released */
-	    usbhid_kbd_scan1(uhid,uhid->uhid_lastmsg[n],1);
-	    }
-	}
+  if (uhid->uhid_lastmsg[n] == 0) break;  /* no more keys */
+  for (o = UBR_KBD_KEYS; o < (UBR_KBD_KEYS + UBR_KBD_NUMKEYS); o++) {
+      if (uhid->uhid_lastmsg[n] == uhid->uhid_imsg[o]) break;
+      }
+  if (o == (UBR_KBD_KEYS + UBR_KBD_NUMKEYS)) {  /* key not found, must be released */
+      usbhid_kbd_scan1(uhid,uhid->uhid_lastmsg[n],1);
+      }
+  }
 }
 
 
@@ -463,10 +463,10 @@ static void usbhid_kbd_scan(usbhid_softc_t *uhid)
     *  and there is report data to be processed.
     *  
     *  Input parameters: 
-    *  	   ur - usb request
-    *  	   
+    *       ur - usb request
+    *       
     *  Return value:
-    *  	   0
+    *       0
     ********************************************************************* */
 
 static int usbhid_ireq_callback(usbreq_t *ur)
@@ -478,42 +478,42 @@ static int usbhid_ireq_callback(usbreq_t *ur)
      */
 
     if (ur->ur_status == 0xFF) {
-	usb_free_request(ur);
-	return 0;
-	}
+  usb_free_request(ur);
+  return 0;
+  }
 
     /*
      * What we do now depends on the type of device.
      */
 
     switch (uhid->uhid_devtype) {
-	case HID_DEVTYPE_KBD:
-	    /*
-	     * Handle keyboard event
-	     */
-	    usbhid_kbd_scan(uhid);
+  case HID_DEVTYPE_KBD:
+      /*
+       * Handle keyboard event
+       */
+      usbhid_kbd_scan(uhid);
 
-	    /*
-	     * Save old event to compare for next time.
-	     */
-	    memcpy(uhid->uhid_lastmsg,uhid->uhid_imsg,UBR_KBD_MAX);
-	    break;
+      /*
+       * Save old event to compare for next time.
+       */
+      memcpy(uhid->uhid_lastmsg,uhid->uhid_imsg,UBR_KBD_MAX);
+      break;
 
-	case HID_DEVTYPE_MOUSE:
+  case HID_DEVTYPE_MOUSE:
 #if 0
-	    /*
-	     * No need to handle mice, but here's the good stuff.
-	     */
-	    printf("Mouse: [%s %s %s] X:%d Y:%d Wheel:%d\n",
-		   (ur->ur_buffer[0] & 1) ? "left" : "",
-		   (ur->ur_buffer[0] & 4) ? "middle" : "",
-		   (ur->ur_buffer[0] & 2) ? "right" : "",
-		   (int)(signed char)ur->ur_buffer[1],
-		   (int)(signed char)ur->ur_buffer[2],
-		   (int)(signed char)ur->ur_buffer[3]);
+      /*
+       * No need to handle mice, but here's the good stuff.
+       */
+      printf("Mouse: [%s %s %s] X:%d Y:%d Wheel:%d\n",
+       (ur->ur_buffer[0] & 1) ? "left" : "",
+       (ur->ur_buffer[0] & 4) ? "middle" : "",
+       (ur->ur_buffer[0] & 2) ? "right" : "",
+       (int)(signed char)ur->ur_buffer[1],
+       (int)(signed char)ur->ur_buffer[2],
+       (int)(signed char)ur->ur_buffer[3]);
 #endif
-	    break;
-	}
+      break;
+  }
 
     /*
      * Re-queue request to get next keyboard event.
@@ -534,11 +534,11 @@ static int usbhid_ireq_callback(usbreq_t *ur)
     *  something happens.
     *  
     *  Input parameters: 
-    *  	   dev - usb device
-    *  	   softc - the usb hid softc
-    *  	   
+    *       dev - usb device
+    *       softc - the usb hid softc
+    *       
     *  Return value:
-    *  	   nothing
+    *       nothing
     ********************************************************************* */
 
 static void usbhid_queue_intreq(usbdev_t *dev,usbhid_softc_t *softc)
@@ -546,9 +546,9 @@ static void usbhid_queue_intreq(usbdev_t *dev,usbhid_softc_t *softc)
     usbreq_t *ur;
 
     ur = usb_make_request(dev,
-			  softc->uhid_ipipe,
-			  softc->uhid_imsg,softc->uhid_ipipemps,
-			  UR_FLAG_IN);
+        softc->uhid_ipipe,
+        softc->uhid_imsg,softc->uhid_ipipemps,
+        UR_FLAG_IN);
 
     ur->ur_callback = usbhid_ireq_callback;
 
@@ -564,11 +564,11 @@ static void usbhid_queue_intreq(usbdev_t *dev,usbhid_softc_t *softc)
     *  device and allocating our softc here.
     *  
     *  Input parameters: 
-    *  	   dev - usb device, in the "addressed" state.
-    *  	   drv - the driver table entry that matched
-    *  	   
+    *       dev - usb device, in the "addressed" state.
+    *       drv - the driver table entry that matched
+    *       
     *  Return value:
-    *  	   0
+    *       0
     ********************************************************************* */
 
 static int usbhid_attach(usbdev_t *dev,usb_driver_t *drv)
@@ -588,12 +588,12 @@ static int usbhid_attach(usbdev_t *dev,usb_driver_t *drv)
     ifdscr = usb_find_cfg_descr(dev,USB_INTERFACE_DESCRIPTOR_TYPE,0);
 
     if (!epdscr || !ifdscr) {
-	/*
-	 * Could not get descriptors, something is very wrong.
-	 * Leave device addressed but not configured.
-	 */
-	return 0;
-	}
+  /*
+   * Could not get descriptors, something is very wrong.
+   * Leave device addressed but not configured.
+   */
+  return 0;
+  }
 
     /*
      * Allocate a DMA buffer
@@ -601,9 +601,9 @@ static int usbhid_attach(usbdev_t *dev,usb_driver_t *drv)
 
     softc->uhid_imsg = usb_dma_alloc(UBR_KBD_MAX);
     if (softc->uhid_imsg == NULL) {
-	/* Could not allocate a buffer, fail. */
-	return -1;
-	}
+  /* Could not allocate a buffer, fail. */
+  return -1;
+  }
 
     /*
      * Choose the standard configuration.
@@ -632,11 +632,11 @@ static int usbhid_attach(usbdev_t *dev,usb_driver_t *drv)
 
     softc->uhid_devtype = ifdscr->bInterfaceProtocol;
     if (softc->uhid_devtype > HID_DEVTYPE_MAX) {
-	softc->uhid_devtype = HID_DEVTYPE_UNKNOWN;
-	}
+  softc->uhid_devtype = HID_DEVTYPE_UNKNOWN;
+  }
 
     console_log("USBHID: %s Configured.\n",
-	   usbhid_devtypes[softc->uhid_devtype]);
+     usbhid_devtypes[softc->uhid_devtype]);
 
     /*
      * Queue a transfer on the interrupt endpoint to catch
@@ -657,10 +657,10 @@ static int usbhid_attach(usbdev_t *dev,usb_driver_t *drv)
     *  will be cancelled automagically.
     *  
     *  Input parameters: 
-    *  	   dev - usb device
-    *  	   
+    *       dev - usb device
+    *       
     *  Return value:
-    *  	   0
+    *       0
     ********************************************************************* */
 
 static int usbhid_detach(usbdev_t *dev)

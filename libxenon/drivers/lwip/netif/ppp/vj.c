@@ -375,7 +375,7 @@ vj_compress_tcp(struct vjcompress *comp, struct pbuf *pb)
   if (!comp->compressSlot || comp->last_xmit != cs->cs_id) {
     comp->last_xmit = cs->cs_id;
     hlen -= deltaS + 4;
-    if(pbuf_header(pb, -hlen)){
+    if (pbuf_header(pb, -hlen)) {
       /* Can we cope with this failing?  Just assert for now */
       LWIP_ASSERT("pbuf_header failed\n", 0);
     }
@@ -384,7 +384,7 @@ vj_compress_tcp(struct vjcompress *comp, struct pbuf *pb)
     *cp++ = cs->cs_id;
   } else {
     hlen -= deltaS + 3;
-    if(pbuf_header(pb, -hlen)) {
+    if (pbuf_header(pb, -hlen)) {
       /* Can we cope with this failing?  Just assert for now */
       LWIP_ASSERT("pbuf_header failed\n", 0);
     }
@@ -586,23 +586,23 @@ vj_uncompress_tcp(struct pbuf **nb, struct vjcompress *comp)
   IPH_CHKSUM_SET(&cs->cs_ip,  (u_short)(~tmp));
   
   /* Remove the compressed header and prepend the uncompressed header. */
-  if(pbuf_header(n0, -((s16_t)(vjlen)))) {
+  if (pbuf_header(n0, -((s16_t)(vjlen)))) {
     /* Can we cope with this failing?  Just assert for now */
     LWIP_ASSERT("pbuf_header failed\n", 0);
     goto bad;
   }
 
-  if(LWIP_MEM_ALIGN(n0->payload) != n0->payload) {
+  if (LWIP_MEM_ALIGN(n0->payload) != n0->payload) {
     struct pbuf *np, *q;
     u8_t *bufptr;
 
     np = pbuf_alloc(PBUF_RAW, n0->len + cs->cs_hlen, PBUF_POOL);
-    if(!np) {
+    if (!np) {
       PPPDEBUG(LOG_WARNING, ("vj_uncompress_tcp: realign failed\n"));
       goto bad;
     }
 
-    if(pbuf_header(np, -cs->cs_hlen)) {
+    if (pbuf_header(np, -cs->cs_hlen)) {
       /* Can we cope with this failing?  Just assert for now */
       LWIP_ASSERT("pbuf_header failed\n", 0);
       goto bad;
@@ -614,7 +614,7 @@ vj_uncompress_tcp(struct pbuf **nb, struct vjcompress *comp)
       bufptr += q->len;
     }
 
-    if(n0->next) {
+    if (n0->next) {
       pbuf_chain(np, n0->next);
       pbuf_dechain(n0);
     }
@@ -622,12 +622,12 @@ vj_uncompress_tcp(struct pbuf **nb, struct vjcompress *comp)
     n0 = np;
   }
 
-  if(pbuf_header(n0, cs->cs_hlen)) {
+  if (pbuf_header(n0, cs->cs_hlen)) {
     struct pbuf *np;
 
     LWIP_ASSERT("vj_uncompress_tcp: cs->cs_hlen <= PBUF_POOL_BUFSIZE", cs->cs_hlen <= PBUF_POOL_BUFSIZE);
     np = pbuf_alloc(PBUF_RAW, cs->cs_hlen, PBUF_POOL);
-    if(!np) {
+    if (!np) {
       PPPDEBUG(LOG_WARNING, ("vj_uncompress_tcp: prepend failed\n"));
       goto bad;
     }

@@ -294,8 +294,8 @@ char *ipaddr_ntoa_r(const ip_addr_t *addr, char *buf, int buflen)
       rem = *ap % (u8_t)10;
       *ap /= (u8_t)10;
       inv[i++] = '0' + rem;
-    } while(*ap);
-    while(i--) {
+    } while (*ap);
+    while (i--) {
       if (len++ >= buflen) {
         return NULL;
       }

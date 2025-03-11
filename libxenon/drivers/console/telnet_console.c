@@ -19,7 +19,7 @@
 /* Module Definitions                                                        */
 /*===========================================================================*/
 
-#define BUFSIZE	65536
+#define BUFSIZE  65536
 #define PORT_TEL 23
 
 typedef struct {
@@ -66,18 +66,18 @@ void telnet_console_init(void) {
         if (err == ERR_OK) {
             tel_pcb = tcp_listen(tel_pcb); /* set listerning */
             tcp_accept(tel_pcb, telnet_accept); /* register callback */
-			
-			stdout_hook=telnet_console_tx_print;
+      
+      stdout_hook=telnet_console_tx_print;
         }
     }
 }
 
 /*===========================================================================*/
 void telnet_console_close(void) {
-	stdout_hook=NULL;
-	
+  stdout_hook=NULL;
+  
     session_states = TELNET_CLOSING;
-	
+  
     telnet_close(tel_pcb); /* close telnet session */
 }
 
@@ -86,20 +86,20 @@ void telnet_console_tx_print(const char *buf, int bc) {
     TEL_TXST *st;
 
     if (session_states != TELNET_CONNECTED) {
-		network_poll();
+    network_poll();
         return;
     }
 
-	if (buf == NULL || !bc ) {
-		return;
-	}
-	
+  if (buf == NULL || !bc ) {
+    return;
+  }
+  
     st = &tel_st;
     memcpy(st->buf , buf, bc); /* copy data */
     st->len = bc; /* length */
-	
+  
     telnet_send(tel_pcb, st); /* send telnet data */
-	network_poll();
+  network_poll();
 }
 
 

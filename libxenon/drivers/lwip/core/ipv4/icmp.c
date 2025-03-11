@@ -210,12 +210,12 @@ icmp_input(struct pbuf *p, struct netif *inp)
     /* increase number of echo replies attempted to send */
     snmp_inc_icmpoutechoreps();
 
-    if(pbuf_header(p, hlen)) {
+    if (pbuf_header(p, hlen)) {
       LWIP_ASSERT("Can't move over header in packet", 0);
     } else {
       err_t ret;
       /* send an ICMP packet, src addr is the dest addr of the curren packet */
-      ret = ip_output_if(p, ip_current_dest_addr(), IP_HDRINCL,
+      ret = ip_output_if (p, ip_current_dest_addr(), IP_HDRINCL,
                    ICMP_TTL, 0, IP_PROTO_ICMP, inp);
       if (ret != ERR_OK) {
         LWIP_DEBUGF(ICMP_DEBUG, ("icmp_input: ip_output_if returned an error: %c.\n", ret));

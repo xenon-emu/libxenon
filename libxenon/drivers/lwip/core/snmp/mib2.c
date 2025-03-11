@@ -921,7 +921,7 @@ static void ocstrncpy(u8_t *dst, u8_t *src, u16_t n)
 void objectidncpy(s32_t *dst, s32_t *src, u8_t n)
 {
   u8_t i = n;
-  while(i > 0) {
+  while (i > 0) {
     i--;
     *dst++ = *src++;
   }
@@ -1079,7 +1079,7 @@ void snmp_dec_iflist(void)
 {
   snmp_mib_node_delete(&iflist_root, iflist_root.tail);
   /* disable getnext traversal on empty table */
-  if(iflist_root.count == 0) iftable.maxlength = 0;
+  if (iflist_root.count == 0) iftable.maxlength = 0;
 }
 
 /**
@@ -1222,8 +1222,8 @@ void snmp_delete_arpidx_tree(struct netif *ni, ip_addr_t *ip)
     }
   }
   /* disable getnext traversal on empty tables */
-  if(arptree_root.count == 0) at.maxlength = 0;
-  if(ipntomtree_root.count == 0) ipntomtable.maxlength = 0;
+  if (arptree_root.count == 0) at.maxlength = 0;
+  if (ipntomtree_root.count == 0) ipntomtable.maxlength = 0;
 }
 
 void snmp_inc_ipinreceives(void)
@@ -2394,7 +2394,7 @@ ifentry_get_object_def(u8_t ident_len, s32_t *ident, struct obj_def *od)
         {
           struct netif *netif;
 
-          snmp_ifindextonetif(ident[1], &netif);
+          snmp_ifindextonetif (ident[1], &netif);
           od->instance = MIB_OBJECT_TAB;
           od->access = MIB_OBJECT_READ_ONLY;
           od->asn_type = (SNMP_ASN1_UNIV | SNMP_ASN1_PRIMIT | SNMP_ASN1_OC_STR);
@@ -2463,7 +2463,7 @@ ifentry_get_value(struct obj_def *od, u16_t len, void *value)
   struct netif *netif;
   u8_t id;
 
-  snmp_ifindextonetif(od->id_inst_ptr[1], &netif);
+  snmp_ifindextonetif (od->id_inst_ptr[1], &netif);
   LWIP_ASSERT("invalid id", (od->id_inst_ptr[0] >= 0) && (od->id_inst_ptr[0] <= 0xff));
   id = (u8_t)od->id_inst_ptr[0];
   switch (id)
@@ -2622,7 +2622,7 @@ ifentry_set_test(struct obj_def *od, u16_t len, void *value)
   LWIP_UNUSED_ARG(len);
 
   set_ok = 0;
-  snmp_ifindextonetif(od->id_inst_ptr[1], &netif);
+  snmp_ifindextonetif (od->id_inst_ptr[1], &netif);
   id = (u8_t)od->id_inst_ptr[0];
   switch (id)
   {
@@ -2644,7 +2644,7 @@ ifentry_set_value(struct obj_def *od, u16_t len, void *value)
   u8_t id;
   LWIP_UNUSED_ARG(len);
 
-  snmp_ifindextonetif(od->id_inst_ptr[1], &netif);
+  snmp_ifindextonetif (od->id_inst_ptr[1], &netif);
   id = (u8_t)od->id_inst_ptr[0];
   switch (id)
   {
@@ -2731,7 +2731,7 @@ atentry_get_value(struct obj_def *od, u16_t len, void *value)
   LWIP_UNUSED_ARG(len);
   LWIP_UNUSED_ARG(value);/* if !LWIP_ARP */
 
-  snmp_ifindextonetif(od->id_inst_ptr[1], &netif);
+  snmp_ifindextonetif (od->id_inst_ptr[1], &netif);
   snmp_oidtoip(&od->id_inst_ptr[2], &ip);
 
 #if LWIP_ARP /** @todo implement a netif_find_addr */
@@ -3422,7 +3422,7 @@ ip_ntomentry_get_value(struct obj_def *od, u16_t len, void *value)
   LWIP_UNUSED_ARG(len);
   LWIP_UNUSED_ARG(value);/* if !LWIP_ARP */
 
-  snmp_ifindextonetif(od->id_inst_ptr[1], &netif);
+  snmp_ifindextonetif (od->id_inst_ptr[1], &netif);
   snmp_oidtoip(&od->id_inst_ptr[2], &ip);
 
 #if LWIP_ARP /** @todo implement a netif_find_addr */

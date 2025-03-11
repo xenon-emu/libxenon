@@ -9,17 +9,17 @@ extern "C" {
 
 static inline uint64_t ld(volatile void *addr)
 {
-	uint64_t l;
-	asm volatile ("ld %0, 0(%1)" : "=r" (l) : "b" (addr));
-	return l;
+  uint64_t l;
+  asm volatile ("ld %0, 0(%1)" : "=r" (l) : "b" (addr));
+  return l;
 }
 
 
 static inline void  std(volatile void *addr, uint64_t v)
 {
-	asm volatile ("std %1, 0(%0)" : : "b" (addr), "r" (v));
-	asm volatile ("eieio");
-	asm volatile ("isync");
+  asm volatile ("std %1, 0(%0)" : : "b" (addr), "r" (v));
+  asm volatile ("eieio");
+  asm volatile ("isync");
 }
 
 #ifdef __cplusplus

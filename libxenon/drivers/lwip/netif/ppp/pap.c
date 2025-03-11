@@ -218,7 +218,7 @@ upap_timeout(void *arg)
         u->us_unit, u->us_timeouttime, u->us_clientstate));
 
   if (u->us_clientstate != UPAPCS_AUTHREQ) {
-	UPAPDEBUG(LOG_INFO, ("upap_timeout: not in AUTHREQ state!\n"));
+  UPAPDEBUG(LOG_INFO, ("upap_timeout: not in AUTHREQ state!\n"));
     return;
   }
 
@@ -525,7 +525,7 @@ upap_rauthnak(upap_state *u, u_char *inp, int id, int len)
     UPAPDEBUG(LOG_INFO, ("pap_rauthnak: ignoring missing msg-length.\n"));
   } else {
     GETCHAR(msglen, inp);
-    if(msglen > 0) {
+    if (msglen > 0) {
       len -= sizeof (u_char);
       if (len < msglen) {
         UPAPDEBUG(LOG_INFO, ("pap_rauthnak: rcvd short packet.\n"));
