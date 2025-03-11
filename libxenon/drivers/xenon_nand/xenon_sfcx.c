@@ -1,6 +1,4 @@
 #include <xetypes.h>
-#include <stdio.h>
-#include <stdlib.h>
 #include <unistd.h>
 #include <fcntl.h>
 #include <time/time.h>
@@ -472,7 +470,7 @@ int rawflash_checkImage_ecd(int len) {
   return result;
 }
 
-int rawflash_checkImage(int f)
+int rawflash_checkImage(FILE *f)
 {
   sfcx_init(); // Make sure sfcx is initalized!
   int len = 0;
@@ -486,7 +484,7 @@ int rawflash_checkImage(int f)
     printf(" ! ERROR: unable to allocate 0x%x bytes for a buffer!\n", len);
     return -1;
   }
-  if (read(f, blockbuf, len) != len)
+  if (fread(blockbuf, len, 1, f) != len)
   {
     printf(" ! ERROR: Can't read enough data...");
     free(blockbuf);
@@ -501,7 +499,7 @@ int rawflash_checkImage(int f)
   return 0;
 }
 
-int rawflash_writeImage(int len, int f)
+int rawflash_writeImage(int len, FILE *f)
 {
   int i=0;
   int secondPgOffset = sfc.page_sz_phys;
@@ -524,7 +522,7 @@ int rawflash_writeImage(int len, int f)
     status = sfcx_read_block(blockbuf, addr, 1);
     if ((sfcx_is_pagevalid(blockbuf) == 0) || (sfcx_is_pagevalid(&blockbuf[secondPgOffset]) == 0))
       status = status | STATUS_BB_ER;
-    r = read(f, blockbuf, readsz);
+    r = fread(blockbuf, readsz, 1, f);
     if (r < 0)
     {
       printf("ERROR: failed to read %d bytes from file\n\n",readsz);
@@ -556,6 +554,42 @@ int rawflash_writeImage(int len, int f)
   return 1;
 }
 
+int rawflash_readImage(int len, FILE *fd)
+{
+	int i = 0;
+	int secondPgOffset = sfc.page_sz_phys;
+	int addr, status;
+	int readsz = sfc.pages_in_block*sfc.page_sz_phys;
+	int numblocks = (len/sfc.block_sz_phys);
+	blockbuf = (unsigned char*)malloc(readsz);
+	if (blockbuf == NULL)
+	{
+    printf("ERROR: failed to allocate buffer\n\n",readsz);
+		return -1;
+	}
+	if (sfc.meta_type == META_TYPE_2)
+		secondPgOffset = 0x1080; // 0x210*8
+	while (i < numblocks)
+	{
+		printf("\rprocessing block 0x%X of 0x%X (%3.2f %%", i+1, numblocks, ((float)(i + 1) / (float)numblocks) * 100);
+		addr = i*sfc.block_sz;
+		// check first two pages of each block to find out if it's a good block
+		status = sfcx_read_block(blockbuf, addr, 1);
+		if ((sfcx_is_pagevalid(blockbuf) == 0) || (sfcx_is_pagevalid(&blockbuf[secondPgOffset]) == 0))
+			status = status | STATUS_BB_ER;
+		if (fwrite( blockbuf, readsz, 1, fd) < 0)
+		{
+			dprintf("\rERROR: failed to write %d bytes to file\n\n",readsz);
+			return -1;
+		}
+		if ((status & (STATUS_BB_ER | STATUS_ECC_ER)) != 0)
+      printf("block 0x%x seems bad, status 0x%08x\n", i, status);
+		i++;
+	}
+	printf("\r\n\n");
+	return 0;
+}
+
 int try_rawflash(char *filename)
 {
   struct stat s;
@@ -565,9 +599,9 @@ int try_rawflash(char *filename)
   if (size <= 0)  
     return -1; //Invalid Filesize
 
-  int f = open(filename, O_RDONLY);
+  FILE *f = fopen(filename, "r");
   if (f < 0)  
-    return f; //Can't open file!
+    return -2; //Can't open file!
 
   printf(" * rawflash v5 started (by cOz, modified By Swizzy)\n");
 
@@ -576,12 +610,12 @@ int try_rawflash(char *filename)
   else if ((size != 0x1080000)&& (size != RAW_NAND_64)) // 16 M size
   {
     printf("error: %s - size %d is not valid image size!\n", filename, size);
-    close(f);
+    fclose(f);
     return -1;
   }
 
-    printf("\n * found '%s'. press power NOW if you don't want to flash the NAND.\n",filename);
-    delay(15);
+  printf("\n * found '%s'. press power NOW if you don't want to flash the NAND.\n",filename);
+  delay(15);
 
   printf(" * Checking NAND File to be of matching type...\n");
 
@@ -592,8 +626,8 @@ int try_rawflash(char *filename)
   else  
     printf(" * Image matches expected data...\n");  
 
-  close(f); // to re-align it to the start again
-  f = open(filename, O_RDONLY);
+  fclose(f); // to re-align it to the start again
+  f = fopen(filename, "r");
   if (f < 0)  
     return f; //Can't open file!
         
@@ -603,12 +637,12 @@ int try_rawflash(char *filename)
   else
     printf("failed to write image :(\n");
 
-  close(f);
+  fclose(f);
   if (blockbuf != NULL)
     free(blockbuf);
         
-    for(;;); // loop
-    return -1;
+  for(;;); // loop
+  return -1;
 }
 
 /*
