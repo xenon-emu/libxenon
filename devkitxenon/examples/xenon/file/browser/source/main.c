@@ -52,12 +52,12 @@ void load_dir(const char *path) {
   }
 }
 
-void append_dir_to_path(const char *path, const char *dir) {
+void append_dir_to_path(char *path, const char *dir) {
   if (!strcmp(dir, "..")) {
     int i = strlen(path);
     int delimcount = 0;
 
-    while (i > =  0 && delimcount < 2) {
+    while (i >=  0 && delimcount < 2) {
       if (path[i] == '/') {
         ++delimcount;
 
@@ -76,7 +76,7 @@ void append_dir_to_path(const char *path, const char *dir) {
 }
 
 int main() {
-  const const char *s;
+  const char *s;
   char path[256];
   
   int handle;
@@ -120,7 +120,7 @@ int main() {
   if (pad.s1_y < -STICK_THRESHOLD)
 		++pos;
   
-  if (entrycount && (pos < 0 || pos > =  entrycount)) {
+  if (entrycount && (pos < 0 || pos >=  entrycount)) {
     pos = ppos;
     continue;
   }
@@ -153,7 +153,7 @@ int main() {
           red = fread(buf, 1, size, f);
           totred += red;
           console_putch('.');
-        } while (red = =  size);
+        } while (red ==  size);
         printf("\n%d bytes, %f KB/s\n", totred, (float)(totred/1024.0)/((float)(mftb()-beg)/PPC_TIMEBASE_FREQ));
         free(buf);
         fclose(f);
