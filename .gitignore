@@ -1,6 +1,8 @@
 *.o
 *.d
 *.a
+*.elf
+*.elf32
 toolchain/build
 nbproject/*
 toolchain/build.log
