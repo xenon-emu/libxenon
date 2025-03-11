@@ -571,7 +571,7 @@ int rawflash_readImage(int len, FILE *fd)
 		secondPgOffset = 0x1080; // 0x210*8
 	while (i < numblocks)
 	{
-		printf("\rprocessing block 0x%X of 0x%X (%3.2f %%", i+1, numblocks, ((float)(i + 1) / (float)numblocks) * 100);
+		printf("\rprocessing block 0x%X of 0x%X (%3.2f %%)", i+1, numblocks, ((float)(i + 1) / (float)numblocks) * 100);
 		addr = i*sfc.block_sz;
 		// check first two pages of each block to find out if it's a good block
 		status = sfcx_read_block(blockbuf, addr, 1);
