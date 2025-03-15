@@ -202,14 +202,14 @@ void sfcx_calcecc_ex(unsigned int *data, unsigned char* edc) {
 	val = ~val;
 
 	// 26 bit ecc data
-	edc[0] = ((val << 6) | (data[0x20C] & 0x3F)) & 0xFF;
+	edc[0] = ((val << 6) | (edc[0] & 0x3F)) & 0xFF;
 	edc[1] = (val >> 2) & 0xFF;
 	edc[2] = (val >> 10) & 0xFF;
 	edc[3] = (val >> 18) & 0xFF;
 }
 
 void sfcx_calcecc(unsigned int *data)
-{	
+{
 	unsigned char *edc = ((unsigned char*)data) + sfc.page_sz;
 	sfcx_calcecc_ex(data, &edc[0xC]);
 }
