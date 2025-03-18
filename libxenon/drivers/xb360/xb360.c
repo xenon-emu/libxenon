@@ -625,8 +625,16 @@ int xenon_get_console_type()
 			return REV_TRINITY;
 	}
 	else if(consoleVersion >= 0x5851)
+	{
+		if (PCIBridgeRevisionID >= 0x70 && sfcx_readreg(SFCX_PHISON) != 0)
+			return REV_WINCHESTER_MMC;
 		return REV_WINCHESTER;
+<<<<<<< HEAD
 	return REV_UNKNOWN;
+=======
+	}
+    return REV_UNKNOWN;
+>>>>>>> a327245 (Fixed Winchester not showing image, anything post Corona should work the same as Corona.)
 }
 
 int xenon_logical_nand_data_ok()

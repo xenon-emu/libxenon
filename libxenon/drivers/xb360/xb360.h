@@ -96,6 +96,7 @@ static const unsigned int xelloffsets[XELL_OFFSET_COUNT] = {0x70000, // ggBoot m
 #define REV_CORONA 5
 #define REV_CORONA_PHISON 6
 #define REV_WINCHESTER 7
+#define REV_WINCHESTER_MMC 8
 #define REV_UNKNOWN (-1)
 
 typedef struct kventry {
