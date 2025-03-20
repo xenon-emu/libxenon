@@ -51,7 +51,7 @@ jobs:
           file: ./toolchain.dockerfile
           builder: ${{ steps.buildx.outputs.name }}
           push: ${{ github.event_name != 'pull_request' }}
-          tags: free60/toolchain:latest
+          tags: free60/toolchain:${{ github.ref_name }}-${{ github.sha }},free60/toolchain:latest
           cache-from: type=local,src=/tmp/.buildx-cache-toolchain
           cache-to: type=local,mode=max,dest=/tmp/.buildx-cache-toolchain-new
 
@@ -63,7 +63,7 @@ jobs:
           file: ./libxenon.dockerfile
           builder: ${{ steps.buildx.outputs.name }}
           push: ${{ github.event_name != 'pull_request' }}
-          tags: free60/libxenon:latest
+          tags: free60/libxenon:${{ github.ref_name }}-${{ github.sha }},free60/libxenon:latest
           cache-from: type=local,src=/tmp/.buildx-cache-libxenon
           cache-to: type=local,mode=max,dest=/tmp/.buildx-cache-libxenon-new
 
