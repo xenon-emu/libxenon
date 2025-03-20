@@ -34,9 +34,18 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-buildx-
 
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            toolchain:
+            - 'toolchain/**'
+            - 'toolchain.dockerfile'
+
       - name: Build and push Toolchain
         id: docker_build_toolchain
         uses: docker/build-push-action@v6
+        if: steps.filter.outputs.toolchain == 'true'
         with:
           context: ./
           file: ./toolchain.dockerfile
