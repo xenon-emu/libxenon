@@ -1,9 +1,8 @@
 # LibXenon
-[![GitHub pages - documentation](https://img.shields.io/github/workflow/status/Free60Project/libxenon/Documentation?label=documentation)](https://free60project.github.io/libxenon/)
-[![GitHub Workflow - Docker](https://img.shields.io/github/workflow/status/Free60Project/libxenon/docker?label=docker)](https://github.com/Free60Project/libxenon/actions?query=workflow%3Adocker)
-[![Docker pulls (Toolchain)](https://img.shields.io/docker/pulls/free60/toolchain)](https://hub.docker.com/r/free60/toolchain)
-[![Docker pulls (LibXenon)](https://img.shields.io/docker/pulls/free60/libxenon)](https://hub.docker.com/r/free60/libxenon)
-
+[![GitHub Workflow - Docker](https://img.shields.io/github/actions/workflow/status/Free60Project/libxenon/docker.yml?label=docker)](https://github.com/Free60Project/libxenon/actions?query=workflow%3Adocker)
+[![GitHub pages - documentation](https://img.shields.io/github/actions/workflow/status/Free60Project/libxenon/doxygen.yml?label=documentation)](https://free60project.github.io/libxenon/)
+[![Docker pulls (LibXenon)](https://img.shields.io/docker/pulls/free60/libxenon?label=docker%20pulls%20%28libxenon%29)](https://hub.docker.com/r/free60/libxenon)
+[![Docker pulls (Toolchain)](https://img.shields.io/docker/pulls/free60/toolchain?label=docker%20pulls%20%28toolchain%29)](https://hub.docker.com/r/free60/toolchain)
 
 LibXenon provides a bare-metal homebrew library for the Xbox 360 gaming console.
 
