@@ -283,7 +283,7 @@ function freetype_install
 	export LDFLAGS="$CFLAGS"
 
 	echo -e "Configuring freetype..."
-	./configure --prefix=$DEVKITXENON/usr --host=ppc-elf --disable-shared >> $LOGFILE 2>&1 || fail_with_info
+	./configure --prefix=$DEVKITXENON/usr --host=ppc-elf --disable-shared --without-brotli >> $LOGFILE 2>&1 || fail_with_info
 
 	echo -e "Building freetype..."
 	make $PARALLEL CROSS_COMPILE=$TARGET- >> $LOGFILE 2>&1 || fail_with_info
