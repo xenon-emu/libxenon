@@ -18,6 +18,8 @@
 #include "lwip/tcp.h"
 #include "lwip/tcp_impl.h"
 
+#include "network.h"
+
 struct netif netif;
 
 ip_addr_t ipaddr, netmask, gateway;
@@ -31,9 +33,7 @@ extern err_t enet_init(struct netif *netif);
 void network_poll();
 
 
-void network_init()
-{
-
+void network_init(int withDHCP, ip_addr_t static_fallback_ip_addr, ip_addr_t static_fallback_gateway, ip_addr_t static_fallback_netmask) {
 #ifdef STATS
 	stats_init();
 #endif /* STATS */
@@ -44,13 +44,27 @@ void network_init()
 	last_dhcp_coarse=mftb();
 
 	//printf(" * configuring device for DHCP...\r\n");
-	/* Start Network with DHCP */
-	IP4_ADDR(&netmask, 255,255,255,255);
-	IP4_ADDR(&gateway, 0,0,0,0);
-	IP4_ADDR(&ipaddr, 0,0,0,0);
+	if (withDHCP == 1) {
+		/* Start Network with DHCP */
+		IP4_ADDR(&netmask, 255,255,255,255);
+		IP4_ADDR(&gateway, 0,0,0,0);
+		IP4_ADDR(&ipaddr, 0,0,0,0);
+	}
+	else {
+		lwip_init();  //lwip 1.4.0 RC2
+		
+		if (!netif_add(&netif, &static_fallback_ip_addr, &static_fallback_netmask, &static_fallback_gateway, NULL, enet_init, ip_input)){
+			printf(" ! netif_add failed!\n");
+			return;
+		}
+		netif_set_default(&netif);
+
+		netif_set_addr(&netif, &static_fallback_ip_addr, &static_fallback_netmask, &static_fallback_gateway);
+		netif_set_up(&netif);
+		return;
+	}
 
 	lwip_init();  //lwip 1.4.0 RC2
-	//printf("ok now the NIC\n");
 
 	if (!netif_add(&netif, &ipaddr, &netmask, &gateway, NULL, enet_init, ip_input)){
 		printf(" ! netif_add failed!\n");
@@ -58,34 +72,32 @@ void network_init()
 	}
 	netif_set_default(&netif);
 
-	printf(" * requesting dhcp...");
-	//dhcp_set_struct(&netif, &netif_dhcp);
-	dhcp_start(&netif);
+	if (withDHCP == 1) {
+		printf(" * requesting dhcp...");
+		//dhcp_set_struct(&netif, &netif_dhcp);
+		dhcp_start(&netif);
 
-	dhcp_wait=mftb();
-	int i = 0;
-	while (netif.ip_addr.addr==0 && i < 60) {
-		network_poll();
-		now2=mftb();
-		if (tb_diff_msec(now2, dhcp_wait) >= 250){
-			dhcp_wait=mftb();
-			i++;
-			if (i % 2)
-				printf(".");
+		dhcp_wait=mftb();
+		int i = 0;
+		while (netif.ip_addr.addr==0 && i < 60) {
+			network_poll();
+			now2=mftb();
+			if (tb_diff_msec(now2, dhcp_wait) >= 250){
+				dhcp_wait=mftb();
+				i++;
+				if (i % 2)
+					printf(".");
+			}
 		}
-	}
-
-	if (netif.ip_addr.addr) {
-		printf("success\n");
-	} else {
-		printf("failed\n");
-		printf(" * now assigning a static ip\n");
-
-		IP4_ADDR(&ipaddr, 192, 168, 1, 99);
-		IP4_ADDR(&gateway, 192, 168, 1, 1);
-		IP4_ADDR(&netmask, 255, 255, 255, 0);
-		netif_set_addr(&netif, &ipaddr, &netmask, &gateway);
-		netif_set_up(&netif);
+		if (netif.ip_addr.addr) {
+			printf("success\n");
+		} else {
+			printf("failed\n");
+			printf(" * now assigning a static ip\n");
+			
+			netif_set_addr(&netif, &static_fallback_ip_addr, &static_fallback_netmask, &static_fallback_gateway);
+			netif_set_up(&netif);
+		}
 	}
 }
 

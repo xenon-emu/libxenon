@@ -8,7 +8,7 @@ extern "C" {
 #include <lwip/netif.h>
 #include <lwip/dhcp.h>
 
-void network_init();
+void network_init(int withDHCP, ip_addr_t static_fallback_ip_addr, ip_addr_t static_fallback_gateway, ip_addr_t static_fallback_netmask);
 void network_poll();
 void network_print_config();
 
