@@ -37,34 +37,19 @@ Dependencies for Linux distributions using the `dnf` or `apt` package managers w
 - wget
 - file
 
-The main driving script to setup libxenon is at `toolchain/build-xenon-toolchain`. Please see below on how to use it.
-
-### Environment variables
-
-After installation of the toolchain, the following environment variables need to be populated.
-
-`DEVKITXENON` is depends on your chosen installation prefix location. The default is `/usr/local/xenon`:
-
-```
-DEVKITXENON=/usr/local/xenon
-PATH="${PATH:+${PATH}:}$DEVKITXENON/bin:$DEVKITXENON/usr/bin"
-```
-
-You may edit your ~/.bashrc to set these. Alternatively, you may execute `./build-xenon-toolchain env-cmd` to install a command named `xenon-env`. When you run that command, it will set those variables in a new shell.
+If you are not using a Linux system with either the `dnf` or `apt` package manager, ensure the above equivalents are installed before running the main driving script to setup LibXenon, which is named `toolchain/build-xenon-toolchain`. See below on how to use it.
 
 ### Prefix
 
-If you want to choose your own prefix, prepend it to the `./build-xenon-toolchain` invocation.
+By default the prefix is set to `/usr/local/xenon`. If you want to choose your own prefix, prepend it to the `./build-xenon-toolchain` invocation, i.e. `PREFIX="/home/username/xenon" ./build-xenon-toolchain toolchain`.
 
-e.g. `PREFIX=/home/username/xenon ./build-xenon-toolchain toolchain`
-
-### Installing toolchain and libxenon library
+### Installing the toolchain
 
 ```
 ./build-xenon-toolchain toolchain
 ```
 
-### Installing libxenon library (useful for updating just libxenon)
+### Installing the libxenon library
 
 ```
 ./build-xenon-toolchain libxenon
@@ -75,3 +60,15 @@ e.g. `PREFIX=/home/username/xenon ./build-xenon-toolchain toolchain`
 ```
 ./build-xenon-toolchain libs
 ```
+
+### Environment variables
+
+After installation of the toolchain, the following environment variables need to be populated:
+
+```
+DEVKITXENON="/usr/local/xenon"
+PATH="${PATH:+${PATH}:}"$DEVKITXENON"/bin:"$DEVKITXENON"/usr/bin"
+```
+`DEVKITXENON` depends on your chosen installation prefix location. The default value is `/usr/local/xenon` unless you changed it.
+
+You may edit your ~/.bashrc to set these in every shell automatically. Alternatively, you may execute `./build-xenon-toolchain env-cmd` to install a command named `xenon-env`. When you run that command, it will set those variables in a new shell.
