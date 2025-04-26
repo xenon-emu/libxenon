@@ -144,10 +144,10 @@ toolchain_install()
         cd build
         echo -e "Configuring $GCC..."
         ../$GCC/configure --target=$TARGET --prefix="$PREFIX" --with-libiconv-prefix=/opt/local -enable-interwork \
-        --enable-languages="c" --without-headers --disable-shared \
-        --with-newlib --disable-libmudflap --disable-libssp --disable-nls --disable-shared --without-headers \
-        --disable-decimal-float --enable-altivec \
-        --with-gmp=/opt/local --with-mpfr=/opt/local --with-cpu=cell >> $LOGFILE 2>&1 || fail_with_info
+            --enable-languages="c" --without-headers --disable-shared \
+            --with-newlib --disable-libmudflap --disable-libssp --disable-nls --disable-shared --without-headers \
+            --disable-decimal-float --enable-altivec \
+            --with-gmp=/opt/local --with-mpfr=/opt/local --with-cpu=cell >> $LOGFILE 2>&1 || fail_with_info
         echo -e "Building $GCC, this could take a while..."
         make $PARALLEL all-gcc 2>&1 >> $LOGFILE || fail_with_info
         echo -e "Installing $GCC..."
@@ -165,8 +165,8 @@ toolchain_install()
         cd build
         echo -e "Configuring $NEWLIB..."
         ../$NEWLIB/configure --target=$TARGET --prefix="$PREFIX"  --enable-multilib --disable-nls \
-        CFLAGS="-DHAVE_BLKSIZE -O2"\
-        --enable-newlib-io-long-long --enable-newlib-io-long-double >> $LOGFILE 2>&1 || fail_with_info
+            CFLAGS="-DHAVE_BLKSIZE -O2" \
+            --enable-newlib-io-long-long --enable-newlib-io-long-double >> $LOGFILE 2>&1 || fail_with_info
         echo -e "Building $NEWLIB, this could take a while..."
         make $PARALLEL 2>&1 >> $LOGFILE || fail_with_info
         echo -e "Installing $NEWLIB..."
@@ -182,10 +182,10 @@ toolchain_install()
         echo -e "Configuring $GCC (2nd pass)..."
         unset LIBRARY_PATH
         ../$GCC/configure --target=$TARGET --prefix="$PREFIX" --with-libiconv-prefix=/opt/local --with-cpu=cell \
-        --with-gmp=/opt/local --with-mpfr=/opt/local --disable-decimal-float --disable-libquadmath \
-        --enable-languages=c,c++ --disable-libssp --disable-libsanitizer --with-newlib --enable-cxx-flags="-G0" \
-        --disable-libmudflap --disable-nls --disable-shared --disable-linux-futex --enable-altivec \
-        --disable-libatomic --disable-threads --disable-libgomp --disable-libitm -v >> $LOGFILE 2>&1 || fail_with_info
+            --with-gmp=/opt/local --with-mpfr=/opt/local --disable-decimal-float --disable-libquadmath \
+            --enable-languages=c,c++ --disable-libssp --disable-libsanitizer --with-newlib --enable-cxx-flags="-G0" \
+            --disable-libmudflap --disable-nls --disable-shared --disable-linux-futex --enable-altivec \
+            --disable-libatomic --disable-threads --disable-libgomp --disable-libitm -v >> $LOGFILE 2>&1 || fail_with_info
         echo -e "Building $GCC - (2nd pass), this could take a while..."
         make $PARALLEL 2>&1 >> $LOGFILE || fail_with_info
         echo -e "Installing $GCC (2nd pass)..."
