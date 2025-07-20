@@ -119,11 +119,14 @@ int cpu_get_key(unsigned char *data)
 
 int get_virtual_cpukey(unsigned char *data)
 {
-  unsigned char buffer[VFUSES_SIZE];
+   unsigned char buffer[VFUSES_SIZE];
 
-  if (xenon_get_logical_nand_data(&buffer, VFUSES_OFFSET, VFUSES_SIZE == -1))
-	  return 2; //Unable to read NAND data...
+   if (xenon_get_logical_nand_data(&buffer, VFUSES_OFFSET, VFUSES_SIZE) == -1)
+   {
+         return 2; //Unable to read NAND data...
+   }
 
+<<<<<<< HEAD
   //if we got here then it was at least able to read from nand
   //now we need to verify the data somehow
   if (buffer[0]==0xC0 && buffer[1]==0xFF && buffer[2]==0xFF && buffer[3]==0xFF)
@@ -134,6 +137,34 @@ int get_virtual_cpukey(unsigned char *data)
   else
 	/* No Virtual Fuses were found at 0x95000*/
 	return 1;
+=======
+   //if we got here then it was at least able to read from nand
+   //now we need to verify the data somehow
+   if(buffer[0]==0xC0 && buffer[1]==0xFF && buffer[2]==0xFF && buffer[3]==0xFF)
+   {
+      memcpy(data,&buffer[0x20],0x10);
+      return 0;
+   }
+   else
+   {
+      // No Virtual Fuses were found at 0x95000, check again at 0xC0000 (Zero fuse DevGL consoles)
+      if (xenon_get_logical_nand_data(&buffer, ZFUSES_OFFSET, VFUSES_SIZE) == -1)
+      {
+         return 2; //Unable to read NAND data...
+      }
+
+      //if we got here then it was at least able to read from nand
+      //now we need to verify the data somehow
+      if(buffer[0]==0xC0 && buffer[1]==0xFF && buffer[2]==0xFF && buffer[3]==0xFF)
+      {
+         memcpy(data,&buffer[0x20],0x10);
+         return 0;
+      }
+
+      // No virtual fuses at 0x95000 or 0xC0000
+      return 1;
+   }
+>>>>>>> ef425e6 (Add support for vfuses on consoles running DevGL images)
 }
 
 
@@ -629,12 +660,8 @@ int xenon_get_console_type()
 		if (PCIBridgeRevisionID >= 0x70 && sfcx_readreg(SFCX_PHISON) != 0)
 			return REV_WINCHESTER_MMC;
 		return REV_WINCHESTER;
-<<<<<<< HEAD
-	return REV_UNKNOWN;
-=======
 	}
     return REV_UNKNOWN;
->>>>>>> a327245 (Fixed Winchester not showing image, anything post Corona should work the same as Corona.)
 }
 
 int xenon_logical_nand_data_ok()
