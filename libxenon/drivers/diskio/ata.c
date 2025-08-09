@@ -708,10 +708,11 @@ static int atapi_ready = 0;
 static bool atapi_inserted() {
     if (!atapi_ready)
         return false;
+	struct xenon_ata_device *dev = &ata;
 
     uint8_t cmd[12] = { 0 };
     cmd[0] = 0x00;
-    int status = xenon_atapi_packet(cmd, sizeof(cmd), NULL, 0, DIR_NONE);
+    int status = xenon_atapi_packet(dev, (char *)cmd, 0);
     if (status == ATAPI_STATUS_OK)
         return true;
 
