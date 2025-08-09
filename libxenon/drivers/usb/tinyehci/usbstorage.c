@@ -1236,11 +1236,11 @@ retry:
 				if (ehci_reset_port(ehci, i) >= 0) {
 
 					//ehci_device_data * device_data = find_ehci_data(ehci);
-					
+
 					ehci_device_data * device_data = &_ehci_data[_ehci_device_count];
 					dev->busy = 1;
 					device_data->__ehci = ehci;
-					device_data->__dev = dev;					
+					device_data->__dev = dev;
 
 					if (USBStorage_Try_Device(device_data) == 0) {
 						printf("EHCI bus %d device %d: vendor %04X product %04X : Mass-Storage Device\n", j, dev->id, device_data->__vid, device_data->__pid);
@@ -1252,8 +1252,8 @@ retry:
 						//__bdev=register_bdev(NULL, &usb2mass_ops, "uda");
 						//register_disc_interface(&usb2mass_ops);
 						device_data->__ready = 1;
-						if (mount_usb_device)						
-							mount_usb_device(_ehci_device_count);						
+						if (mount_usb_device)
+							mount_usb_device(_ehci_device_count);
 						_ehci_device_count++;
 #ifdef MEM_PRINT
 						s_printf("USBStorage_Init() Ok\n");
