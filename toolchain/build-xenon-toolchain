@@ -257,12 +257,12 @@ libpng_install()
     export LDFLAGS="$CFLAGS"
 
     echo -e "Configuring $LIBPNG..."
-    ./configure --disable-shared --enable-static --prefix=$DEVKITXENON/usr --host=ppc-elf >> $LOGFILE 2>&1 || fail_with_info
+    ./configure --disable-shared --enable-static --prefix=$DEVKITXENON/usr --host=ppc-elf >> $LOGFILE 2>&1
 
     echo -e "Building $LIBPNG..."
-    make $PARALLEL CROSS_COMPILE=$TARGET- >> $LOGFILE 2>&1 || fail_with_info
-    echo -e "Installing $LIBPNG..."	
-    make CROSS_COMPILE=$TARGET- install >> $LOGFILE 2>&1 || fail_with_info
+    make $PARALLEL CROSS_COMPILE=$TARGET- >> $LOGFILE 2>&1
+    echo -e "Installing $LIBPNG..."
+    make CROSS_COMPILE=$TARGET- install >> $LOGFILE 2>&1
     cd ..
     rm -rf $LIBPNG
 
