@@ -284,7 +284,8 @@ bzip2_install()
 
     echo -e "Extracting $BZIP2..."
     rm -rf $BZIP2
-    tar xzf $BZIP2.tar.gz >> $LOGFILE 2>&1 && cat ../libxenon/ports/bzip2/$BZIP2.diff | patch -p0 >> $LOGFILE 2>&1 || fail_with_info
+    tar xzf $BZIP2.tar.gz >> $LOGFILE 2>&1 || fail_with_info
+    cat ../libxenon/ports/bzip2/$BZIP2.diff | patch -N -p0 >> $LOGFILE 2>&1 || fail_with_info
     cd $BZIP2
 
     echo -e "Building $BZIP2..."
@@ -304,7 +305,7 @@ freetype_install()
         echo -e "Downloading $FREETYPE..."
         wget -c $FREETYPE_DL || fail_with_info
     fi
-    
+
     echo -e "Extracting $FREETYPE..."
     rm -rf $FREETYPE
     tar xzf $FREETYPE.tar.gz >> $LOGFILE 2>&1 || fail_with_info
