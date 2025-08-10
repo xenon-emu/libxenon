@@ -284,8 +284,9 @@ bzip2_install()
 
     echo -e "Extracting $BZIP2..."
     rm -rf $BZIP2
-    tar xzf $BZIP2.tar.gz >> $LOGFILE 2>&1 || fail_with_info
-    cat ../libxenon/ports/bzip2/$BZIP2.diff | patch -N -p0 >> $LOGFILE 2>&1 || fail_with_info
+    tar xzf $BZIP2.tar.gz >> $LOGFILE 2>&1
+    cat ../libxenon/ports/bzip2/$BZIP2.diff
+    patch -N -p0 >> $LOGFILE 2>&1
     cd $BZIP2
 
     echo -e "Building $BZIP2..."
@@ -399,15 +400,15 @@ cube()
         cp ../devkitxenon/examples/xenon/graphics/cube/cube.elf32 .
         echo
         echo -e "cube.elf32 compiled, run it via xell"
-        echo		
-        
+        echo
+
     else
         echo
         echo -e "git is needed to download libxenon, install it and run this script again with \"libxenon\" as argument"
         echo -e "If you are running debian/ubuntu : apt install git"
         echo
     fi
-    exit 0	
+    exit 0
 }
 
 all_done()
@@ -422,7 +423,7 @@ all_done()
     echo
     echo -e "export DEVKITXENON=\"$PREFIX"\"
     echo -e 'export PATH="${PATH:+${PATH}:}"$DEVKITXENON"/bin:"$DEVKITXENON"/usr/bin"'
-    echo 
+    echo
     echo -e "Alternatively, run "$0" env-cmd to install a command named xenon-env to /usr/local/bin/xenon-env to set those in the current shell for you"
     echo -e "${NC}"
 }
