@@ -126,18 +126,6 @@ int get_virtual_cpukey(unsigned char *data)
          return 2; //Unable to read NAND data...
    }
 
-<<<<<<< HEAD
-  //if we got here then it was at least able to read from nand
-  //now we need to verify the data somehow
-  if (buffer[0]==0xC0 && buffer[1]==0xFF && buffer[2]==0xFF && buffer[3]==0xFF)
-  {
-	memcpy(data,&buffer[0x20],0x10);
-		return 0;
-  }
-  else
-	/* No Virtual Fuses were found at 0x95000*/
-	return 1;
-=======
    //if we got here then it was at least able to read from nand
    //now we need to verify the data somehow
    if(buffer[0]==0xC0 && buffer[1]==0xFF && buffer[2]==0xFF && buffer[3]==0xFF)
@@ -164,7 +152,6 @@ int get_virtual_cpukey(unsigned char *data)
       // No virtual fuses at 0x95000 or 0xC0000
       return 1;
    }
->>>>>>> ef425e6 (Add support for vfuses on consoles running DevGL images)
 }
 
 
