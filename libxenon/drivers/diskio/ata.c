@@ -412,9 +412,7 @@ xenon_atapi_packet(struct xenon_ata_device *dev, char *packet, int dma) {
 	xenon_ata_regset(dev, XENON_ATA_REG_CMD, XENON_ATA_CMD_PACKET);
 	xenon_ata_wait_ready(dev);
 
-	xenon_ata_pio_write(dev, packet, 12);
-
-	return 0;
+	return xenon_ata_pio_write(dev, packet, 12);
 }
 
 #define   SK(sense)((sense>>16) & 0xFF)
@@ -706,17 +704,19 @@ static int ata_ready = 0;
 static int atapi_ready = 0;
 
 static bool atapi_inserted() {
-    if (!atapi_ready)
+    if (!atapi_ready) {
         return false;
+	}
 	struct xenon_ata_device *dev = &ata;
 
     uint8_t cmd[12] = { 0 };
     cmd[0] = 0x00;
     int status = xenon_atapi_packet(dev, (char *)cmd, 0);
-    if (status == ATAPI_STATUS_OK)
-        return true;
+    if (status != 0)  {
+        return false;
+	}
 
-    return false;
+    return true;
 }
 
 static bool ata_startup(void){

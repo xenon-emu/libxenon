@@ -1,4 +1,5 @@
 #include "xetypes.h"
+#include <stdlib.h>
 
 void call_ctors(void)
 {
