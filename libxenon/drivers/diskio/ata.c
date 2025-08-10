@@ -553,7 +553,7 @@ xenon_atapi_read_sectors(sec_t start_sector, sec_t sector_size, void *buf) {
 	readcmd.code = 0x28;
 	readcmd.lba = start_sector;
 	readcmd.length = sector_size;
-	
+
 #ifndef USE_DMA
 	unsigned int sect = 0;
 	void * bufpos = buf;
@@ -665,9 +665,9 @@ xenon_ata_init1(struct xenon_ata_device *dev, uint32_t ioaddress, uint32_t ioadd
 	dev->ioaddress2 = ioaddress2;
 
 	dev->prds = memalign(0x10000, MAX_PRDS * sizeof (struct xenon_ata_dma_prd));
-	
+
 	xenon_ata_identify(dev);
-	
+
 	/* Try to detect if the port is in use by writing to it,
 	   waiting for a while and reading it again.  If the value
 	   was preserved, there is a device connected.  */
@@ -706,16 +706,23 @@ static int atapi_ready = 0;
 static bool atapi_inserted() {
     if (!atapi_ready) {
         return false;
-	}
-	struct xenon_ata_device *dev = &ata;
+    }
 
-    uint8_t cmd[12] = { 0 };
-    cmd[0] = 0x00;
-    int status = xenon_atapi_packet(dev, (char *)cmd, 0);
-    if (status != 0)  {
+    struct xenon_ata_device *dev = &atapi;
+
+    uint8_t cmd[12] = {0};
+    cmd[0] = 0x00; // TEST UNIT READY
+
+    if (xenon_atapi_packet(dev, (char *)cmd, 0) != 0) {
         return false;
-	}
+    }
 
+    xenon_ata_wait_ready(dev);
+
+    char sense_buf[0x12] = {0};
+    xenon_ata_pio_read(dev, sense_buf, sizeof(sense_buf));
+
+    // For now, just assume if we got here, it's ready
     return true;
 }
 
