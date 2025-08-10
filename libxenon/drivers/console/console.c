@@ -54,7 +54,7 @@ struct ati_info {
 
 
 /* set a pixel to RGB values, must call console_init() first */
-inline void console_pset32(int x, int y, int color)
+static inline void console_pset32(int x, int y, int color)
 {
 #define fbint ((uint32_t*)console_fb)
 #define base (((y >> 5)*32*console_width + ((x >> 5)<<10) \
@@ -64,7 +64,7 @@ inline void console_pset32(int x, int y, int color)
 #undef base
 }
 
-inline void console_pset(int x, int y, unsigned char r, unsigned char g, unsigned char b) {
+static inline void console_pset(int x, int y, unsigned char r, unsigned char g, unsigned char b) {
 	console_pset32(x, y, (b<<24) + (g<<16) + (r<<8));
 	/* little indian:
 	 * fbint[base] = b + (g<<8) + (r<<16); */
