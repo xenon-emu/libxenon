@@ -710,41 +710,22 @@ static bool atapi_inserted() {
 
     struct xenon_ata_device *dev = &atapi;
 
-    uint8_t tur_cmd[12] = {0};
-	// TEST UNIT READY
-    tur_cmd[0] = 0x00;
+    uint8_t cmd[12] = {0};
+    cmd[0] = 0x00; // TEST UNIT READY
 
-    if (xenon_atapi_packet(dev, (char *)tur_cmd, 0) != 0) {
+    if (xenon_atapi_packet(dev, (char *)cmd, 0) != 0) {
         return false;
     }
 
     xenon_ata_wait_ready(dev);
 
-    // Check if we got a CHECK CONDITION
-    if (xenon_ata_check_error(dev)) {
-        // Read sense data
-        uint8_t sense_cmd[12] = {0};
-        sense_cmd[0] = 0x03; // REQUEST SENSE
-        sense_cmd[4] = 18; // Allocation length
+    int sense = xenon_atapi_request_sense(dev);
 
-        if (xenon_atapi_packet(dev, (char *)sense_cmd, 0) != 0) {
-            return false;
-        }
-        xenon_ata_wait_ready(dev);
-
-        uint8_t sense_buf[18] = {0};
-        xenon_ata_pio_read(dev, sense_buf, sizeof(sense_buf));
-
-        // "Medium not present"
-        if (sense_buf[12] == 0x3A) {
-            return false;
-        }
-    }
-
-    return true;
+    // If REQUEST SENSE says "medium not present", treat as no disc
+    return sense == 0x3A ? false : true;
 }
 
-static bool ata_startup(void){
+static bool ata_startup(void) {
 	return true;
 }
 static bool ata_inserted(void) {
